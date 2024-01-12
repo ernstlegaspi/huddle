@@ -1,13 +1,99 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	src: url('../public/assets/fonts/Lemon/Lemon-Regular.ttf');
+	font-family: 'lemon';
+	font-display: swap
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer utilities {
+	.card {
+		@apply rounded-r5 bg-white
+	}
+
+	.default {
+		@apply cursor-default
+	}
+
+	.f {
+		@apply flex
+	}
+
+	.f-center {
+		@apply flex items-center justify-center
+	}
+	
+	.tgray {
+		@apply text-gray-400
+	}
+	
+	.gray-15 {
+		@apply text-gray-400 text-15
+	}
+	
+	.h {
+		@apply h-full
+	}
+
+	.h-center {
+		@apply flex justify-center
+	}
+
+	.h-end {
+		@apply flex justify-end w-full
+	}
+
+	.input {
+		@apply w-full outline-none px-1 py-3 border-b border-vio
+	}
+
+	.pointer {
+		@apply cursor-pointer
+	}
+
+	.s {
+		@apply h-full w-full
+	}
+
+	.v-center {
+		@apply flex items-center
+	}
+
+	.v-center-bet {
+		@apply flex items-center justify-between
+	}
+
+	.vio-button {
+		@apply text-white font-bold bg-vio rounded-r5 py-2
+	}
+	
+	.w {
+		@apply w-full
+	}
+}
+
+* {
+	margin: 0
+}
+
+.lemon {
+	font-family: lemon;
+}
+
+.scroll {
+	overflow-y: scroll
+}
+
+.scroll::-webkit-scrollbar {
+	width: 0px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+	background: transparent
+}
+
+.scroll::-webkit-scrollbar-track {
+	background: transparent
 }
