@@ -15,7 +15,7 @@ export default function Auth() {
 		</div>
 	</>
 
-	return <div className="s f">
+	return <div className="w h-[100vh] f">
 		<div className="w-1/2 h">
 			<div className="h-end items-center h">
 				<p className="lemon text-white text-[100px]">Huddle</p>
@@ -24,7 +24,9 @@ export default function Auth() {
 		<div className="w-1/2 h">
 			<div className="h-end h">
 				<div className="bg-white scroll w-1/2 h px-6 pb-6 relative">
-					<p className="text-vio text-35 font-bold text-center my-5">{isSignIn ? "Sign In" : "Sign Up"}</p>
+					<p className="text-vio text-35 font-bold text-center my-5">
+						{isSignIn ? "Sign In" : "Sign Up"}
+					</p>
 					{isSignIn ? <SignIn /> : null}
 					{isSignIn ? null : <SignUp />}
 					<p className="gray-15 mt-2">

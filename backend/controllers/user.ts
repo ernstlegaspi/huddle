@@ -3,12 +3,12 @@ import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 
 import User from '../models/user'
-import { addCookie, catchError, error, success } from '../utils/index'
+import { catchError, error } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
 const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-const KEY: string = process.env.KEY as string
+const COOKIE_AGE = 9999999999999
 
 export const signIn = (req: Request, res: Response) => {
 	return catchError(async () => {
@@ -30,25 +30,31 @@ export const signIn = (req: Request, res: Response) => {
 		const token = jwt.sign({
 			id: user._id,
 			email: user.email
-		}, KEY, { expiresIn: '3h' })
+		}, process.env.KEY as string, { expiresIn: '3h' })
 
-		addCookie(req, res, token)
-
-		return success({
+		return res.cookie('token', token, {
+			maxAge: COOKIE_AGE,
+			sameSite: 'lax',
+			httpOnly: true,
+			secure: false,
+			domain: req.hostname,
+			path: '/'
+		})
+		.json({
 			email: user?.email,
 			name: user?.name,
 			username: user?.username
-		}, 201, res)
+		})
 	}, res)
 }
 
 export const signUp = (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { error: joiError, value } = signUpSchema.validate(req.body)
-		const { email, name, password, interests: interestsData } = value
+		const { email, password, interests: interestsData } = value
 		const interests: string[] = interestsData as string[]
 
-		if(interests.length < 0 || joiError || !emailRegex.test(email) || !emailRegex2.test(email)) return error(400, res)
+		if(interests.length < 1 || joiError || !emailRegex.test(email) || !emailRegex2.test(email)) return error(400, res)
 
 		const salt = await bcrypt.genSalt(12)
 		const hashedPassword = await bcrypt.hash(password, salt)
@@ -59,7 +65,6 @@ export const signUp = (req: Request, res: Response) => {
 
 		const newUser = await new User({
 			...req.body,
-			username: `@${name.replace(" ", "")}`,
 			password: hashedPassword
 		}).save()
 
@@ -68,14 +73,26 @@ export const signUp = (req: Request, res: Response) => {
 		const token = jwt.sign({
 			id: newUser._id,
 			email: newUser.email
-		}, KEY, { expiresIn: '3h' })
+		}, process.env.KEY as string, { expiresIn: '3h' })
 
-		addCookie(req, res, token)
-
-		return success({
+		return res.cookie('token', token, {
+			maxAge: COOKIE_AGE,
+			sameSite: 'lax',
+			httpOnly: true,
+			secure: false,
+			domain: req.hostname,
+			path: '/'
+		})
+		.json({
 			email: newUser?.email,
 			name: newUser?.name,
 			username: newUser?.username
-		}, 201, res)
+		})
+	}, res)
+}
+
+export const signOut = (req: Request, res: Response) => {
+	return catchError(async () => {
+		return res.clearCookie('token').json({})
 	}, res)
 }

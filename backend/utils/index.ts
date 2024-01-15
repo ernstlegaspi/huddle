@@ -12,14 +12,3 @@ export const catchError = async (callback: () => Promise<Response>, res: Respons
 		return error(500, res)
 	}
 }
-
-export const addCookie = (req: Request, res: Response, token: string) => {
-	res.cookie('token', token, {
-		maxAge: 3 * 60 * 60,
-		sameSite: 'lax',
-		httpOnly: true,
-		secure: false,
-		domain: req.hostname,
-		path: '/'
-	})
-}

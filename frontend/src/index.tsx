@@ -1,14 +1,44 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import storage from 'redux-persist/lib/storage'
+import { configureStore } from '@reduxjs/toolkit'
+import { PersistGate } from 'redux-persist/integration/react'
+import { Provider } from 'react-redux'
+import {
+	persistStore,
+	persistReducer,
+	FLUSH,
+	REHYDRATE,
+	PAUSE,
+	PERSIST,
+	PURGE,
+	REGISTER
+} from 'redux-persist'
+
 import App from './App'
+import authReducer from './slices/auth/authSlice'
 
-const root = ReactDOM.createRoot(
-document.getElementById('root') as HTMLElement
-)
+import './index.css'
 
-root.render(
-	<React.StrictMode>
-		<App />
-	</React.StrictMode>
+const persistConfig = { key: "root", storage, version: 1 }
+
+const auth = persistReducer(persistConfig, authReducer)
+
+const store = configureStore({
+	reducer: {
+		auth
+	},
+	middleware: getDefaultMiddleware => getDefaultMiddleware({
+		serializableCheck: {
+			ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+		}
+	})
+})
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+	<Provider store={store}>
+		<PersistGate loading={null} persistor={persistStore(store)}>
+			<App />
+		</PersistGate>
+	</Provider>
 )
