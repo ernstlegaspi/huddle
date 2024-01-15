@@ -93,6 +93,6 @@ export const signUp = (req: Request, res: Response) => {
 
 export const signOut = (req: Request, res: Response) => {
 	return catchError(async () => {
-		return res.clearCookie('token').json({})
+		return res.status(200).clearCookie('token').json({})
 	}, res)
 }

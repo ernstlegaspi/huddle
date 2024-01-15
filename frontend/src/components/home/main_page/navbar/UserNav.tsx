@@ -1,13 +1,25 @@
+import toast from "react-hot-toast"
 import { AiFillMessage, AiOutlineMessage } from "react-icons/ai"
 import { BsPersonAdd } from "react-icons/bs"
 import { BsPersonFillAdd } from "react-icons/bs"
 import { IoIosNotifications, IoIosNotificationsOutline } from "react-icons/io"
+import { useDispatch } from "react-redux"
 
 import HoverableIcon from "../../../HoverableIcon"
+import { signOut } from "../../../../api/api"
+import { signOutAction } from "../../../../slices/auth/authSlice"
 
 export default function UserNav() {
-	const handleClick = async () => {
+	const dispatch = useDispatch()
 
+	const handleClick = async () => {
+		try {
+			await signOut()
+			dispatch(signOutAction({}))
+		}
+		catch(e) {
+			toast.error('Can not sign out. Try again.')
+		}
 	}
 
 	return <div className="v-center">
