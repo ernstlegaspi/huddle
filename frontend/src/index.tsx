@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import storage from 'redux-persist/lib/storage'
 import { configureStore } from '@reduxjs/toolkit'
@@ -17,16 +16,19 @@ import {
 
 import App from './App'
 import authReducer from './slices/auth/authSlice'
+import uiReducer from './slices/ui/uiSlice'
 
 import './index.css'
 
 const persistConfig = { key: "root", storage, version: 1 }
 
 const auth = persistReducer(persistConfig, authReducer)
+const ui = persistReducer(persistConfig, uiReducer)
 
 const store = configureStore({
 	reducer: {
-		auth
+		auth,
+		ui
 	},
 	middleware: getDefaultMiddleware => getDefaultMiddleware({
 		serializableCheck: {

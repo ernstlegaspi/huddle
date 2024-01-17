@@ -86,6 +86,7 @@ export const signUp = (req: Request, res: Response) => {
 		.json({
 			email: newUser?.email,
 			name: newUser?.name,
+			picture: newUser?.picture,
 			username: newUser?.username
 		})
 	}, res)

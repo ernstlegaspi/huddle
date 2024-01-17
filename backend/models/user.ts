@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
 	},
 	birthday: String,
 	password: String,
-	interests: [String]
+	interests: [String],
+	picture: String
 })
 
 export default mongoose.model('User', userSchema)
