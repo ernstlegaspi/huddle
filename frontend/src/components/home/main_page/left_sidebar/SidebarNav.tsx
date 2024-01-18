@@ -6,7 +6,7 @@ import { MdOutlineSpaceDashboard } from "react-icons/md"
 import { PiTelevisionSimple } from "react-icons/pi"
 import { RiStore2Line } from "react-icons/ri"
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveSidebar } from '../../../../slices/ui/uiSlice'
+import { setActiveSidebar, setViewProfile } from '../../../../slices/ui/uiSlice'
 
 type ButtonProps = {
 	icon: IconType
@@ -16,6 +16,7 @@ type ButtonProps = {
 
 export default function SidebarNav() {
 	const activeSidebar = useSelector((state: any) => state.ui.activeSidebar)
+	const viewProfile = useSelector((state: any) => state.ui.viewProfile)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -23,11 +24,12 @@ export default function SidebarNav() {
 	}, [])
 
 	const SidebarButton = ({ icon: Icon, onClick, text }: ButtonProps) => {
-		const isActive = activeSidebar.toLowerCase() === text.toLowerCase()
+		const isActive = activeSidebar.toLowerCase() === text.toLowerCase() && !viewProfile
 
 		return <div onClick={() => {
 			onClick()
 			dispatch(setActiveSidebar(text))
+			dispatch(setViewProfile(false))
 		}} className={`
 			${isActive ? 'text-vio font-medium rounded-r-r5 bg-white shadow shadow-vio/75 w-[107%]' : 'text-dark pointer hover:bg-vio/30'}
 			v-center relative overflow-x-hidden pl-4 py-3 transition-all
