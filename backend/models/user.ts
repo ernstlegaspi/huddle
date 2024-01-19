@@ -11,7 +11,11 @@ const userSchema = new mongoose.Schema({
 	birthday: String,
 	password: String,
 	interests: [String],
-	picture: String
-})
+	picture: String,
+	posts: [{
+		type: mongoose.Schema.ObjectId,
+		ref: 'User'
+	}]
+}, { timestamps: true })
 
 export default mongoose.model('User', userSchema)

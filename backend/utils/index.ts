@@ -2,7 +2,10 @@ import { Request, Response } from "express"
 
 export const success = (result: object, code: number, res: Response) => res.status(code).json(result)
 
-export const error = (code: number, res: Response) => res.status(code).json({ message: `Error: ${code}` })
+export const error = (code: number, res: Response, message: string = "Invalid Request") => res.status(code).json({ message })
+
+export const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
+export const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
 
 export const catchError = async (callback: () => Promise<Response>, res: Response) => {
 	try {

@@ -11,7 +11,7 @@ type User = {
 
 type AuthUser = {
 	name: string
-	emai: string
+	email: string
 	username: string
 	picture?: string
 }

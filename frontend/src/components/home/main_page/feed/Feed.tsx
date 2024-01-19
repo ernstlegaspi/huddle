@@ -8,7 +8,7 @@ export default function Feed() {
 
 	return <div className={`${viewProfile ? 'px-6' : 'px-10'} relative h w-[43%]`}>
 		<Suspense fallback={<p>Loading</p>}>
-			{viewProfile ? <Profile /> : <p>Stories</p>}
+			{viewProfile ? <Profile /> : <><p>Stories</p></>}
 		</Suspense>
 	</div>
 }

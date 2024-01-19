@@ -3,11 +3,9 @@ import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 
 import User from '../models/user'
-import { catchError, error } from '../utils/index'
+import { catchError, emailRegex, emailRegex2, error } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 
-const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
-const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
 const COOKIE_AGE = 9999999999999
 
 export const signIn = (req: Request, res: Response) => {
@@ -15,15 +13,15 @@ export const signIn = (req: Request, res: Response) => {
 		const { error: joiError, value } = signInSchema.validate(req.body)
 		const { email, password } = value
 
-		if(joiError || !emailRegex.test(email) || !emailRegex2.test(email)) return error(400, res)
+		if(joiError || !emailRegex2.test(email) || !emailRegex2.test(email)) return error(400, res)
 
 		const user = await User.findOne({ email })
 
-		if(!user) return error(404, res)
+		if(!user) return error(404, res, "User does not exist.")
 
 		const comparePassword = await bcrypt.compare(password, user.password as string)
 
-		if(!comparePassword) return error(401, res)
+		if(!comparePassword) return error(401, res, "User does not exist.")
 
 		delete (user as any)?.password
 
