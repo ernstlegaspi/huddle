@@ -17,6 +17,7 @@ type AuthUser = {
 }
 
 type Post = {
+	id?: string
 	body: string
 	likes?: string[]
 	name: string

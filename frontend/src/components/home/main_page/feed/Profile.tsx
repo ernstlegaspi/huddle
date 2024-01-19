@@ -11,18 +11,14 @@ import toast from 'react-hot-toast'
 
 export default function Profile() {
 	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
-	const posts: Post = useSelector((state: any) => state.posts.currentUserPosts)
+	const posts: Post[] = useSelector((state: any) => state.posts.currentUserPosts)
 	const dispatch = useDispatch()
-
-	console.log(posts)
 
 	useEffect(() => {
 		(async () => {
 			try {
 				const { data } = await getPostsPerUser()
 
-				console.log(data)
-	
 				dispatch(setCurrentUserPosts(data.posts))
 			}
 			catch(e) {
@@ -52,10 +48,9 @@ export default function Profile() {
 		</div>
 		<div className="mt-3"></div>
 		<div className="grid grid-cols-2 gap-3">
-			<PostCard />
-			<PostCard />
-			<PostCard />
-			<PostCard />
+			{
+				!posts || posts.length < 1 ? <p>Loading...</p> : posts.map(post => <PostCard key={post.id as string} post={post} />)
+			}
 		</div>
 	</div>
 }

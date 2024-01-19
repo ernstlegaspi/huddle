@@ -10,10 +10,12 @@ import HoverableIcon from "../../HoverableIcon"
 import Form from './Form'
 import ImageUpload from './ImageUpload'
 import { addPost, changePostImage, uploadPostImage } from '../../../api/api'
+import { setCurrentUserPosts } from '../../../slices/post/postSlice'
 
 export default function AddPostModal() {
 	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
-  // eslint-disable-next-line
+	const currentUserPosts = useSelector((state: any) => state.posts.currentUserPosts)
+	console.log(currentUserPosts)
 	const dispatch = useDispatch()
 
 	const [body, setBody] = useState('')
@@ -123,7 +125,7 @@ export default function AddPostModal() {
 
 			const userPicture: string = user.picture ? user.picture as string : ''
 
-			const response = await addPost({
+			const { data } = await addPost({
 				body,
 				name: user.name,
 				pictures: postImage,
@@ -132,7 +134,6 @@ export default function AddPostModal() {
 				tags: tags.split(",")
 			})
 			
-			console.log(response)
 			toast.success('New post added.')
 			setBody('')
 			setTags('')
@@ -140,6 +141,12 @@ export default function AddPostModal() {
 			setPostImage('')
 			close()
 			setDisabled(false)
+			document.body.style.overflow = 'auto'
+
+			const newCurrentUserPosts = [...currentUserPosts]
+			newCurrentUserPosts.push(data)
+
+			dispatch(setCurrentUserPosts(newCurrentUserPosts))
 		}
 		catch(e) {
 			setDisabled(false)
