@@ -2,7 +2,7 @@ import express from 'express'
 import multer from 'multer'
 import path from 'path'
 import { checkMiddleware } from '../middleware'
-import { temporaryPostImageUpload } from '../controllers/imageUpload'
+import { changePostImageUpload, temporaryPostImageUpload } from '../controllers/imageUpload'
 
 const router = express.Router()
 
@@ -18,5 +18,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 router.post('/upload/post-image', checkMiddleware, upload.single('file'), temporaryPostImageUpload)
+router.post('/upload/change-post-image/:prevImage', checkMiddleware, upload.single('file'), changePostImageUpload)
 
 export default router

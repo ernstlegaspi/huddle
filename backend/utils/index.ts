@@ -1,3 +1,4 @@
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Request, Response } from "express"
 
 export const success = (result: object, code: number, res: Response) => res.status(code).json(result)
@@ -14,4 +15,12 @@ export const catchError = async (callback: () => Promise<Response>, res: Respons
 	catch(e) {
 		return error(500, res)
 	}
+}
+
+export const getUserId = (req: Request) => {
+	const token = req.cookies.token
+	const payload = jwt.verify(token, process.env.KEY as string)
+	const { id } = payload as JwtPayload
+
+	return id
 }

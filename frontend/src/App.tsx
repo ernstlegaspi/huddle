@@ -3,7 +3,8 @@ import { lazy, Suspense } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import AddPostModal from './components/modals/AddPostModal'
+
+import AddPostModal from './components/modals/add_post_modal/AddPostModal'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 

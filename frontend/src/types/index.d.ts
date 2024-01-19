@@ -15,3 +15,13 @@ type AuthUser = {
 	username: string
 	picture?: string
 }
+
+type Post = {
+	body: string
+	likes?: string[]
+	name: string
+	pictures: string
+	tags: string[]
+	username: string
+	userPicture: string
+}

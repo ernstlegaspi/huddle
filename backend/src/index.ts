@@ -1,11 +1,12 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import express, { Request, Response } from 'express'
+import express from 'express'
 import mongoose from 'mongoose'
 
 import imageUploadRoutes from '../routes/imageUpload'
 import userRoutes from '../routes/user'
+import postRoutes from '../routes/post'
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use(express.json({ limit: '30mb' }))
 app.use(express.urlencoded({ limit: '30mb' }))
 app.use(express.static('public'))
 
+app.use("", postRoutes)
 app.use("", imageUploadRoutes)
 app.use("", userRoutes)
 

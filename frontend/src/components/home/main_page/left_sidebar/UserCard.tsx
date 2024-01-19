@@ -7,7 +7,7 @@ export default function UserCard() {
 	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
 	const dispatch = useDispatch()
 
-	const handleClick = () => {
+	const handleClick = async () => {
 		dispatch(setViewProfile(true))
 	}
 

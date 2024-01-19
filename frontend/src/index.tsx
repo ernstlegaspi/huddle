@@ -16,6 +16,7 @@ import {
 
 import App from './App'
 import authReducer from './slices/auth/authSlice'
+import postsReducer from './slices/post/postSlice'
 import uiReducer from './slices/ui/uiSlice'
 
 import './index.css'
@@ -23,11 +24,13 @@ import './index.css'
 const persistConfig = { key: "root", storage, version: 1 }
 
 const auth = persistReducer(persistConfig, authReducer)
+const posts = persistReducer(persistConfig, postsReducer)
 const ui = persistReducer(persistConfig, uiReducer)
 
 const store = configureStore({
 	reducer: {
 		auth,
+		posts,
 		ui
 	},
 	middleware: getDefaultMiddleware => getDefaultMiddleware({
