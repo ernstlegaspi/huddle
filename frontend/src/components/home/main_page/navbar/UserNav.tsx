@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux"
 import HoverableIcon from "../../../HoverableIcon"
 import { signOut } from "../../../../api/api"
 import { signOutAction } from "../../../../slices/auth/authSlice"
+import { setViewProfile } from "../../../../slices/ui/uiSlice"
 
 export default function UserNav() {
 	const dispatch = useDispatch()
@@ -16,6 +17,7 @@ export default function UserNav() {
 		try {
 			await signOut()
 			dispatch(signOutAction({}))
+			dispatch(setViewProfile(false))
 		}
 		catch(e) {
 			toast.error('Can not sign out. Try again.')
