@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import AddPostModal from './components/modals/add_post_modal/AddPostModal'
+import SkeletonHomepage from './components/home/SkeletonHomepage'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 
@@ -20,7 +21,7 @@ export default function App() {
 	`}>
 		<AddPostModal />
 		<BrowserRouter>
-			<Suspense fallback={<p>Loading</p>}>
+			<Suspense fallback={<SkeletonHomepage />}>
 				<Toaster />
 				<Routes>
 					<Route path="/" element={<HomePage />} />

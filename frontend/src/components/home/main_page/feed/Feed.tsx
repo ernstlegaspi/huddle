@@ -12,7 +12,7 @@ export default function Feed() {
 		<Suspense fallback={<p>Loading</p>}>
 			{viewProfile ? <Profile /> : <>
 				<p>Stories</p>
-				<Skeleton className="w-[100px] h-[20px] rounded-full" />
+					<Skeleton className="w-[100px] h-[20px] rounded-full bg-blue-500" />
 				<p>Stories 2</p>
 			</>}
 		</Suspense>

@@ -9,7 +9,7 @@ export default function HomePage() {
 	const isLoggedIn = Object.keys(user).length > 0
 
 	return <>
-		<Suspense fallback={<p>Loading...</p>}>
+		<Suspense fallback={<p>Ludeng...</p>}>
 			{isLoggedIn ? <MainPage /> : <Auth />}
 		</Suspense>
 	</>

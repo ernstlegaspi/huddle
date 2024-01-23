@@ -19,6 +19,8 @@ export default function Profile() {
 			try {
 				const { data } = await getPostsPerUser()
 
+        console.log(data)
+        
 				dispatch(setCurrentUserPosts(data.posts))
 			}
 			catch(e) {
@@ -49,7 +51,7 @@ export default function Profile() {
 		<div className="mt-3"></div>
 		<div className="grid grid-cols-2 gap-3">
 			{
-				!posts || posts.length < 1 ? <p>Loading...</p> : posts.map(post => <PostCard key={post.id as string} post={post} />)
+				!posts || posts.length < 1 ? <p>Loading...</p> : posts.map((post, idx) => <PostCard key={idx} post={post} />)
 			}
 		</div>
 	</div>

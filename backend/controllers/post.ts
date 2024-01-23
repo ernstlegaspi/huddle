@@ -36,7 +36,9 @@ export const getPostsPerUser = async (req: Request, res: Response) => {
 			.exec()
 
 		if(!userPosts) return error(400, res)
-		
-		return success({ posts: userPosts.posts }, 200, res)
+
+		const reversedUserPosts = userPosts.posts.reverse()
+
+		return success({ posts: reversedUserPosts }, 200, res)
 	}, res)
 }
