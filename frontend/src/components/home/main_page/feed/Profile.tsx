@@ -1,33 +1,85 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BiDotsHorizontalRounded } from "react-icons/bi"
+import { ClipLoader } from 'react-spinners'
 
 import ProfilePicture from "../../../ProfilePicture"
 import PostCard from "../../../PostCard"
 import HoverableIcon from "../../../HoverableIcon"
-import { useDispatch, useSelector } from "react-redux"
-import { setCurrentUserPosts } from '../../../../slices/post/postSlice'
+import { useSelector } from "react-redux"
 import { getPostsPerUser } from '../../../../api/api'
 import toast from 'react-hot-toast'
+import SkeletonPostCard from '../../../SkeletonPostCard'
 
 export default function Profile() {
+	const page = useRef(0)
+	const canRefetch = useRef(true)
+	const shownUserPostsCount = useRef(0)
+	const userPostsLength = useRef(0)
+	const postsRef = useRef<Post[]>([])
+
+	const [isRefetching, setIsRefetching] = useState(false)
+	const [posts, setPosts] = useState<Post[]>([])
+
 	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
-	const posts: Post[] = useSelector((state: any) => state.posts.currentUserPosts)
-	const dispatch = useDispatch()
 
 	useEffect(() => {
 		(async () => {
 			try {
-				const { data } = await getPostsPerUser()
+				const { data } = await getPostsPerUser(0)
 
-        console.log(data)
-        
-				dispatch(setCurrentUserPosts(data.posts))
+				shownUserPostsCount.current = data.posts.length
+				userPostsLength.current = data.length
+				postsRef.current = data.posts
+				setPosts(data.posts)
 			}
 			catch(e) {
 				toast.error("Can not get your posts. Try logging in again.")
+				setPosts([])
 			}
 		})()
-	}, [dispatch])
+	}, [])
+
+	useEffect(() => {
+		const handleScroll = async () => {
+			if(shownUserPostsCount.current >= userPostsLength.current) return
+
+			const windowHeight = window.innerHeight
+			const scrollTop = document.documentElement.scrollTop
+			const scrollHeight = document.documentElement.scrollHeight
+
+			if((windowHeight + scrollTop === scrollHeight) && canRefetch.current) {
+				page.current++
+				canRefetch.current = false
+				setIsRefetching(true)
+
+				try {
+					const { data } = await getPostsPerUser(page.current)
+					const newPosts = [...postsRef.current]
+
+					shownUserPostsCount.current += data.posts.length
+
+					for(let f=0; f<data.posts.length; f++) {
+						newPosts.push(data.posts[f])
+					}
+
+					canRefetch.current = true
+					setIsRefetching(false)
+					setPosts(newPosts)
+				}
+				catch(e) {
+					toast.error('Can not get posts. Try again later.')
+					canRefetch.current = true
+					setIsRefetching(false)
+				}
+			}
+		}
+
+		window.addEventListener('scroll', handleScroll)
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll)
+		}
+	}, [])
 
 	return <div className="w h py-6 relative">
 		<div className="w bg-vio/50 rounded-r5 h-[300px]">
@@ -51,8 +103,18 @@ export default function Profile() {
 		<div className="mt-3"></div>
 		<div className="grid grid-cols-2 gap-3">
 			{
-				!posts || posts.length < 1 ? <p>Loading...</p> : posts.map((post, idx) => <PostCard key={idx} post={post} />)
+				!posts || posts.length < 1
+				? <>
+					<SkeletonPostCard />
+					<SkeletonPostCard />
+					<div className="h-[50px]"></div>
+				</>
+				: posts.map((post, idx) => <PostCard key={idx} idx={idx+1} post={post} />)
 			}
 		</div>
+		<div className="my-7"></div>
+		{isRefetching ? <div className="w f-center py-[150px]">
+			<ClipLoader color="#afa6b7" />
+		</div> : null}
 	</div>
 }

@@ -18,7 +18,7 @@ export const addPost = async (req: Request, res: Response) => {
 			owner: userId
 		}).save()
 
-		const user = await User.findByIdAndUpdate(userId,
+		await User.findByIdAndUpdate(userId,
 			{ $push: { posts: newPost._id } },
 			{ new: true }
 		)
@@ -29,6 +29,11 @@ export const addPost = async (req: Request, res: Response) => {
 
 export const getPostsPerUser = async (req: Request, res: Response) => {
 	return catchError(async () => {
+		const { page } = req.params
+
+		if(!page) return error(404, res)
+
+		const p = +page // convert string to int
 		const userId = getUserId(req)
 
 		const userPosts = await User.findById(userId)
@@ -37,8 +42,25 @@ export const getPostsPerUser = async (req: Request, res: Response) => {
 
 		if(!userPosts) return error(400, res)
 
+		const userPostsLen = userPosts.posts.length
 		const reversedUserPosts = userPosts.posts.reverse()
+		let count = 1
+		const posts = []
 
-		return success({ posts: reversedUserPosts }, 200, res)
+		if(userPostsLen < 7 || p === 0) {
+			for(let f=0; f<userPostsLen && count++ < 7; f++) {
+				posts.push(reversedUserPosts[f])
+			}
+
+		return success({ posts, length: userPostsLen }, 200, res)
+		}
+
+		const startingIndex = 6 * p
+
+		for(let f=startingIndex; f<userPostsLen && count++ < 7; f++) {
+			posts.push(reversedUserPosts[f])
+		}
+
+		return success({ posts, length: userPostsLen }, 200, res)
 	}, res)
 }

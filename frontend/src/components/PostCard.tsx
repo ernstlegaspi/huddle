@@ -4,14 +4,14 @@ import { FaRegHeart } from "react-icons/fa"
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import ProfilePicture from './ProfilePicture'
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post, idx }: { post: Post, idx: Number }) {
 	const likeCount = post.likes ? post.likes.length < 1 ? '' : post.likes.length : ''
 
-	return <div className="bg-white rounded-r5 w-full p-2 pointer transition-all hover:shadow-md hover:shadow-vio/50">
+	return <div className="bg-white rounded-r5 w p-2 pointer transition-all hover:shadow-md hover:shadow-vio/70">
 		<LazyLoadImage
 			src={`http://localhost:3001/images/${post.pictures}`}
 			alt="Mountains"
-			className="w h-[200px] rounded-r5"
+			className="w h-[300px] rounded-r5"
 		/>
 		<div className="w f justify-between mt-3">
 			<div className="f">
@@ -21,6 +21,7 @@ export default function PostCard({ post }: { post: Post }) {
 				<div>
 					<p className="text-dark font-bold">{post.name}</p>
 					<p className="text-dvio text-14 mt-[-5px]">{post.username}</p>
+					<p>{idx.toString()}</p>
 				</div>
 			</div>
 			<div className="f">

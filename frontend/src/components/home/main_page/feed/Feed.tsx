@@ -2,17 +2,17 @@ import { lazy, Suspense } from 'react'
 import { useSelector } from "react-redux"
 
 import { Skeleton } from '../../../ui/skeleton'
+import SkeletonProfile from './SkeletonProfile'
 
 const Profile = lazy(() => import("./Profile"))
 
 export default function Feed() {
 	const viewProfile = useSelector((state: any) => state.ui.viewProfile)
 
-	return <div className={`${viewProfile ? 'px-6' : 'px-10'} relative h-auto w-[43%]`}>
-		<Suspense fallback={<p>Loading</p>}>
+	return <div className={`${viewProfile ? 'px-6' : 'px-10'} relative h-auto w-[50%]`}>
+		<Suspense fallback={viewProfile ? <SkeletonProfile /> : <p>FeedLudeng</p>}>
 			{viewProfile ? <Profile /> : <>
 				<p>Stories</p>
-					<Skeleton className="w-[100px] h-[20px] rounded-full bg-blue-500" />
 				<p>Stories 2</p>
 			</>}
 		</Suspense>

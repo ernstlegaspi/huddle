@@ -11,7 +11,6 @@ const auth = createSlice({
 		},
 		signOutAction: (state, action) => {
 			state.userInfo = action.payload
-			localStorage.removeItem('userInfo')
 			localStorage.removeItem('persist:root')
 		}
 	}

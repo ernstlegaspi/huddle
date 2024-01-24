@@ -16,12 +16,13 @@ type ButtonProps = {
 
 export default function SidebarNav() {
 	const activeSidebar = useSelector((state: any) => state.ui.activeSidebar)
+  const sidebarLen = Object.keys(activeSidebar).length
 	const viewProfile = useSelector((state: any) => state.ui.viewProfile)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		if(Object.keys(activeSidebar).length < 1) dispatch(setActiveSidebar('feed'))
-	}, [])
+		if(sidebarLen < 1) dispatch(setActiveSidebar('feed'))
+	}, [dispatch, sidebarLen])
 
 	const SidebarButton = ({ icon: Icon, onClick, text }: ButtonProps) => {
 		const isActive = activeSidebar.toLowerCase() === text.toLowerCase() && !viewProfile

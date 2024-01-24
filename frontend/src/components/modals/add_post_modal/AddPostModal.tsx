@@ -3,20 +3,17 @@ import toast from 'react-hot-toast'
 import { ChangeEvent, useState } from 'react'
 import { IoIosImages } from "react-icons/io"
 import { IoClose } from "react-icons/io5"
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import useAddPostModal from "../../../hooks/useAddPostModal"
 import HoverableIcon from "../../HoverableIcon"
 import Form from './Form'
 import ImageUpload from './ImageUpload'
 import { addPost, changePostImage, uploadPostImage } from '../../../api/api'
-import { setCurrentUserPosts } from '../../../slices/post/postSlice'
 
 export default function AddPostModal() {
 	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
 	const currentUserPosts = useSelector((state: any) => state.posts.currentUserPosts)
-	console.log(currentUserPosts)
-	const dispatch = useDispatch()
 
 	const [body, setBody] = useState('')
 	const [disabled, setDisabled] = useState(false)
@@ -142,11 +139,6 @@ export default function AddPostModal() {
 			close()
 			setDisabled(false)
 			document.body.style.overflow = 'auto'
-
-			const newCurrentUserPosts = [...currentUserPosts]
-			newCurrentUserPosts.push(data)
-
-			dispatch(setCurrentUserPosts(newCurrentUserPosts))
 		}
 		catch(e) {
 			setDisabled(false)
