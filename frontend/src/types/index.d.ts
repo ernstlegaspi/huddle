@@ -17,8 +17,9 @@ type AuthUser = {
 }
 
 type Post = {
-	id?: string
 	body: string
+	email?: string
+	id?: string
 	likes?: string[]
 	name: string
 	pictures: string

@@ -3,21 +3,17 @@ import { AiFillMessage, AiOutlineMessage } from "react-icons/ai"
 import { BsPersonAdd } from "react-icons/bs"
 import { BsPersonFillAdd } from "react-icons/bs"
 import { IoIosNotifications, IoIosNotificationsOutline } from "react-icons/io"
-import { useDispatch } from "react-redux"
 
 import HoverableIcon from "../../../HoverableIcon"
 import { signOut } from "../../../../api/api"
-import { signOutAction } from "../../../../slices/auth/authSlice"
-import { setViewProfile } from "../../../../slices/ui/uiSlice"
+import { clearLocalStorage } from "../../../../lib/utils"
 
 export default function UserNav() {
-	const dispatch = useDispatch()
-
 	const handleClick = async () => {
 		try {
 			await signOut()
-			dispatch(signOutAction({}))
-			dispatch(setViewProfile(false))
+			clearLocalStorage()
+			window.location.reload()
 		}
 		catch(e) {
 			toast.error('Can not sign out. Try again.')

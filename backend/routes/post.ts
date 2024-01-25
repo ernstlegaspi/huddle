@@ -5,6 +5,6 @@ import { checkMiddleware } from '../middleware'
 const router = express.Router()
 
 router.post('/addPost', checkMiddleware, addPost)
-router.get('/getPostsPerUser/:page', checkMiddleware, getPostsPerUser)
+router.get('/getPostsPerUser/:page/:email', checkMiddleware, getPostsPerUser)
 
 export default router

@@ -1,5 +1,5 @@
-import useAddPostModal from "../../../../hooks/useAddPostModal"
 import ProfilePicture from "../../../ProfilePicture"
+import { useAddPostModal } from "../../../../hooks/useToggleModal"
 
 export default function PostSomethingCard() {
 	const { open } = useAddPostModal()

@@ -11,7 +11,7 @@ export default function ImageUpload({ handleImageUpload, postImage, setTags, tag
 	return <div className="border-t border-vio/30 flex-1">
 		{
 			postImage ? <div className="relative w h f flex-col">
-				<img src={`http://localhost:3001/images/${postImage}`} alt="Temporary Post Image" className="w flex-1" />
+				<img src={`http://localhost:3001/images/${postImage}`} alt="Temporary Post" className="w flex-1" />
 				<input
 					type="text"
 					value={tags}

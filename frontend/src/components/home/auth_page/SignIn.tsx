@@ -1,14 +1,11 @@
 import toast from 'react-hot-toast'
 import { AxiosError } from 'axios'
 import { ChangeEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { signIn } from '../../../api/api'
-import { authAction } from '../../../slices/auth/authSlice'
 
 export default function SignIn() {
 	const [data, setData] = useState({ email: '', password: '' })
 	const [loading, setLoading] = useState(false)
-	const dispatch = useDispatch()
 	const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
 	const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
 
@@ -36,7 +33,8 @@ export default function SignIn() {
 			const { data: resData } = await signIn({ ...data })
 
 			setLoading(false)
-			dispatch(authAction(resData))
+			localStorage.setItem('huddle_user', JSON.stringify(resData))
+			window.location.reload()
 		}
 		catch(e: any) {
 			setLoading(false)
@@ -59,7 +57,7 @@ export default function SignIn() {
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setData({ ...data, [e.target.name]: e.target.value })
 	}
-	
+
 	return <>
 		<input disabled={loading} value={data?.email} onChange={handleChange} type="email" name="email" placeholder="Email" className="input mb-5" />
 		<input disabled={loading} value={data?.password} onChange={handleChange} type="password" name="password" placeholder="Password" className="input mb-2" />

@@ -1,6 +1,6 @@
-import { lazy, Suspense } from 'react'
-import { useSelector } from 'react-redux'
+import { lazy, Suspense, useEffect } from 'react'
 import SkeletonHomepage from '../SkeletonHomepage'
+import useViewProfile from '../../../hooks/useViewProfile'
 
 const Feed = lazy(() => import("./feed/Feed"))
 const FriendsBar = lazy(() => import("./friends_bar/FriendsBar"))
@@ -9,12 +9,17 @@ const RightSidebar = lazy(() => import("./right_sidebar/RightSidebar"))
 const Sidebar = lazy(() => import("./left_sidebar/LeftSidebar"))
 
 export default function MainPage() {
-	const viewProfile = useSelector((state: any) => state.ui.viewProfile)
+	const viewProfile = localStorage.getItem('view_profile')
+	const { isClicked } = useViewProfile()
+
+	useEffect(() => {
+		console.log("main page refreshed: ")
+	}, [])
 
 	return <>
 		<Suspense fallback={<SkeletonHomepage />}>
 			<Navbar />
-			<div className={`${viewProfile ? 'h-auto' : 'h-[100vh]'} f pt-[82px]`}>
+			<div className={`${isClicked || viewProfile ? 'h-auto' : 'h-[100vh]'} f pt-[82px]`}>
 				<Sidebar />
 				<Feed />
 				<RightSidebar />

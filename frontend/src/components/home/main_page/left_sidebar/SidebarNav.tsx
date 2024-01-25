@@ -2,11 +2,13 @@ import { useEffect } from 'react'
 import { IconType } from "react-icons"
 import { BsCalendar3Event } from "react-icons/bs"
 import { FaPeopleCarry } from "react-icons/fa"
+import { IoSettingsOutline } from "react-icons/io5"
 import { MdOutlineSpaceDashboard } from "react-icons/md"
 import { PiTelevisionSimple } from "react-icons/pi"
 import { RiStore2Line } from "react-icons/ri"
-import { useDispatch, useSelector } from 'react-redux'
-import { setActiveSidebar, setViewProfile } from '../../../../slices/ui/uiSlice'
+
+import useViewProfile from '../../../../hooks/useViewProfile'
+import useActiveSidebar from '../../../../hooks/useActiveSidebar'
 
 type ButtonProps = {
 	icon: IconType
@@ -15,23 +17,29 @@ type ButtonProps = {
 }
 
 export default function SidebarNav() {
-	const activeSidebar = useSelector((state: any) => state.ui.activeSidebar)
-  const sidebarLen = Object.keys(activeSidebar).length
-	const viewProfile = useSelector((state: any) => state.ui.viewProfile)
-	const dispatch = useDispatch()
+	const activeSidebar = localStorage.getItem('active_sidebar') ? localStorage.getItem('active_sidebar') as string : ''
+	const { isClicked, toggle } = useViewProfile()
+	const { activeSidebar: sidebar, setActiveSidebar } = useActiveSidebar()
 
 	useEffect(() => {
-		if(sidebarLen < 1) dispatch(setActiveSidebar('feed'))
-	}, [dispatch, sidebarLen])
+		if(!activeSidebar) {
+			localStorage.setItem('active_sidebar', 'feed')
+			setActiveSidebar('feed')
+		}
+	}, [])
 
 	const SidebarButton = ({ icon: Icon, onClick, text }: ButtonProps) => {
-		const isActive = activeSidebar.toLowerCase() === text.toLowerCase() && !viewProfile
+		const isActive = (activeSidebar.toLowerCase() === text.toLowerCase() || sidebar === text) && !isClicked && !localStorage.getItem('view_profile')
 
-		return <div onClick={() => {
+		const handleClick = () => {
 			onClick()
-			dispatch(setActiveSidebar(text))
-			dispatch(setViewProfile(false))
-		}} className={`
+			setActiveSidebar(text)
+			toggle('')
+			localStorage.setItem('active_sidebar', text)
+			localStorage.setItem('view_profile', '')
+		}
+
+		return <div onClick={handleClick} className={`
 			${isActive ? 'text-vio font-medium rounded-r-r5 bg-white shadow shadow-vio/75 w-[107%]' : 'text-dark pointer hover:bg-vio/30'}
 			v-center relative overflow-x-hidden pl-4 py-3 transition-all
 		`}>
@@ -47,5 +55,6 @@ export default function SidebarNav() {
 		<SidebarButton icon={BsCalendar3Event} onClick={() => {}} text="Events" />
 		<SidebarButton icon={PiTelevisionSimple} onClick={() => {}} text="Video" />
 		<SidebarButton icon={RiStore2Line} onClick={() => {}} text="Marketplace" />
+		<SidebarButton icon={IoSettingsOutline} onClick={() => {}} text="Settings" />
 	</div>
 }

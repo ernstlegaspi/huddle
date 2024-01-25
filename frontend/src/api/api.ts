@@ -15,4 +15,7 @@ export const changePostImage = (data: FormData, prevImage: string) => API.post(`
 export const uploadPostImage = (data: FormData) => API.post('upload/post-image', data)
 
 export const addPost = (data: Post) => API.post('addPost', data)
-export const getPostsPerUser = (page: Number) => API.get(`getPostsPerUser/${page}`)
+export const getPostsPerUser = (page: Number, email: string) => API.get(`getPostsPerUser/${page}/${email}`)
+
+// user
+export const getUserApi = (email: string) => API.get(`auth/getUser/${email}`)

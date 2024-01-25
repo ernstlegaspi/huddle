@@ -1,14 +1,11 @@
 import { AxiosError } from 'axios'
 import toast from "react-hot-toast"
 import { ChangeEvent, useState } from "react"
-import { useDispatch } from 'react-redux'
 
 import { days, interestsArr, months, years } from "../../../constants"
 import { signUp } from '../../../api/api'
-import { authAction } from '../../../slices/auth/authSlice'
 
 export default function SignUp() {
-	const dispatch = useDispatch()
 	const [data, setData] = useState<User>({ name: '', username: '', password: '', email: '', birthday: '', interests: [] })
 	const [date, setDate] = useState({ month: '', day: '', year: '' })
 	const [loading, setLoading] = useState(false)
@@ -111,7 +108,8 @@ export default function SignUp() {
 			})
 
 			setLoading(false)
-			dispatch(authAction(resData))
+			localStorage.setItem('huddle_user', JSON.stringify(resData))
+			window.location.reload()
 		}
 		catch(e: any) {
 			setLoading(false)

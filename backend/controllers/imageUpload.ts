@@ -1,5 +1,4 @@
 import fs from 'fs'
-import mongoose from 'mongoose'
 import path from 'path'
 import { Request, Response } from 'express'
 import { catchError, error, success } from '../utils'

@@ -2,18 +2,18 @@ import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import { ChangeEvent, useState } from 'react'
 import { IoIosImages } from "react-icons/io"
-import { IoClose } from "react-icons/io5"
-import { useSelector } from 'react-redux'
 
-import useAddPostModal from "../../../hooks/useAddPostModal"
 import HoverableIcon from "../../HoverableIcon"
 import Form from './Form'
 import ImageUpload from './ImageUpload'
 import { addPost, changePostImage, uploadPostImage } from '../../../api/api'
+import { useAddPostModal } from "../../../hooks/useToggleModal"
+import BlackInset from '../BlackInset'
+import CloseButton from '../../CloseButton'
+import { getUser } from '../../../lib/utils'
 
 export default function AddPostModal() {
-	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
-	const currentUserPosts = useSelector((state: any) => state.posts.currentUserPosts)
+	const user: AuthUser = getUser()
 
 	const [body, setBody] = useState('')
 	const [disabled, setDisabled] = useState(false)
@@ -88,7 +88,7 @@ export default function AddPostModal() {
 		}
 		catch(e: any) {
 			setPostImage('')
-			
+
 			if(e instanceof AxiosError) {
 				const { response }: AxiosError = e
 				const { message }: { message: string } = response?.data as { message: string }
@@ -122,8 +122,9 @@ export default function AddPostModal() {
 
 			const userPicture: string = user.picture ? user.picture as string : ''
 
-			const { data } = await addPost({
+			await addPost({
 				body,
+				email: user?.email,
 				name: user.name,
 				pictures: postImage,
 				username: user.username,
@@ -143,14 +144,26 @@ export default function AddPostModal() {
 		catch(e) {
 			setDisabled(false)
 
+			if(e instanceof AxiosError) {
+				const error: AxiosError = e
+
+				if(error?.response?.status === 401) {
+					toast.error('User is not existing. Try again later.')
+					return
+				}
+				
+				toast.error('Can not add new post. Try again later.')
+				return
+			}
+
 			toast.error('Can not add new post. Try again later.')
 		}
 	}
 	
-	return <div className="z-[60] absolute inset-0 bg-dark/50 f-center">
+	return <BlackInset close={handleClose}>
 		<div className={`${postImage && !isNext ? 'h-auto' : 'h-[500px]'} card w-[600px] f flex-col`}>
 			<div className="h-bet items-center p-3">
-				<HoverableIcon mainIcon={IoClose} onClick={handleClose} />
+				<CloseButton handleClose={handleClose} />
 				<div className="v-center">
 					<p className="vio-label">Add Post</p>
 					{postImage ? <label htmlFor='changePostPicture' className="ml-1">
@@ -193,5 +206,5 @@ export default function AddPostModal() {
 				/>
 			}
 		</div>
-	</div>
+	</BlackInset>
 }

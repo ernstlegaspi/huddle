@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 
 import User from '../models/user'
-import { catchError, emailRegex, emailRegex2, error } from '../utils/index'
+import { catchError, emailRegex, emailRegex2, error, success } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 
 const COOKIE_AGE = 9999999999999
@@ -30,6 +30,8 @@ export const signIn = (req: Request, res: Response) => {
 			email: user.email
 		}, process.env.KEY as string, { expiresIn: '3h' })
 
+		const picture = user?.picture ? user?.picture : ''
+		
 		return res.cookie('token', token, {
 			maxAge: COOKIE_AGE,
 			sameSite: 'lax',
@@ -41,7 +43,8 @@ export const signIn = (req: Request, res: Response) => {
 		.json({
 			email: user?.email,
 			name: user?.name,
-			username: user?.username
+			username: user?.username,
+			picture
 		})
 	}, res)
 }
@@ -73,6 +76,8 @@ export const signUp = (req: Request, res: Response) => {
 			email: newUser.email
 		}, process.env.KEY as string, { expiresIn: '3h' })
 
+		const picture = newUser?.picture ? newUser?.picture : ''
+
 		return res.cookie('token', token, {
 			maxAge: COOKIE_AGE,
 			sameSite: 'lax',
@@ -84,14 +89,24 @@ export const signUp = (req: Request, res: Response) => {
 		.json({
 			email: newUser?.email,
 			name: newUser?.name,
-			picture: newUser?.picture,
+			picture,
 			username: newUser?.username
 		})
 	}, res)
 }
 
 export const signOut = (req: Request, res: Response) => {
+	return res.status(200).clearCookie('token').json({})
+}
+
+export const getUser = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		return res.status(200).clearCookie('token').json({})
+		const { email } = req.params
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(404, res)
+
+		return success({ ...user }, 200, res)
 	}, res)
 }

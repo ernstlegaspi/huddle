@@ -87,6 +87,10 @@
 }
 
 @layer utilities {
+	.black-inset {
+		@apply z-[60] fixed inset-0 bg-dark/50 f-center
+	}
+
 	.card {
 		@apply rounded-r5 bg-white
 	}

@@ -1,14 +1,14 @@
+import toast from 'react-hot-toast'
 import { useEffect, useRef, useState } from 'react'
-import { BiDotsHorizontalRounded } from "react-icons/bi"
 import { ClipLoader } from 'react-spinners'
 
 import ProfilePicture from "../../../ProfilePicture"
 import PostCard from "../../../PostCard"
-import HoverableIcon from "../../../HoverableIcon"
-import { useSelector } from "react-redux"
-import { getPostsPerUser } from '../../../../api/api'
-import toast from 'react-hot-toast'
 import SkeletonPostCard from '../../../SkeletonPostCard'
+import { useEditProfileModal } from '../../../../hooks/useToggleModal'
+import { getPostsPerUser } from '../../../../api/api'
+import { getUser } from '../../../../lib/utils'
+import { AxiosError } from 'axios'
 
 export default function Profile() {
 	const page = useRef(0)
@@ -20,12 +20,13 @@ export default function Profile() {
 	const [isRefetching, setIsRefetching] = useState(false)
 	const [posts, setPosts] = useState<Post[]>([])
 
-	const user: AuthUser = useSelector((state: any) => state.auth.userInfo)
+	const user: AuthUser = getUser()
+	const { open } = useEditProfileModal()
 
 	useEffect(() => {
 		(async () => {
 			try {
-				const { data } = await getPostsPerUser(0)
+				const { data } = await getPostsPerUser(0, user?.email)
 
 				shownUserPostsCount.current = data.posts.length
 				userPostsLength.current = data.length
@@ -33,6 +34,15 @@ export default function Profile() {
 				setPosts(data.posts)
 			}
 			catch(e) {
+				if(e instanceof AxiosError) {
+					const error = e as AxiosError
+
+					if(error?.response?.status === 401) {
+						toast.error('User is not existing. Try again later.')
+						return
+					}
+				}
+
 				toast.error("Can not get your posts. Try logging in again.")
 				setPosts([])
 			}
@@ -53,7 +63,7 @@ export default function Profile() {
 				setIsRefetching(true)
 
 				try {
-					const { data } = await getPostsPerUser(page.current)
+				const { data } = await getPostsPerUser(page.current, user?.email)
 					const newPosts = [...postsRef.current]
 
 					shownUserPostsCount.current += data.posts.length
@@ -81,6 +91,11 @@ export default function Profile() {
 		}
 	}, [])
 
+	const handleClick = () => {
+		document.body.style.overflow = "hidden"
+		open()
+	}
+
 	return <div className="w h py-6 relative">
 		<div className="w bg-vio/50 rounded-r5 h-[300px]">
 
@@ -92,12 +107,14 @@ export default function Profile() {
 			<div className="relative z-10 h-center rounded-full bg-gl h-[170px] w-[170px]"></div>
 		</div>
 		<div className="relative z-0 w bg-white rounded-r5 mt-[-63px]">
-			<div className="w f justify-between p-3 text-dark">
+			<div className="w v-center justify-between p-3 text-dark">
 				<div>
 					<p className="font-bold text-20">{user.name}</p>
 					<p className="text-dvio">{user.username}</p>
 				</div>
-				<HoverableIcon hoverIcon={BiDotsHorizontalRounded} mainIcon={BiDotsHorizontalRounded} onClick={() => {}} />
+				<button onClick={handleClick} className="h-max bg-vio outline-none py-2 px-4 rounded-full text-white transition-all hover:bg-dvio">
+					Edit Profile
+				</button>
 			</div>
 		</div>
 		<div className="mt-3"></div>
@@ -107,9 +124,10 @@ export default function Profile() {
 				? <>
 					<SkeletonPostCard />
 					<SkeletonPostCard />
-					<div className="h-[50px]"></div>
+					<SkeletonPostCard />
+					<SkeletonPostCard />
 				</>
-				: posts.map((post, idx) => <PostCard key={idx} idx={idx+1} post={post} />)
+				: posts.map((post, idx) => <PostCard key={idx} post={post} />)
 			}
 		</div>
 		<div className="my-7"></div>

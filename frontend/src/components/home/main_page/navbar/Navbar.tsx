@@ -1,16 +1,15 @@
 import { Link } from "react-router-dom"
-import { useDispatch } from "react-redux"
 
 import SearchBar from "./SearchBar"
 import UserNav from "./UserNav"
-import { setActiveSidebar, setViewProfile } from "../../../../slices/ui/uiSlice"
+import useViewProfile from "../../../../hooks/useViewProfile"
 
 export default function Navbar() {
-	const dispatch = useDispatch()
+	const { toggle } = useViewProfile()
 
 	const handleClick = () => {
-		dispatch(setViewProfile(false))
-		dispatch(setActiveSidebar('feed'))
+		localStorage.setItem('view_profile', '')
+		toggle('')
 	}
 
 	return <div className="relative w">
