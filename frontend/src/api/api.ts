@@ -19,3 +19,4 @@ export const getPostsPerUser = (page: Number, email: string) => API.get(`getPost
 
 // user
 export const getUserApi = (email: string) => API.get(`auth/getUser/${email}`)
+export const updateProfile = (data: { email: string, name: string, username: string }) => API.put('user/updateProfile', data)

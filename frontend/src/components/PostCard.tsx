@@ -3,8 +3,10 @@ import { FaRegHeart } from "react-icons/fa"
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import ProfilePicture from './ProfilePicture'
+import useNameUsername from '../hooks/useNameAndUsername'
 
 export default function PostCard({ post }: { post: Post }) {
+  const { nameUsername } = useNameUsername()
 	const likeCount = post.likes ? post.likes.length < 1 ? '' : post.likes.length : ''
 
 	return <div className="bg-white rounded-r5 w p-2 pointer transition-all hover:shadow-md hover:shadow-vio/70">
@@ -19,8 +21,8 @@ export default function PostCard({ post }: { post: Post }) {
 					<ProfilePicture picture={post.userPicture} />
 				</div>
 				<div>
-					<p className="text-dark font-bold">{post.name}</p>
-					<p className="text-dvio text-14 mt-[-5px]">{post.username}</p>
+					<p className="text-dark font-bold">{nameUsername.name ? nameUsername.name : post.name}</p>
+					<p className="text-dvio text-14 mt-[-5px]">@{nameUsername.username ? nameUsername.username : post.username}</p>
 				</div>
 			</div>
 			<div className="f">

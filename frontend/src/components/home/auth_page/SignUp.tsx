@@ -104,7 +104,7 @@ export default function SignUp() {
 				...data,
 				birthday: `${date.month} ${date.day}, ${date.year}`,
 				interests: interestsArray,
-				username: `@${name.replace(" ", "")}`
+				username: `${name.replace(" ", "")}`
 			})
 
 			setLoading(false)

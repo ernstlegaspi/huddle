@@ -1,9 +1,11 @@
 import ProfilePicture from "../../../ProfilePicture"
 import { getUser } from "../../../../lib/utils"
 import useViewProfile from "../../../../hooks/useViewProfile"
+import useNameUsername from "../../../../hooks/useNameAndUsername"
 
 export default function UserCard() {
 	const user: AuthUser = getUser()
+  const { nameUsername } = useNameUsername()
 	const { toggle } = useViewProfile()
 
 	const handleClick = async () => {
@@ -17,8 +19,8 @@ export default function UserCard() {
 				<ProfilePicture picture={user?.picture as string} />
 			</div>
 			<div className="ml-3">
-				<p className="font-bold">{user?.name}</p>
-				<p className="text-14 text-vio">{user?.username}</p>
+				<p className="font-bold">{nameUsername.name ? nameUsername.name : user?.name}</p>
+				<p className="text-14 text-vio">@{nameUsername.username ? nameUsername.username : user?.username}</p>
 			</div>
 		</div>
 	</div>

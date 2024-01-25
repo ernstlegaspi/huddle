@@ -5,6 +5,7 @@ import { ClipLoader } from 'react-spinners'
 import ProfilePicture from "../../../ProfilePicture"
 import PostCard from "../../../PostCard"
 import SkeletonPostCard from '../../../SkeletonPostCard'
+import useNameUsername from '../../../../hooks/useNameAndUsername'
 import { useEditProfileModal } from '../../../../hooks/useToggleModal'
 import { getPostsPerUser } from '../../../../api/api'
 import { getUser } from '../../../../lib/utils'
@@ -16,6 +17,7 @@ export default function Profile() {
 	const shownUserPostsCount = useRef(0)
 	const userPostsLength = useRef(0)
 	const postsRef = useRef<Post[]>([])
+	const { nameUsername } = useNameUsername()
 
 	const [isRefetching, setIsRefetching] = useState(false)
 	const [posts, setPosts] = useState<Post[]>([])
@@ -109,8 +111,8 @@ export default function Profile() {
 		<div className="relative z-0 w bg-white rounded-r5 mt-[-63px]">
 			<div className="w v-center justify-between p-3 text-dark">
 				<div>
-					<p className="font-bold text-20">{user.name}</p>
-					<p className="text-dvio">{user.username}</p>
+					<p className="font-bold text-20">{nameUsername.name  ? nameUsername.name : user.name}</p>
+					<p className="text-dvio">@{nameUsername.username ? nameUsername.username : user.username}</p>
 				</div>
 				<button onClick={handleClick} className="h-max bg-vio outline-none py-2 px-4 rounded-full text-white transition-all hover:bg-dvio">
 					Edit Profile

@@ -2,8 +2,9 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 
+import Post from '../models/post'
 import User from '../models/user'
-import { catchError, emailRegex, emailRegex2, error, success } from '../utils/index'
+import { catchError, emailRegex, emailRegex2, error, getUserId, success } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 
 const COOKIE_AGE = 9999999999999
@@ -108,5 +109,43 @@ export const getUser = async (req: Request, res: Response) => {
 		if(!user) return error(404, res)
 
 		return success({ ...user }, 200, res)
+	}, res)
+}
+
+export const updateProfile = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, name, username } = req.body
+		const nameRegEx = /^[a-zA-Z\s]+$/
+		const usernameRegEx = /^[a-zA-Z_]+$/
+		const userId = getUserId(req)
+
+		if(!email || !name || !username) return error(400, res)
+
+		if(!nameRegEx.test(name)) return error(400, res, "Enter a valid name")
+
+		if(!usernameRegEx.test(username)) return error(400, res, "Enter a valid username")
+		
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res)
+
+		const newUser = await User.findByIdAndUpdate(userId,
+			{ $set: { name, username } },
+			{ new: true }
+		)
+
+		if(!newUser) return error(400, res)
+
+		await Post.updateMany({ owner: userId },
+			{ $set: {
+				name: newUser.name,
+				username: newUser.username
+			} }
+		)
+
+		return success({
+			name: newUser?.name,
+			username: newUser?.username
+		}, 201, res)
 	}, res)
 }
