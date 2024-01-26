@@ -5,7 +5,7 @@ import CloseButton from "../../CloseButton"
 import Input from "../../Input"
 import BlackInset from "../BlackInset"
 import { useEditProfileModal } from "../../../hooks/useToggleModal"
-import { getUser } from "../../../lib/utils"
+import { getUser, nameRegex, usernameRegEx } from "../../../lib/utils"
 import { updateProfile } from "../../../api/api"
 import { AxiosError } from "axios"
 import useNameUsername from "../../../hooks/useNameAndUsername"
@@ -34,8 +34,6 @@ export default function EditProfileModal() {
 		if(loading) return
 
 		try {
-			const nameRegEx = /^[a-zA-Z\s]+$/
-			const usernameRegEx = /^[a-zA-Z_]+$/
 			const { name, username } = data
 
 			if(!name || !username) {
@@ -43,7 +41,7 @@ export default function EditProfileModal() {
 				return
 			}
 
-			if(!nameRegEx.test(name)) {
+			if(!nameRegex.test(name)) {
 				toast.error('Enter a valid name')
 				return
 			}

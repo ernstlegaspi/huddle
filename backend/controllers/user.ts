@@ -173,9 +173,7 @@ export const updateName = async (req: Request, res: Response) => {
 			} }
 		)
 
-		return success({
-			name
-		}, 201, res)
+		return success({}, 201, res)
 	}, res)
 }
 

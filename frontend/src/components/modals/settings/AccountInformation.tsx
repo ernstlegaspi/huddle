@@ -1,21 +1,25 @@
 import toast from "react-hot-toast"
 import { AxiosError } from "axios"
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { IoIosArrowForward } from "react-icons/io"
 
 import CircleLoader from "../../CircleLoader"
 import { getUserApi } from "../../../api/api"
 import { getUser } from "../../../lib/utils"
+import useCurrentUser from "../../../hooks/useCurrentUser"
 
 type InformationProps = {
 	label: string
-	onClick: () => void
 	subLabel?: string
 }
 
-export default function AccountInformation() {
+type Props = {
+	setSettingsContent: Dispatch<SetStateAction<string>>
+}
+
+export default function AccountInformation({ setSettingsContent }: Props) {
+	const { currentUser, setCurrentUser } = useCurrentUser()
 	const [loading, setLoading] = useState(false)
-	const [user, setUser] = useState<User>()
 	const persistedUser: AuthUser = getUser()
 
 	useEffect(() => {
@@ -25,7 +29,7 @@ export default function AccountInformation() {
 			try {
 				const { data } = await getUserApi(persistedUser?.email)
 
-				setUser(data)
+				setCurrentUser(data)
 				setLoading(false)
 			}
 			catch(e) {
@@ -43,26 +47,30 @@ export default function AccountInformation() {
 		})()
 	}, [])
 	
-	const Information = ({ label, onClick, subLabel }: InformationProps) => <>
-		<div onClick={onClick} className="v-center-bet p-2 w rounded-r5 pointer text-dvio transition-all hover:bg-vio/30">
+	const Information = ({ label, subLabel }: InformationProps) => {
+		const handleClick = () => {
+			setSettingsContent(label.toLowerCase())
+		}
+
+		return <div onClick={handleClick} className="v-center-bet p-2 w rounded-r5 pointer text-dvio transition-all hover:bg-vio/30">
 			<div>
 				<p>{label}</p>
 				{subLabel ? <p className="text-12">{subLabel}</p> : null}
 			</div>
 			<IoIosArrowForward />
 		</div>
-	</>
+	}
 
 	return <>
 		{loading ? <CircleLoader /> : <>
-			<div className="h w pt-3 px-3">
+			<div className="s pt-3 px-3">
 			<p className="vio-label text-20 text-center mb-3">Account Information</p>
-			<Information label="Name" onClick={() => {}} />
-			<Information label="Username" onClick={() => {}} subLabel={`@${user?.username}`} />
-			<Information label="Email" onClick={() => {}} subLabel={user?.email} />
-			<Information label="Password" onClick={() => {}} />
-			<Information label="Birthday" onClick={() => {}} subLabel={user?.birthday} />
-			<Information label="Interests" onClick={() => {}} />
+			<Information label="Name" />
+			<Information label="Username" subLabel={`@${currentUser?.username}`} />
+			<Information label="Email" subLabel={currentUser?.email} />
+			<Information label="Password" />
+			<Information label="Birthday" subLabel={currentUser?.birthday} />
+			<Information label="Interests" />
 		</div>
 		</>}
 	</>

@@ -4,6 +4,7 @@ import { ChangeEvent, useState } from "react"
 
 import { days, interestsArr, months, years } from "../../../constants"
 import { signUp } from '../../../api/api'
+import { emailRegex, emailRegex2, nameRegex } from '../../../lib/utils'
 
 export default function SignUp() {
 	const [data, setData] = useState<User>({ name: '', username: '', password: '', email: '', birthday: '', interests: [] })
@@ -13,9 +14,6 @@ export default function SignUp() {
 	const [interestsArray, setInterests] = useState<string[]>([])
 	const [isClicked, setIsClicked] = useState(false)
 	const [hasSubmitted, setHasSubmitted] = useState(false)
-	const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
-	const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-	const nameRegex = /^[a-zA-Z\s]+$/
 
 	const Interest = ({ text }: { text: string }) => {
 		const handleClick = () => {

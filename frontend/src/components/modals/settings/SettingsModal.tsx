@@ -7,8 +7,10 @@ import BlackInset from "../BlackInset"
 import useActiveSidebar from "../../../hooks/useActiveSidebar"
 import CloseButton from "../../CloseButton"
 import { useSettingsModal } from "../../../hooks/useToggleModal"
+import useCurrentUser from "../../../hooks/useCurrentUser"
 
 const AccountInformation = lazy(() => import("./AccountInformation"))
+const NameSettings = lazy(() => import("./NameSettings"))
 
 type SettingsNavProps = {
 	icon: IconType
@@ -17,8 +19,10 @@ type SettingsNavProps = {
 
 export default function SettingsModal() {
 	// eslint-disable-next-line
+	const { currentUser } = useCurrentUser()
 	const [_, startTransition] = useTransition()
 	const [activeSettings, setActiveSettings] = useState('')
+	const [settingsContent, setSettingsContent] = useState('')
 	const { setActiveSidebar } = useActiveSidebar()
 	const { close, isOpen } = useSettingsModal()
 
@@ -61,7 +65,8 @@ export default function SettingsModal() {
 			</div>
 			<div className="bg-white flex-1 h rounded-r-r5">
 				<Suspense fallback={<p>SettingsLudebng</p>}>
-					{activeSettings === 'account' ? <AccountInformation /> : null}
+					{activeSettings === 'account' && settingsContent === '' ? <AccountInformation setSettingsContent={setSettingsContent} /> : null}
+					{settingsContent === 'name' ? <NameSettings name={currentUser?.name as string} setSettingsContent={setSettingsContent} /> : null}
 				</Suspense>
 			</div>
 		</div>
