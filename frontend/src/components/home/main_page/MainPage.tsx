@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense } from 'react'
 import SkeletonHomepage from '../SkeletonHomepage'
 import useViewProfile from '../../../hooks/useViewProfile'
 
@@ -11,10 +11,6 @@ const Sidebar = lazy(() => import("./left_sidebar/LeftSidebar"))
 export default function MainPage() {
 	const viewProfile = localStorage.getItem('view_profile')
 	const { isClicked } = useViewProfile()
-
-	useEffect(() => {
-		console.log("main page refreshed: ")
-	}, [])
 
 	return <>
 		<Suspense fallback={<SkeletonHomepage />}>

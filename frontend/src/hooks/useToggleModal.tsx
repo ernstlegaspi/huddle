@@ -15,3 +15,4 @@ const createModal = (initialState: { isOpen: boolean }) =>
 
 export const useAddPostModal = createModal({ isOpen: false })
 export const useEditProfileModal = createModal({ isOpen: false })
+export const useSettingsModal = createModal({ isOpen: false })

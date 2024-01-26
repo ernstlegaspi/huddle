@@ -1,6 +1,5 @@
 import toast from 'react-hot-toast'
 import { useEffect, useRef, useState } from 'react'
-import { ClipLoader } from 'react-spinners'
 
 import ProfilePicture from "../../../ProfilePicture"
 import PostCard from "../../../PostCard"
@@ -10,6 +9,7 @@ import { useEditProfileModal } from '../../../../hooks/useToggleModal'
 import { getPostsPerUser } from '../../../../api/api'
 import { getUser } from '../../../../lib/utils'
 import { AxiosError } from 'axios'
+import CircleLoader from '../../../CircleLoader'
 
 export default function Profile() {
 	const page = useRef(0)
@@ -49,7 +49,7 @@ export default function Profile() {
 				setPosts([])
 			}
 		})()
-	}, [])
+	}, [user?.email])
 
 	useEffect(() => {
 		const handleScroll = async () => {
@@ -91,7 +91,7 @@ export default function Profile() {
 		return () => {
 			window.removeEventListener('scroll', handleScroll)
 		}
-	}, [])
+	}, [user?.email])
 
 	const handleClick = () => {
 		document.body.style.overflow = "hidden"
@@ -133,8 +133,6 @@ export default function Profile() {
 			}
 		</div>
 		<div className="my-7"></div>
-		{isRefetching ? <div className="w f-center py-[150px]">
-			<ClipLoader color="#afa6b7" />
-		</div> : null}
+		{isRefetching ? <CircleLoader /> : null}
 	</div>
 }

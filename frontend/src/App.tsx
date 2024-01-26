@@ -3,9 +3,10 @@ import { lazy, Suspense, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
-import AddPostModal from './components/modals/add_post_modal/AddPostModal'
+import AddPostModal from './components/modals/add_post/AddPostModal'
+import EditProfileModal from './components/modals/edit_profile/EditProfileModal'
 import SkeletonHomepage from './components/home/SkeletonHomepage'
-import EditProfileModal from './components/modals/edit_profile_modal/EditProfileModal'
+import SettingsModal from './components/modals/settings/SettingsModal'
 import { clearLocalStorage, getUser } from './lib/utils'
 import { getUserApi, signOut } from './api/api'
 
@@ -30,7 +31,7 @@ export default function App() {
 				}
 			})()
 		}
-	}, [])
+	}, [user])
 
 	return <div className={`
 		${user ? 'bg-gl' : 'bg-vio'}
@@ -38,6 +39,7 @@ export default function App() {
 	`}>
 		<AddPostModal />
 		<EditProfileModal />
+		<SettingsModal />
 		<BrowserRouter>
 			<Suspense fallback={user ? <SkeletonHomepage /> : <div className="w h-[100vh] bg-vio"></div>}>
 				<Toaster />

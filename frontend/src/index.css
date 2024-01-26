@@ -169,7 +169,7 @@
 }
 
 .lemon {
-	font-family: lemon;
+	font-family: lemon
 }
 
 .scroll {
@@ -177,7 +177,7 @@
 }
 
 .scroll::-webkit-scrollbar {
-	width: 0px;
+	width: 0px
 }
 
 .scroll::-webkit-scrollbar-thumb {

@@ -34,7 +34,7 @@ export default function SignUp() {
 			existingInterests.push(text)
 			setInterests(existingInterests)
 		}
-		
+
 		return <div onMouseLeave={() => {
 			setIsClicked(false)
 		}} onClick={handleClick} className={`
@@ -58,43 +58,36 @@ export default function SignUp() {
 
 			if(!name || !password || !confirmPassword) {
 				toast.error('All fields are required.')
-
 				return
 			}
 
 			if(!nameRegex.test(name)) {
 				toast.error("Enter a valid name.")
-				
 				return
 			}
 			
 			if(!emailRegex.test(email) || !emailRegex2.test(email)) {
 				toast.error("Enter a valid email address.")
-
 				return
 			}
 
 			if(password.length < 1|| confirmPassword.length < 1) {
 				toast.error('Password should be 8 - 20 characters.')
-
 				return
 			}
 			
 			if(password !== confirmPassword) {
 				toast.error('Passwords should be the same.')
-
 				return
 			}
 			
 			if(!day || !month || !year) {
 				toast.error('Enter a valid birthday.')
-
 				return
 			}
 
 			if(interestsArray.length < 5) {
 				toast.error('Interests should be at least 5.')
-				
 				return
 			}
 
@@ -115,20 +108,15 @@ export default function SignUp() {
 			setLoading(false)
 
 			if(e instanceof AxiosError) {
-				const status = e?.response?.status
+				const data = e?.response?.data
+				const { message }: { message: string } = data
 
-				if(status === 409) {
-					toast.error('Email is already existing.')
-
+				if(message) {
+					toast.error(message)
 					return
 				}
-
-				toast.error("Can not sign up. Try again later.")
-
-				return
 			}
 
-			console.log(e)
 			toast.error("Can not sign up. Try again later.")
 		}
 	}

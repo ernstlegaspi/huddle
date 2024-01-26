@@ -6,10 +6,10 @@ import { IoIosImages } from "react-icons/io"
 import HoverableIcon from "../../HoverableIcon"
 import Form from './Form'
 import ImageUpload from './ImageUpload'
-import { addPost, changePostImage, uploadPostImage } from '../../../api/api'
-import { useAddPostModal } from "../../../hooks/useToggleModal"
 import BlackInset from '../BlackInset'
 import CloseButton from '../../CloseButton'
+import { useAddPostModal } from "../../../hooks/useToggleModal"
+import { addPost, changePostImage, uploadPostImage } from '../../../api/api'
 import { getUser } from '../../../lib/utils'
 
 export default function AddPostModal() {
@@ -131,7 +131,7 @@ export default function AddPostModal() {
 				userPicture,
 				tags: tags.split(",")
 			})
-			
+
 			toast.success('New post added.')
 			setBody('')
 			setTags('')

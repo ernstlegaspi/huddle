@@ -9,6 +9,7 @@ import { RiStore2Line } from "react-icons/ri"
 
 import useViewProfile from '../../../../hooks/useViewProfile'
 import useActiveSidebar from '../../../../hooks/useActiveSidebar'
+import { useSettingsModal } from '../../../../hooks/useToggleModal'
 
 type ButtonProps = {
 	icon: IconType
@@ -17,16 +18,22 @@ type ButtonProps = {
 }
 
 export default function SidebarNav() {
-	const activeSidebar = localStorage.getItem('active_sidebar') ? localStorage.getItem('active_sidebar') as string : ''
+	const persisted = localStorage.getItem('active_sidebar') as string
+	const activeSidebar = persisted ? persisted : ''
 	const { isClicked, toggle } = useViewProfile()
 	const { activeSidebar: sidebar, setActiveSidebar } = useActiveSidebar()
+	const { open } = useSettingsModal()
 
 	useEffect(() => {
-		if(!activeSidebar) {
+		if(!activeSidebar || persisted.toLowerCase() === 'settings') {
 			localStorage.setItem('active_sidebar', 'feed')
 			setActiveSidebar('feed')
 		}
 	}, [])
+
+	const handleSettingsClick = () => {
+		open()
+	}
 
 	const SidebarButton = ({ icon: Icon, onClick, text }: ButtonProps) => {
 		const isActive = (activeSidebar.toLowerCase() === text.toLowerCase() || sidebar === text) && !isClicked && !localStorage.getItem('view_profile')
@@ -48,13 +55,13 @@ export default function SidebarNav() {
 			<p className={`${isActive ? 'text-[17px]' : ''} ml-2`}>{text}</p>
 		</div>
 	}
-	
+
 	return <div className="mt-4">
 		<SidebarButton icon={MdOutlineSpaceDashboard} onClick={() => {}} text="Feed" />
 		<SidebarButton icon={FaPeopleCarry} onClick={() => {}} text="Friends" />
 		<SidebarButton icon={BsCalendar3Event} onClick={() => {}} text="Events" />
 		<SidebarButton icon={PiTelevisionSimple} onClick={() => {}} text="Video" />
 		<SidebarButton icon={RiStore2Line} onClick={() => {}} text="Marketplace" />
-		<SidebarButton icon={IoSettingsOutline} onClick={() => {}} text="Settings" />
+		<SidebarButton icon={IoSettingsOutline} onClick={handleSettingsClick} text="Settings" />
 	</div>
 }

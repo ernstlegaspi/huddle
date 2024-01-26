@@ -40,14 +40,13 @@ export default function SignIn() {
 			setLoading(false)
 
 			if(e instanceof AxiosError) {
-				const status = e?.response?.status
+				const data = e?.response?.data
+				const { message }: { message: string } = data
 
-				if(status === 401 || status === 404) {
-					toast.error('Email or Password is not correct.')
+				if(message) {
+					toast.error(message)
 					return
 				}
-				
-				return
 			}
 
 			toast.error('Can not sign in. Try again later.')
