@@ -165,6 +165,8 @@ export const updateName = async (req: Request, res: Response) => {
 
 		if(!user) return error(401, res, "User does not exist")
 
+		if(name === user.name) return error(400, res, "There are no changes in name.")
+
 		await updateUser(userId, { name })
 
 		await Post.updateMany({ owner: userId },
@@ -191,6 +193,8 @@ export const updateUsername = async (req: Request, res: Response) => {
 		const user = await User.findOne({ email })
 
 		if(!user) return error(401, res, "User does not exist")
+
+		if(username === user.username) return error(400, res, "There are no changes in username.")
 
 		await updateUser(userId, { username })
 

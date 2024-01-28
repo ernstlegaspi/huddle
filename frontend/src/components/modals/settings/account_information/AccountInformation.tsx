@@ -3,10 +3,10 @@ import { AxiosError } from "axios"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { IoIosArrowForward } from "react-icons/io"
 
-import CircleLoader from "../../CircleLoader"
-import { getUserApi } from "../../../api/api"
-import { getUser } from "../../../lib/utils"
-import useCurrentUser from "../../../hooks/useCurrentUser"
+import CircleLoader from "../../../CircleLoader"
+import { getUserApi } from "../../../../api/api"
+import { getUser } from "../../../../lib/utils"
+import useCurrentUser from "../../../../hooks/useCurrentUser"
 
 type InformationProps = {
 	label: string

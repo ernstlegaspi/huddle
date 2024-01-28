@@ -3,27 +3,22 @@ import { AxiosError } from "axios"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 import { IoIosArrowBack } from "react-icons/io"
 
-import Input from "../../Input"
-import HoverableIcon from "../../HoverableIcon"
-import { nameRegex } from "../../../lib/utils"
-import { updateName } from "../../../api/api"
-import useCurrentUser from "../../../hooks/useCurrentUser"
-import useNameUsername from "../../../hooks/useNameAndUsername"
+import Input from "../../../Input"
+import HoverableIcon from "../../../HoverableIcon"
+import { nameRegex } from "../../../../lib/utils"
+import { updateName } from "../../../../api/api"
+import useCurrentUser from "../../../../hooks/useCurrentUser"
+import useNameUsername from "../../../../hooks/useNameAndUsername"
+import AccountForm from "./Form"
 
-export default function NameSetting({ name: persistedName, setSettingsContent }: { name: string, setSettingsContent: Dispatch<SetStateAction<string>> }) {
+export default function NameSetting({ setSettingsContent }: { setSettingsContent: Dispatch<SetStateAction<string>> }) {
 	const { currentUser } = useCurrentUser()
 	const { setNameUsername } = useNameUsername()
-	const [name, setName] = useState(persistedName)
+	const [name, setName] = useState(currentUser.name)
 	const [loading, setLoading] = useState(false)
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setName(e.target.value)
-	}
-
-	const handleClick = () => {
-		if(loading) return
-		
-		setSettingsContent('')
 	}
 
 	const handleSubmit = async () => {
@@ -38,7 +33,7 @@ export default function NameSetting({ name: persistedName, setSettingsContent }:
 				return
 			}
 
-			if(name === currentUser.name) {
+			if(name.trim() === currentUser.name.trim()) {
 				toast.error('There are no changes in the name.')
 				return
 			}
@@ -54,6 +49,8 @@ export default function NameSetting({ name: persistedName, setSettingsContent }:
 			setLoading(false)
 		}
 		catch(e) {
+			setLoading(false)
+
 			if(e instanceof AxiosError) {
 				const data = e?.response?.data
 				const { message }: { message: string } = data
@@ -69,25 +66,15 @@ export default function NameSetting({ name: persistedName, setSettingsContent }:
 		}
 	}
 
-	return <div className="s p-3">
-		<div className="mb-5 v-center">
-			<HoverableIcon disabled={loading} mainIcon={IoIosArrowBack} onClick={handleClick} />
-			<p className="vio-label text-20 ml-1">Change Name</p>
-		</div>
-		<Input
-			disabled={loading}
-			type="text"
-			value={name}
-			onChange={handleChange}
-			name="name"
-			placeholder="Name..."
-			label="Name"
-		/>
-		<div className="h-end">
-			<button onClick={handleSubmit} disabled={!name || loading} className={`
-				${name && !loading ? 'bg-vio hover:bg-dvio' : 'bg-vio/30'}
-				transition-all text-white rounded-r5 py-2 px-4 mt-3
-			`}>{loading ? "Loading..." : "Update"}</button>
-		</div>
-	</div>
+	return <AccountForm
+		handleSubmit={handleSubmit}
+		inputLabel="Name"
+		label="Change Name"
+		loading={loading}
+		name="name"
+		onChange={handleChange}
+		placeholder="Name..."
+		setSettingsContent={setSettingsContent}
+		value={name}
+	/>
 }
