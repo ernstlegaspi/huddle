@@ -9,6 +9,7 @@ import CloseButton from "../../CloseButton"
 import { useSettingsModal } from "../../../hooks/useToggleModal"
 
 const AccountInformation = lazy(() => import("./account_information/AccountInformation"))
+const EmailSettings = lazy(() => import("./account_information/email_settings/EmailSettings"))
 const NameSettings = lazy(() => import("./account_information/NameSettings"))
 const UsernameSettings = lazy(() => import("./account_information/UsernameSettings"))
 
@@ -30,6 +31,8 @@ export default function SettingsModal() {
 	const handleClose = () => {
 		setActiveSidebar('feed')
 		localStorage.setItem('active_sidebar', 'feed')
+		setSettingsContent('')
+		setActiveSettings('')
 
 		close()
 	}
@@ -39,14 +42,17 @@ export default function SettingsModal() {
 
 		const handleClick = () => {
 			setActiveSettings(label.toLowerCase())
+
+			if(label.toLowerCase() === 'account') return
+			setSettingsContent('')
 		}
 
 		return <div onClick={() => startTransition(() => handleClick())} className={`
-			${isActive ? 'bg-vio/30 text-dvio border-l-[3px] border-dvio' : 'text-vio'}
-			font-medium transition-all px-4 v-center pointer w py-3 hover:bg-vio/30 hover:text-dvio
+			${isActive ? 'bg-vio/30 text-dvio border-l-[3px] border-dvio font-medium' : 'text-vio'}
+			transition-all px-4 v-center pointer w py-3 hover:bg-vio/30 hover:text-dvio
 		`}>
 			<Icon size={18} />
-			<p className="ml-2">{label}</p>
+			<p className="ml-2 tracking-wider">{label}</p>
 		</div>
 	}
 
@@ -65,6 +71,7 @@ export default function SettingsModal() {
 			<div className="bg-white flex-1 h rounded-r-r5">
 				<Suspense fallback={<p>SettingsLudebng</p>}>
 					{activeSettings === 'account' && settingsContent === '' ? <AccountInformation setSettingsContent={setSettingsContent} /> : null}
+					{settingsContent === 'email' ? <EmailSettings setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'name' ? <NameSettings setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'username' ? <UsernameSettings setSettingsContent={setSettingsContent} /> : null}
 				</Suspense>

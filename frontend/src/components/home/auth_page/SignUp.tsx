@@ -69,7 +69,7 @@ export default function SignUp() {
 				return
 			}
 
-			if(password.length < 1|| confirmPassword.length < 1) {
+			if(password.length < 8 || password.length > 20 || confirmPassword.length < 8 || confirmPassword.length > 20) {
 				toast.error('Password should be 8 - 20 characters.')
 				return
 			}

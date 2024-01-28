@@ -221,7 +221,7 @@ export const updateEmail = async (req: Request, res: Response) => {
 
 		const user = await User.findOne({ email })
 
-		if(!user) return error(401, res, "User does not exist")
+		if(user) return error(401, res, "Email is already used.")
 
 		await updateUser(userId, { email })
 

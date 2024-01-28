@@ -41,11 +41,9 @@ export default function UsernameSettings({ setSettingsContent }: { setSettingsCo
 
 			localStorage.setItem('huddle_user', JSON.stringify({
 				name: currentUser.name,
-				email:
-				currentUser.email,
+				email: currentUser.email,
 				username,
-				picture:
-				currentUser.picture
+				picture: currentUser.picture
 			}))
 
 			setNameUsername({ name: currentUser.name, username })

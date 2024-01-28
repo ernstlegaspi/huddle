@@ -52,7 +52,7 @@ export default function SidebarNav() {
 		`}>
 			<div className={`${isActive ? 'absolute' : 'hidden'} py-2 bg-vio rounded-full w-[10px] h-[30px] left-[-5px]`}></div>
 			{isActive ? <Icon className="ml-1" size={23} /> : <Icon size={22} />}
-			<p className={`${isActive ? 'text-[17px]' : ''} ml-2`}>{text}</p>
+			<p className={`${isActive ? 'text-[17px]' : ''} ml-2 tracking-wider`}>{text}</p>
 		</div>
 	}
 
