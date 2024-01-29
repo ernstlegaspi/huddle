@@ -24,12 +24,15 @@ export const updateBirthday = (data: { email: string, birthday: string }) => API
 export const updateName = (data: { email: string, name: string }) => API.put('user/updateName', data)
 export const updateUsername = (data: { email: string, username: string }) => API.put('user/updateUsername', data)
 export const updateEmail = (data: { email: string }) => API.put('user/updateEmail', data)
+export const updateInterests = (data: { email: string, interests: string[] }) => API.put('user/updateInterests', data)
+
 export const updatePassword = (data: {
 	email: string,
 	currentPassword: string
 	confirmNewPassword: string,
 	newPassword: string
 }) => API.put('user/updatePassword', data)
+
 export const passwordConfirmation = (data: { email: string, password: string }) => API.put('user/passwordConfirmation', data)
 
 // otp

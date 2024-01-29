@@ -58,7 +58,7 @@ export default function PasswordConfirmation({ setCanChangePassword, setSettings
 			:
 			<div className="s p-3">
 				<div className="v-center">
-					<HoverableIcon mainIcon={IoIosArrowBack} onClick={handleClose} />
+					<HoverableIcon disabled={loading} mainIcon={IoIosArrowBack} onClick={handleClose} />
 					<p className="vio-label ml-1">Confirm Password</p>
 				</div>
 				<p className="mt-1 text-vio tracking-wider">Kindly enter your password first to proceed.</p>

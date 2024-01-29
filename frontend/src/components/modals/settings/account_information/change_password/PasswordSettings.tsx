@@ -67,7 +67,7 @@ export default function PasswordSetting({ setSettingsContent }: { setSettingsCon
 			canChangePassword
 			? <div className="s p-3">
 				<div className="v-center mb-4">
-					<CloseButton handleClose={handleClose} />
+					<CloseButton disabled={loading} handleClose={handleClose} />
 					<p className="vio-label ml-1">Change Password</p>
 				</div>
 				<Input

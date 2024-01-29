@@ -47,7 +47,7 @@ export default function BirthdaySettings({ setSettingsContent }: { setSettingsCo
 	
 	return <div className="s p-3">
 		<div className="v-center mb-3">
-			<CloseButton handleClose={handleClose} />
+			<CloseButton disabled={loading} handleClose={handleClose} />
 			<p className="ml-1 vio-label text-20">Change Birthday</p>
 		</div>
 		<div className="f flex-col">

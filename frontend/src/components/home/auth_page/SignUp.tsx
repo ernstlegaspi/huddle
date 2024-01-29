@@ -46,7 +46,7 @@ export default function SignUp() {
 
 	const handleClick = async () => {
 		if(loading) return
-		
+
 		setHasSubmitted(true)
 
 		try {

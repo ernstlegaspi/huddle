@@ -298,6 +298,28 @@ export const updateBirthday = async (req: Request, res: Response) => {
 		
 		await updateUser(userId, { birthday })
 
-		return success({ birthday }, 201, res)
+		return success({}, 201, res)
+	}, res)
+}
+
+export const updateInterests = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, interests } = req.body
+		const interestArray: string[] = interests
+		const userId = getUserId(req)
+
+		if(!email || interestArray.length < 1) return error(400, res, "Error updating interests. Try again later.")
+
+		if(!isValidEmail(email)) return error(400, res, errorEmail)
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "User does not exist")
+
+		if(user.interests.sort().join('').trim() === interestArray.sort().join('').trim()) return error(400, res, "There are no changes in your interests.")
+		
+		await updateUser(userId, { interests: interestArray })
+
+		return success({}, 201, res)
 	}, res)
 }

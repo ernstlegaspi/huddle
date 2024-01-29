@@ -12,6 +12,7 @@ import { useSettingsModal } from "../../../hooks/useToggleModal"
 const AccountInformation = lazy(() => import("./account_information/AccountInformation"))
 const BirthdaySettings = lazy(() => import("./account_information/BirthdaySettings"))
 const EmailSettings = lazy(() => import("./account_information/email_settings/EmailSettings"))
+const InterestsSettings = lazy(() => import("./account_information/InterestsSettings"))
 const NameSettings = lazy(() => import("./account_information/NameSettings"))
 const PasswordSettings = lazy(() => import("./account_information/change_password/PasswordSettings"))
 const UsernameSettings = lazy(() => import("./account_information/UsernameSettings"))
@@ -79,6 +80,7 @@ export default function SettingsModal() {
 					{settingsContent === 'name' ? <NameSettings setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'password' ? <PasswordSettings setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'username' ? <UsernameSettings setSettingsContent={setSettingsContent} /> : null}
+					{settingsContent === 'interests' ? <InterestsSettings setSettingsContent={setSettingsContent} /> : null}
 				</Suspense>
 			</div>
 		</div>
