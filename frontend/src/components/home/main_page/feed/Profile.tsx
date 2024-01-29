@@ -114,7 +114,7 @@ export default function Profile() {
 					<p className="font-bold text-20">{nameUsername.name  ? nameUsername.name : user.name}</p>
 					<p className="text-dvio">@{nameUsername.username ? nameUsername.username : user.username}</p>
 				</div>
-				<button onClick={handleClick} className="h-max bg-vio outline-none py-2 px-4 rounded-full text-white transition-all hover:bg-dvio">
+				<button onClick={handleClick} className="h-max bg-vio outline-none py-2 px-4 rounded-r5 text-white transition-all hover:bg-dvio">
 					Edit Profile
 				</button>
 			</div>

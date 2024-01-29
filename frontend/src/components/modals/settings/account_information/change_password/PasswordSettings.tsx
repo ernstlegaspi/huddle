@@ -7,6 +7,7 @@ import CloseButton from "../../../../CloseButton"
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
 import { axiosError, isValidPassword } from "../../../../../lib/utils"
 import { updatePassword } from "../../../../../api/api"
+import VioButton from "../../../../VioButton"
 
 export default function PasswordSetting({ setSettingsContent }: { setSettingsContent: Dispatch<SetStateAction<string>> }) {
 	const [canChangePassword, setCanChangePassword] = useState(false)
@@ -99,12 +100,11 @@ export default function PasswordSetting({ setSettingsContent }: { setSettingsCon
 					label="Confirm Password"
 				/>
 				<div className="mt-3 h-end">
-					<button disabled={loading} onClick={handleClick} className={`
-						${loading ? 'bg-vio/30' : 'bg-vio hover:bg-dvio'}
-						transition-all py-2 px-4 text-white rounded-full
-					`}>
-						{loading ? "Updating..." : "Update"}
-					</button>
+					<VioButton
+						label={loading ? "Updating..." : "Update"}
+						loading={!isValidPassword(data.currentPassword) || !isValidPassword(data.newPassword) || !isValidPassword(data.confirmNewPassword) || loading}
+						onClick={handleClick}
+					/>
 				</div>
 			</div>
 			: <PasswordConfirmation setCanChangePassword={setCanChangePassword} setSettingsContent={setSettingsContent} />

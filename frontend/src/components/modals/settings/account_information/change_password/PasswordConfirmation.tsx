@@ -7,6 +7,7 @@ import HoverableIcon from "../../../../HoverableIcon"
 import CircleLoader from "../../../../CircleLoader"
 import { axiosError, isValidPassword } from "../../../../../lib/utils"
 import { passwordConfirmation } from "../../../../../api/api"
+import VioButton from "../../../../VioButton"
 
 type Props = {
 	setCanChangePassword: Dispatch<SetStateAction<boolean>>
@@ -73,12 +74,7 @@ export default function PasswordConfirmation({ setCanChangePassword, setSettings
 						`}
 					/>
 					<div className="h-end mt-3">
-						<button onClick={handleClick} disabled={loading} className={`
-							${loading ? 'bg-vio/30' : 'bg-vio'}
-							transition-all text-white rounded-full py-2 px-4 hover:bg-dvio
-						`}>
-							{loading ? "Loading..." : "Continue"}
-						</button>
+						<VioButton label={loading ? "Updating..." : "Continue"} loading={loading || !isValidPassword(password)} onClick={handleClick} />
 					</div>
 			</div>
 		}

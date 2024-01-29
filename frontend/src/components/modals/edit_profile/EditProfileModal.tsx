@@ -105,7 +105,7 @@ export default function EditProfileModal() {
 				<p className="vio-label text-20">Edit Profile</p>
 				<button onClick={handleSubmit} className={`
 					${loading ? 'bg-vio/30 default' : 'pointer bg-vio hover:bg-dvio'}
-					rounded-full text-white py-1 px-4 transition-all 
+					rounded-r5 text-white py-1 px-4 transition-all 
 				`}>
 					Save
 				</button>

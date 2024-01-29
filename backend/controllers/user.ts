@@ -294,6 +294,8 @@ export const updateBirthday = async (req: Request, res: Response) => {
 
 		if(!user) return error(401, res, "User does not exist")
 
+		if(user.birthday === birthday) return error(400, res, "There are no changes in your birthday.")
+		
 		await updateUser(userId, { birthday })
 
 		return success({ birthday }, 201, res)

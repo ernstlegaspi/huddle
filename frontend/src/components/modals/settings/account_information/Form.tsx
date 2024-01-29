@@ -3,6 +3,7 @@ import { IoIosArrowBack } from "react-icons/io"
 
 import HoverableIcon from "../../../HoverableIcon"
 import Input from "../../../Input"
+import VioButton from "../../../VioButton"
 
 type Props = {
 	handleSubmit: () => void
@@ -49,11 +50,8 @@ export default function AccountForm({
 			placeholder={placeholder}
 			label={inputLabel}
 		/>
-		<div className="h-end">
-			<button onClick={handleSubmit} disabled={loading || !value} className={`
-				${loading || !value ? 'bg-vio/30' : 'bg-vio hover:bg-dvio'}
-				transition-all text-white rounded-r5 py-2 px-4 mt-3
-			`}>{loading ? "Loading..." : "Update"}</button>
+		<div className="h-end mt-3">
+			<VioButton label={loading ? "Updating..." : "Update"} loading={loading} onClick={handleSubmit} />
 		</div>
 	</div>
 }

@@ -3,7 +3,7 @@ import { ChangeEvent, useState } from "react"
 
 import { days, interestsArr, months, years } from "../../../constants"
 import { signUp } from '../../../api/api'
-import { axiosError, emailRegex, emailRegex2, nameRegex } from '../../../lib/utils'
+import { axiosError, birthdayFormatter, emailRegex, emailRegex2, nameRegex } from '../../../lib/utils'
 
 export default function SignUp() {
 	const [data, setData] = useState<User>({ name: '', username: '', password: '', email: '', birthday: '', interests: [] })
@@ -92,7 +92,7 @@ export default function SignUp() {
 
 			const { data: resData } = await signUp({
 				...data,
-				birthday: `${date.month} ${date.day}, ${date.year}`,
+				birthday: birthdayFormatter(date.day, date.month, date.year),
 				interests: interestsArray,
 				username: `${name.replace(" ", "")}`
 			})

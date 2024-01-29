@@ -2,6 +2,7 @@ import toast from 'react-hot-toast'
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
 import CloseButton from '../../../../CloseButton'
+import VioButton from '../../../../VioButton'
 
 type Props = {
 	code: string
@@ -68,12 +69,7 @@ export default function CodeConfirmation({ code, setCode, setCodeValid, setSetti
 			/>
 		</div>
 		<div className="h-end">
-			<button disabled={!inputCode} onClick={handleContinue} className={`
-				${inputCode ? 'hover:bg-dvio bg-vio border-vio' : 'bg-vio/30 border-vio/30'}
-				border text-white rounded-full py-2 px-4 transition-all ml-1
-			`}>
-				Continue
-			</button>
+			<VioButton label={"Continue"} loading={!inputCode} onClick={handleContinue} />
 		</div>
 	</div>
 }

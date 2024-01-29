@@ -18,6 +18,8 @@ export const clearLocalStorage = () => {
 	localStorage.removeItem('active_sidebar')
 }
 
+export const birthdayFormatter = (day: string, month: string, year: string) => `${month} ${day}, ${year}`
+
 export const axiosError = (e: any, errorMessage: string) => {
 	if(e instanceof AxiosError) {
 		const data = e?.response?.data

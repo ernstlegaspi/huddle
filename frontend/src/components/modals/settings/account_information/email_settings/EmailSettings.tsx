@@ -7,6 +7,7 @@ import { emailOtp, updateEmail } from "../../../../../api/api"
 import { axiosError, emailRegex, emailRegex2 } from "../../../../../lib/utils"
 import CircleLoader from "../../../../CircleLoader"
 import CodeConfirmation from "./CodeConfirmation"
+import VioButton from "../../../../VioButton"
 
 export default function EmailSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
 	const { currentUser } = useCurrentUser()
@@ -80,8 +81,8 @@ export default function EmailSettings({ setSettingsContent }: { setSettingsConte
 	const Confirmation = () => <div className="s p-3">
 		<p className="vio-label mb-3">Are you sure you want to change email?</p>
 		<div className="f">
-			<button disabled={otpLoading} onClick={handleCancel} className="border border-vio rounded-full py-2 px-4 text-vio transition-all hover:text-white hover:bg-vio">Cancel</button>
-			<button disabled={otpLoading} onClick={handleContinue} className="border border-vio bg-vio text-white rounded-full py-2 px-4 transition-all hover:bg-dvio ml-1">Continue</button>
+			<button disabled={otpLoading} onClick={handleCancel} className="border border-vio rounded-r5 mr-2 py-2 px-4 text-vio transition-all hover:text-white hover:bg-vio">Cancel</button>
+			<VioButton label={loading ? "Loading..." : "Continue"} loading={otpLoading} onClick={handleContinue} />
 		</div>
 	</div>
 
