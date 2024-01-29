@@ -22,7 +22,9 @@ export default function CodeConfirmation({ code, setCode, setCodeValid, setSetti
 	}
 
 	const handleContinue = () => {
-		if(code !== inputCode) {
+		const codeRegex = /^[0-9]*$/
+		
+		if(code !== inputCode || code.length < 1 || !codeRegex.test(code)) {
 			toast.error("Invalid code")
 			return
 		}
@@ -39,7 +41,6 @@ export default function CodeConfirmation({ code, setCode, setCodeValid, setSetti
 
 			setCount(prev => prev - 1)
 			expiration.current--
-
 		}, 1000)
 
 		return () => {

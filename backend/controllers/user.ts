@@ -231,10 +231,9 @@ export const updateEmail = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const updatePassword = async (req: Request, res: Response) => {
+export const passwordConfirmation = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { email, password } = req.body
-		const userId = getUserId(req)
 
 		if(!email || !password) return error(400, res, "Error updating password. Try again later.")
 
@@ -244,7 +243,37 @@ export const updatePassword = async (req: Request, res: Response) => {
 
 		if(!user) return error(401, res, "User not found.")
 
-		await updateUser(userId, { password })
+		const comparePassword = await bcrypt.compare(password, user.password as string)
+
+		if(!comparePassword) return error(400, res, "Password is incorrect.")
+
+		return success({}, 200, res)
+	}, res)
+}
+
+export const updatePassword = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, currentPassword, newPassword, confirmNewPassword } = req.body
+		const userId = getUserId(req)
+
+		if(!email || !currentPassword || !newPassword || !confirmNewPassword) return error(400, res, "Error updating password. Try again later.")
+
+		if(newPassword !== confirmNewPassword) return error(400, res, "New password and confirm new password should be the same.")
+
+		if(!isValidEmail(email)) return error(400, res, errorEmail)
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "User not found.")
+
+		const comparePassword = await bcrypt.compare(currentPassword, user.password as string)
+
+		if(!comparePassword) return error(400, res, "Current password is wrong.")
+
+		const salt = await bcrypt.genSalt(12)
+		const hashedNewPassword = await bcrypt.hash(newPassword, salt)
+
+		await updateUser(userId, { password: hashedNewPassword })
 
 		return success({}, 201, res)
 	}, res)

@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast'
-import { AxiosError } from 'axios'
 import { ChangeEvent, useState } from 'react'
 import { signIn } from '../../../api/api'
+import { axiosError } from '../../../lib/utils'
 
 export default function SignIn() {
 	const [data, setData] = useState({ email: '', password: '' })
@@ -38,18 +38,7 @@ export default function SignIn() {
 		}
 		catch(e: any) {
 			setLoading(false)
-
-			if(e instanceof AxiosError) {
-				const data = e?.response?.data
-				const { message }: { message: string } = data
-
-				if(message) {
-					toast.error(message)
-					return
-				}
-			}
-
-			toast.error('Can not sign in. Try again later.')
+			toast.error(axiosError(e, 'Can not sign in. Try again later.'))
 		}
 	}
 

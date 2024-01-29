@@ -1,11 +1,10 @@
 import toast from "react-hot-toast"
-import { AxiosError } from "axios"
 import { ChangeEvent, useState } from "react"
 
 import AccountForm from "../Form"
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
 import { emailOtp, updateEmail } from "../../../../../api/api"
-import { emailRegex, emailRegex2 } from "../../../../../lib/utils"
+import { axiosError, emailRegex, emailRegex2 } from "../../../../../lib/utils"
 import CircleLoader from "../../../../CircleLoader"
 import CodeConfirmation from "./CodeConfirmation"
 
@@ -55,18 +54,7 @@ export default function EmailSettings({ setSettingsContent }: { setSettingsConte
 		}
 		catch(e) {
 			setLoading(false)
-
-			if(e instanceof AxiosError) {
-				const data = e?.response?.data
-				const { message }: { message: string } = data
-
-				if(message) {
-					toast.error(message)
-					return
-				}
-			}
-
-			toast.error('Can not update email. Try again later.')
+			toast.error(axiosError(e, 'Can not update email. Try again later.'))
 		}
 	}
 	

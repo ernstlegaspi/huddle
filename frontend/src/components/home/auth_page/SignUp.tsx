@@ -1,10 +1,9 @@
-import { AxiosError } from 'axios'
 import toast from "react-hot-toast"
 import { ChangeEvent, useState } from "react"
 
 import { days, interestsArr, months, years } from "../../../constants"
 import { signUp } from '../../../api/api'
-import { emailRegex, emailRegex2, nameRegex } from '../../../lib/utils'
+import { axiosError, emailRegex, emailRegex2, nameRegex } from '../../../lib/utils'
 
 export default function SignUp() {
 	const [data, setData] = useState<User>({ name: '', username: '', password: '', email: '', birthday: '', interests: [] })
@@ -104,18 +103,7 @@ export default function SignUp() {
 		}
 		catch(e: any) {
 			setLoading(false)
-
-			if(e instanceof AxiosError) {
-				const data = e?.response?.data
-				const { message }: { message: string } = data
-
-				if(message) {
-					toast.error(message)
-					return
-				}
-			}
-
-			toast.error("Can not sign up. Try again later.")
+			toast.error(axiosError(e, "Can not sign up. Try again later."))
 		}
 	}
 
@@ -191,7 +179,7 @@ export default function SignUp() {
 			{years.reverse().map(year => <option key={year} value={year}>{year}</option>)}
 		</select>
 
-		<p className="tgray mb-2">Interests <span className="text-14">(Pick at least 5 interestsArray...)</span></p>
+		<p className="tgray mb-2">Interests <span className="text-14">(Pick at least 5 interests...)</span></p>
 		<div className="f flex-wrap gap-3">
 			{interestsArr.map(_interest => <Interest key={_interest} text={_interest} />)}
 		</div>

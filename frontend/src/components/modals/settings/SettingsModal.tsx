@@ -6,7 +6,9 @@ import { MdBlock, MdLockOutline } from "react-icons/md"
 import BlackInset from "../BlackInset"
 import useActiveSidebar from "../../../hooks/useActiveSidebar"
 import CloseButton from "../../CloseButton"
+import CircleLoader from "../../CircleLoader"
 import { useSettingsModal } from "../../../hooks/useToggleModal"
+import PasswordSettings from "./account_information/change_password/PasswordSettings"
 
 const AccountInformation = lazy(() => import("./account_information/AccountInformation"))
 const EmailSettings = lazy(() => import("./account_information/email_settings/EmailSettings"))
@@ -69,11 +71,12 @@ export default function SettingsModal() {
 				<SettingsTab icon={MdBlock} label="Block" />
 			</div>
 			<div className="bg-white flex-1 h rounded-r-r5">
-				<Suspense fallback={<p>SettingsLudebng</p>}>
+				<Suspense fallback={<CircleLoader />}>
 					{activeSettings === 'account' && settingsContent === '' ? <AccountInformation setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'email' ? <EmailSettings setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'name' ? <NameSettings setSettingsContent={setSettingsContent} /> : null}
 					{settingsContent === 'username' ? <UsernameSettings setSettingsContent={setSettingsContent} /> : null}
+					{settingsContent === 'password' ? <PasswordSettings setSettingsContent={setSettingsContent} /> : null}
 				</Suspense>
 			</div>
 		</div>

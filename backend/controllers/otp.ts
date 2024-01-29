@@ -6,7 +6,7 @@ import { catchError, success } from '../utils'
 export const emailOtp = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { to } = req.body
-		
+
 		const email = process.env.EMAIL
 		const newOtp = otp.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false })
 

@@ -23,6 +23,13 @@ export const updateProfile = (data: { email: string, name: string, username: str
 export const updateName = (data: { email: string, name: string }) => API.put('user/updateName', data)
 export const updateUsername = (data: { email: string, username: string }) => API.put('user/updateUsername', data)
 export const updateEmail = (data: { email: string }) => API.put('user/updateEmail', data)
+export const updatePassword = (data: {
+	email: string,
+	currentPassword: string
+	confirmNewPassword: string,
+	newPassword: string
+}) => API.put('user/updatePassword', data)
+export const passwordConfirmation = (data: { email: string, password: string }) => API.put('user/passwordConfirmation', data)
 
 // otp
 export const emailOtp = (to: { to: string }) => API.post('otp/', to)

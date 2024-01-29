@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getUser, signIn, signOut, signUp, updateBirthday, updateEmail, updateName, updatePassword, updateProfile, updateUsername } from '../controllers/user'
+import { getUser, passwordConfirmation, signIn, signOut, signUp, updateBirthday, updateEmail, updateName, updatePassword, updateProfile, updateUsername } from '../controllers/user'
 import { checkMiddleware } from '../middleware'
 
 const router = express.Router()
@@ -17,5 +17,6 @@ router.put('/user/updateEmail', checkMiddleware, updateEmail)
 router.put('/user/updateName', checkMiddleware, updateName)
 router.put('/user/updatePassword', checkMiddleware, updatePassword)
 router.put('/user/updateUsername', checkMiddleware, updateUsername)
+router.put('/user/passwordConfirmation', checkMiddleware, passwordConfirmation)
 
 export default router

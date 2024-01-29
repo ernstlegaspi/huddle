@@ -1,3 +1,4 @@
+import { AxiosError } from "axios"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -16,6 +17,19 @@ export const clearLocalStorage = () => {
 	localStorage.removeItem('view_profile')
 	localStorage.removeItem('active_sidebar')
 }
+
+export const axiosError = (e: any, errorMessage: string) => {
+	if(e instanceof AxiosError) {
+		const data = e?.response?.data
+		const { message }: { message: string } = data
+
+		return message
+	}
+
+	return errorMessage
+}
+
+export const isValidPassword = (password: string) => password.length >= 8 && password.length <= 20
 
 export const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
 export const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/

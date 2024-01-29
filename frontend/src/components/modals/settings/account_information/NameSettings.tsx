@@ -1,11 +1,7 @@
 import toast from "react-hot-toast"
-import { AxiosError } from "axios"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
-import { IoIosArrowBack } from "react-icons/io"
 
-import Input from "../../../Input"
-import HoverableIcon from "../../../HoverableIcon"
-import { nameRegex } from "../../../../lib/utils"
+import { axiosError, nameRegex } from "../../../../lib/utils"
 import { updateName } from "../../../../api/api"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
@@ -50,19 +46,7 @@ export default function NameSetting({ setSettingsContent }: { setSettingsContent
 		}
 		catch(e) {
 			setLoading(false)
-
-			if(e instanceof AxiosError) {
-				const data = e?.response?.data
-				const { message }: { message: string } = data
-
-				if(message) {
-					toast.error(message)
-					return
-				}
-			}
-
-			setLoading(false)
-			toast.error("Error updating your name. Try again later")
+			toast.error(axiosError(e, "Error updating your name. Try again later"))
 		}
 	}
 

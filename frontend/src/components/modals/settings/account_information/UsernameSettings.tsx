@@ -1,12 +1,11 @@
 import toast from "react-hot-toast"
-import { AxiosError } from "axios"
 import { ChangeEvent, useState } from "react"
 
 import AccountForm from "./Form"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
 import { updateUsername } from "../../../../api/api"
-import { usernameRegEx } from "../../../../lib/utils"
+import { axiosError, usernameRegEx } from "../../../../lib/utils"
 
 export default function UsernameSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
 	const { currentUser } = useCurrentUser()
@@ -52,21 +51,10 @@ export default function UsernameSettings({ setSettingsContent }: { setSettingsCo
 		}
 		catch(e) {
 			setLoading(false)
-
-			if(e instanceof AxiosError) {
-				const data = e?.response?.data
-				const { message }: { message: string } = data
-
-				if(message) {
-					toast.error(message)
-					return
-				}
-			}
-			
-			toast.error('Can not update username. Try again later.')
+			toast.error(axiosError(e, "Can not update username. Try again later."))
 		}
 	}
-	
+
 	return <AccountForm
 		handleSubmit={handleSubmit}
 		inputLabel="Username"
