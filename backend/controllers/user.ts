@@ -328,7 +328,6 @@ export const updatePicture = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { email, picture } = req.body
 		const userId = getUserId(req)
-		console.log(__dirname)
 		const imagePath = path.join(__dirname, `../public/images/${picture}`)
 
 		if(!email || !picture) {
@@ -355,6 +354,32 @@ export const updatePicture = async (req: Request, res: Response) => {
 
 		await Post.updateMany({ owner: userId },
 			{ $set: { userPicture: picture } }
+		)
+
+		return success({}, 201, res)
+	}, res)
+}
+
+export const removeProfilePicture = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, picture } = req.body
+		const userId = getUserId(req)
+		const imagePath = path.join(__dirname, `../public/images/${picture}`)
+
+		if(!email || !picture) return error(400, res, "Error updating profile picture. Try again later.")
+
+		if(!isValidEmail(email)) return error(400, res, errorEmail)
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "User does not exist")
+
+		await fs.promises.unlink(imagePath)
+
+		await updateUser(userId, { picture: '' })
+
+		await Post.updateMany({ owner: userId },
+			{ $set: { userPicture: '' } }
 		)
 
 		return success({}, 201, res)

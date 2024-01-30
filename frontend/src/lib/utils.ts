@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
 
-export const getUser = () => {
+export const getPersistedUser = () => {
 	const user = localStorage.getItem("huddle_user")
 
 	return user ? JSON.parse(user) : ''
@@ -16,6 +16,10 @@ export const clearLocalStorage = () => {
 	localStorage.removeItem('huddle_user')
 	localStorage.removeItem('view_profile')
 	localStorage.removeItem('active_sidebar')
+}
+
+export const setPersistedUser = (data: AuthUser) => {
+	localStorage.setItem('huddle_user', JSON.stringify(data))
 }
 
 export const birthdayFormatter = (day: string, month: string, year: string) => `${month} ${day}, ${year}`

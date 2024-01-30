@@ -5,10 +5,12 @@ import 'react-lazy-load-image-component/src/effects/blur.css'
 import ProfilePicture from './ProfilePicture'
 import useNameUsername from '../hooks/useNameAndUsername'
 import useCurrentPhoto from '../hooks/useCurrentPhoto'
+import { getPersistedUser } from '../lib/utils'
 
 export default function PostCard({ post }: { post: Post }) {
 	const { currentPhoto } = useCurrentPhoto()
 	const { nameUsername } = useNameUsername()
+	const persistedUser: AuthUser = getPersistedUser()
 	const likeCount = post.likes ? post.likes.length < 1 ? '' : post.likes.length : ''
 
 	return <div className="bg-white rounded-r5 w p-2 pointer transition-all hover:shadow-md hover:shadow-vio/70">
@@ -21,7 +23,7 @@ export default function PostCard({ post }: { post: Post }) {
 			<div className="f">
 				<div className="mt-1 mr-3">
 					{
-						currentPhoto || post.userPicture ? <div className="w-[35px] h-[35px]">
+						currentPhoto || post.userPicture && persistedUser.picture ? <div className="w-[35px] h-[35px]">
 							<ProfilePicture picture={currentPhoto ? currentPhoto : post.userPicture } />
 						</div>
 						: <ProfilePicture picture='' />

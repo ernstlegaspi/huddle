@@ -3,7 +3,7 @@ import { ChangeEvent, useState } from "react"
 
 import { days, interestsArr, months, years } from "../../../constants"
 import { signUp } from '../../../api/api'
-import { axiosError, birthdayFormatter, emailRegex, emailRegex2, nameRegex } from '../../../lib/utils'
+import { axiosError, birthdayFormatter, emailRegex, emailRegex2, nameRegex, setPersistedUser } from '../../../lib/utils'
 
 export default function SignUp() {
 	const [data, setData] = useState<User>({ name: '', username: '', password: '', email: '', birthday: '', interests: [] })
@@ -98,7 +98,7 @@ export default function SignUp() {
 			})
 
 			setLoading(false)
-			localStorage.setItem('huddle_user', JSON.stringify(resData))
+			setPersistedUser(resData)
 			window.location.reload()
 		}
 		catch(e: any) {

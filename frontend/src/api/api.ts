@@ -26,6 +26,7 @@ export const updateUsername = (data: { email: string, username: string }) => API
 export const updateEmail = (data: { email: string }) => API.put('user/updateEmail', data)
 export const updateInterests = (data: { email: string, interests: string[] }) => API.put('user/updateInterests', data)
 export const updatePicture = (data: { email: string, picture: string }) => API.put('user/updatePicture', data)
+export const removeProfilePicture = (data: { email: string, picture: string }) => API.put('user/removeProfilePicture', data)
 
 export const updatePassword = (data: {
 	email: string,

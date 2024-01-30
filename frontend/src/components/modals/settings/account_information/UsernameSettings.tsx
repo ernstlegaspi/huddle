@@ -5,10 +5,10 @@ import AccountForm from "./Form"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
 import { updateUsername } from "../../../../api/api"
-import { axiosError, usernameRegEx } from "../../../../lib/utils"
+import { axiosError, setPersistedUser, usernameRegEx } from "../../../../lib/utils"
 
 export default function UsernameSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
-	const { currentUser } = useCurrentUser()
+	const { currentUser, setCurrentUser } = useCurrentUser()
 	const { setNameUsername } = useNameUsername()
 	const [loading, setLoading] = useState(false)
 	const [username, setUsername] = useState(currentUser.username)
@@ -38,12 +38,14 @@ export default function UsernameSettings({ setSettingsContent }: { setSettingsCo
 
 			await updateUsername({ email: currentUser.email, username })
 
-			localStorage.setItem('huddle_user', JSON.stringify({
+			setCurrentUser({ ...currentUser, username })
+
+			setPersistedUser({
 				name: currentUser.name,
 				email: currentUser.email,
 				username,
 				picture: currentUser.picture
-			}))
+			})
 
 			setNameUsername({ name: currentUser.name, username })
 			setLoading(false)

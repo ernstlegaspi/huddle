@@ -10,10 +10,10 @@ import BlackInset from '../BlackInset'
 import CloseButton from '../../CloseButton'
 import { useAddPostModal } from "../../../hooks/useToggleModal"
 import { addPost, changePostImage, uploadImage } from '../../../api/api'
-import { MAX_FILE_SIZE, axiosError, getUser } from '../../../lib/utils'
+import { MAX_FILE_SIZE, axiosError, getPersistedUser } from '../../../lib/utils'
 
 export default function AddPostModal() {
-	const user: AuthUser = getUser()
+	const user: AuthUser = getPersistedUser()
 
 	const [body, setBody] = useState('')
 	const [disabled, setDisabled] = useState(false)

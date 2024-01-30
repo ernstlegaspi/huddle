@@ -4,13 +4,13 @@ import { ChangeEvent, useState } from "react"
 import AccountForm from "../Form"
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
 import { emailOtp, updateEmail } from "../../../../../api/api"
-import { axiosError, emailRegex, emailRegex2 } from "../../../../../lib/utils"
+import { axiosError, emailRegex, emailRegex2, setPersistedUser } from "../../../../../lib/utils"
 import CircleLoader from "../../../../CircleLoader"
 import CodeConfirmation from "./CodeConfirmation"
 import VioButton from "../../../../VioButton"
 
 export default function EmailSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
-	const { currentUser } = useCurrentUser()
+	const { currentUser, setCurrentUser } = useCurrentUser()
 	const [loading, setLoading] = useState(false)
 	const [otpLoading, setOptLoading] = useState(false)
 	const [email, setEmail] = useState(currentUser.email)
@@ -43,13 +43,14 @@ export default function EmailSettings({ setSettingsContent }: { setSettingsConte
 
 			await updateEmail({ email })
 
-			localStorage.setItem('huddle_user', JSON.stringify({
+			setPersistedUser({
 				name: currentUser.name,
 				email,
 				username: currentUser.username,
 				picture: currentUser.picture
-			}))
+			})
 
+			setCurrentUser({ ...currentUser, email })
 			setLoading(false)
 			setSettingsContent('')
 		}

@@ -1,14 +1,14 @@
 import toast from "react-hot-toast"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 
-import { axiosError, nameRegex } from "../../../../lib/utils"
+import { axiosError, nameRegex, setPersistedUser } from "../../../../lib/utils"
 import { updateName } from "../../../../api/api"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
 import AccountForm from "./Form"
 
 export default function NameSetting({ setSettingsContent }: { setSettingsContent: Dispatch<SetStateAction<string>> }) {
-	const { currentUser } = useCurrentUser()
+	const { currentUser, setCurrentUser } = useCurrentUser()
 	const { setNameUsername } = useNameUsername()
 	const [name, setName] = useState(currentUser.name)
 	const [loading, setLoading] = useState(false)
@@ -38,9 +38,15 @@ export default function NameSetting({ setSettingsContent }: { setSettingsContent
 
 			await updateName({ email: currentUser.email, name })
 
+			setCurrentUser({ ...currentUser, name })
 			setNameUsername({ name, username: currentUser.username })
 			setSettingsContent('')
-			localStorage.setItem('huddle_user', JSON.stringify({ name, email: currentUser.email, username: currentUser.username, picture: currentUser.picture }))
+			setPersistedUser({
+				name,
+				email: currentUser?.email,
+				username: currentUser?.username,
+				picture: currentUser?.picture
+			})
 
 			setLoading(false)
 		}

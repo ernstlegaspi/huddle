@@ -1,12 +1,12 @@
 import ProfilePicture from "../../../ProfilePicture"
 import { useAddPostModal } from "../../../../hooks/useToggleModal"
 import useCurrentPhoto from "../../../../hooks/useCurrentPhoto"
-import { getUser } from "../../../../lib/utils"
+import { getPersistedUser } from "../../../../lib/utils"
 
 export default function PostSomethingCard() {
 	const { currentPhoto } = useCurrentPhoto()
 	const { open } = useAddPostModal()
-	const user: AuthUser = getUser()
+	const user: AuthUser = getPersistedUser()
 	
 	const handleClick = () => {
 		open()

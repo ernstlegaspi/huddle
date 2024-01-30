@@ -1,7 +1,8 @@
 import toast from 'react-hot-toast'
 import { ChangeEvent, useState } from 'react'
+
 import { signIn } from '../../../api/api'
-import { axiosError } from '../../../lib/utils'
+import { axiosError, setPersistedUser } from '../../../lib/utils'
 
 export default function SignIn() {
 	const [data, setData] = useState({ email: '', password: '' })
@@ -33,7 +34,7 @@ export default function SignIn() {
 			const { data: resData } = await signIn({ ...data })
 
 			setLoading(false)
-			localStorage.setItem('huddle_user', JSON.stringify(resData))
+			setPersistedUser(resData)
 			window.location.reload()
 		}
 		catch(e: any) {

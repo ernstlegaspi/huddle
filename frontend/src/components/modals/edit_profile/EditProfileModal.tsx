@@ -5,13 +5,13 @@ import CloseButton from "../../CloseButton"
 import Input from "../../Input"
 import BlackInset from "../BlackInset"
 import { useEditProfileModal } from "../../../hooks/useToggleModal"
-import { getUser, nameRegex, usernameRegEx } from "../../../lib/utils"
+import { getPersistedUser, nameRegex, setPersistedUser, usernameRegEx } from "../../../lib/utils"
 import { updateProfile } from "../../../api/api"
 import { AxiosError } from "axios"
 import useNameUsername from "../../../hooks/useNameAndUsername"
 
 export default function EditProfileModal() {
-	const user: AuthUser = getUser()
+	const user: AuthUser = getPersistedUser()
 	const [data, setData] = useState({ name: user?.name, username: user?.username })
 	const [loading, setLoading] = useState(false)
 	const { close, isOpen } = useEditProfileModal()
@@ -64,11 +64,11 @@ export default function EditProfileModal() {
 				username: data.username
 			})
 
-			localStorage.setItem('huddle_user', JSON.stringify({
+			setPersistedUser({
 				...res.data,
 				email: user?.email,
 				picture: user?.picture
-			}))
+			})
 
 			setLoading(false)
 			setNameUsername({ name: data.name, username: data.username })

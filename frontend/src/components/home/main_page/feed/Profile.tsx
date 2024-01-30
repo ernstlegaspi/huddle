@@ -6,12 +6,10 @@ import SkeletonPostCard from '../../../SkeletonPostCard'
 import CircleLoader from '../../../CircleLoader'
 import useNameUsername from '../../../../hooks/useNameAndUsername'
 import usePostsCount from '../../../../hooks/usePostsCount'
-import useCurrentUser from '../../../../hooks/useCurrentUser'
 import ProfilePhoto from './ProfilePhoto'
 import { useEditProfileModal } from '../../../../hooks/useToggleModal'
-import { getPostsPerUser, getUserApi } from '../../../../api/api'
-import { axiosError, getUser } from '../../../../lib/utils'
-import { Skeleton } from '../../../ui/skeleton'
+import { getPostsPerUser } from '../../../../api/api'
+import { axiosError, getPersistedUser } from '../../../../lib/utils'
 
 export default function Profile() {
 	const page = useRef(0)
@@ -26,27 +24,22 @@ export default function Profile() {
 	const [loading, setLoading] = useState(false)
 	const [posts, setPosts] = useState<Post[]>([])
 
-	const persistedUser: AuthUser = getUser()
+	const persistedUser: AuthUser = getPersistedUser()
 	const { open } = useEditProfileModal()
-	const { currentUser, setCurrentUser } = useCurrentUser()
 
 	useEffect(() => {
 		(async () => {
 			try {
 				setLoading(true)
 
-				const [user, posts] = await Promise.all([
-					getUserApi(persistedUser.email), getPostsPerUser(0, persistedUser?.email)
-				])
+				const { data } = await getPostsPerUser(0, persistedUser?.email)
 
-				setCurrentUser(user.data)
-
-				shownUserPostsCount.current = posts.data.posts.length
-				userPostsLength.current = posts.data.length
-				postsRef.current = posts.data.posts
-				setPosts(posts.data.posts)
+				shownUserPostsCount.current = data.posts.length
+				userPostsLength.current = data.length
+				postsRef.current = data.posts
+				setPosts(data.posts)
 				setLoading(false)
-				setPostsCount(posts.data.posts.length)
+				setPostsCount(data.posts.length)
 			}
 			catch(e) {
 				setLoading(false)
@@ -108,13 +101,7 @@ export default function Profile() {
 		<div className="w bg-vio/50 rounded-r5 h-[300px]">
 
 		</div>
-		<>
-			{
-				loading ?
-				<Skeleton className="rounded-full bg-vio w-[150px] relative z-20 h-[150px] left-1/2 translate-x-[-50%] h-center mt-[-85px]" />
-				: <ProfilePhoto user={currentUser} />
-			}
-		</>
+		<ProfilePhoto />
 		<div className="relative z-10 w-max left-1/2 translate-x-[-50%] h-center mt-[-160px]">
 			<div className="relative z-10 h-center rounded-full bg-gl h-[170px] w-[170px]"></div>
 		</div>

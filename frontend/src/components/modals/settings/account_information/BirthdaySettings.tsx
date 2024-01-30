@@ -8,7 +8,7 @@ import { axiosError, birthdayFormatter } from "../../../../lib/utils"
 import { updateBirthday } from "../../../../api/api"
 
 export default function BirthdaySettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
-	const { currentUser: user } = useCurrentUser()
+	const { currentUser: user, setCurrentUser, } = useCurrentUser()
 	const birthday = user.birthday.split(" ")
 	const [date, setDate] = useState({ month: birthday[0], day: birthday[1].split(",")[0], year: birthday[2] })
 	const [loading, setLoading] = useState(false)
@@ -36,6 +36,7 @@ export default function BirthdaySettings({ setSettingsContent }: { setSettingsCo
 
 			await updateBirthday({ email: user.email, birthday: _birthday })
 
+			setCurrentUser({ ...user, birthday: _birthday })
 			setLoading(false)
 			setSettingsContent('')
 		}

@@ -9,7 +9,7 @@ import { interestsArr } from "../../../../constants"
 import { updateInterests } from "../../../../api/api"
 
 export default function InterestsSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
-	const { currentUser } = useCurrentUser()
+	const { currentUser, setCurrentUser } = useCurrentUser()
 	const [loading, setLoading] = useState(false)
 	const [interestsArray, setInterests] = useState<string[]>(currentUser.interests)
 	const [isClicked, setIsClicked] = useState(false)
@@ -62,9 +62,10 @@ export default function InterestsSettings({ setSettingsContent }: { setSettingsC
 			}
 
 			setLoading(true)
-
+			
 			await updateInterests({ email: currentUser.email, interests: interestsArray })
-
+			
+			setCurrentUser({ ...currentUser, interests: interestsArray })
 			setLoading(false)
 			setSettingsContent('')
 		}

@@ -1,11 +1,11 @@
 import ProfilePicture from "../../../ProfilePicture"
-import { getUser } from "../../../../lib/utils"
+import { getPersistedUser } from "../../../../lib/utils"
 import useViewProfile from "../../../../hooks/useViewProfile"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
 import useCurrentPhoto from "../../../../hooks/useCurrentPhoto"
 
 export default function UserCard() {
-	const user: AuthUser = getUser()
+	const user: AuthUser = getPersistedUser()
 	const { nameUsername } = useNameUsername()
 	const { currentPhoto } = useCurrentPhoto()
 	const { toggle } = useViewProfile()

@@ -5,8 +5,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import SkeletonHomepage from './components/home/SkeletonHomepage'
 import usePostsCount from './hooks/usePostsCount'
-import { clearLocalStorage, getUser } from './lib/utils'
+import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
 import { getUserApi, signOut } from './api/api'
+import useCurrentUser from './hooks/useCurrentUser'
 
 const AddPostModal = lazy(() => import("./components/modals/add_post/AddPostModal"))
 const EditProfileModal = lazy(() => import("./components/modals/edit_profile/EditProfileModal"))
@@ -18,21 +19,23 @@ const HomePage = lazy(() => import("./components/home/HomePage"))
 axios.defaults.withCredentials = true
 
 export default function App() {
+	const { setCurrentUser } = useCurrentUser()
 	const { postsCount } = usePostsCount()
-	const user = getUser()
+	const user = getPersistedUser()
 
 	useEffect(() => {
 		if(user) {
 			(async () => {
 				try {
 					const { data } = await getUserApi(user?.email)
+					setCurrentUser(data)
 
-					localStorage.setItem('huddle_user', JSON.stringify({
+					setPersistedUser({
 						email: data.email,
 						name: data.name,
 						username: data.username,
 						picture: data.picture
-					}))
+					})
 				}
 				catch(e) {
 					await signOut()
@@ -42,7 +45,7 @@ export default function App() {
 				}
 			})()
 		}
-	}, [user])
+	}, [])
 
 	return <div className={`
 		${user ? 'bg-gl' : 'bg-vio'}
