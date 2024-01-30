@@ -17,7 +17,7 @@ export const temporaryPostImageUpload = async (req: Request, res: Response) => {
 		const filename = file.filename
 
 		if(!allowedFile.includes(filename.split(".")[1])) return error(400, res, "Not an image.")
-		
+	
 		return success({ filename }, 201, res)
 	}, res)
 }

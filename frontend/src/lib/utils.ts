@@ -37,3 +37,4 @@ export const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/
 export const emailRegex2 = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
 export const nameRegex = /^[a-zA-Z\s]+$/
 export const usernameRegEx = /^[a-zA-Z_]+$/
+export const MAX_FILE_SIZE = 1048576 // 1 mb

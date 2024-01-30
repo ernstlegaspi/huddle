@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt'
+import fs from 'fs'
 import jwt from 'jsonwebtoken'
+import path from 'path'
 import { Request, Response } from 'express'
 
 import Post from '../models/post'
@@ -111,7 +113,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 		const user = await User.findOne({ email }).select('-password')
 
-		if(!user) return error(404, res)
+		if(!user) return error(404, res, "User does not exist. Log in first.")
 
 		return success(user, 200, res)
 	}, res)
@@ -170,9 +172,7 @@ export const updateName = async (req: Request, res: Response) => {
 		await updateUser(userId, { name })
 
 		await Post.updateMany({ owner: userId },
-			{ $set: {
-				name
-			} }
+			{ $set: { name } }
 		)
 
 		return success({}, 201, res)
@@ -319,6 +319,43 @@ export const updateInterests = async (req: Request, res: Response) => {
 		if(user.interests.sort().join('').trim() === interestArray.sort().join('').trim()) return error(400, res, "There are no changes in your interests.")
 		
 		await updateUser(userId, { interests: interestArray })
+
+		return success({}, 201, res)
+	}, res)
+}
+
+export const updatePicture = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, picture } = req.body
+		const userId = getUserId(req)
+		console.log(__dirname)
+		const imagePath = path.join(__dirname, `../public/images/${picture}`)
+
+		if(!email || !picture) {
+			await fs.promises.unlink(imagePath)
+
+			return error(400, res, "Error updating profile picture. Try again later.")
+		}
+
+		if(!isValidEmail(email)) {
+			await fs.promises.unlink(imagePath)
+
+			return error(400, res, errorEmail)
+		}
+
+		const user = await User.findOne({ email })
+
+		if(!user) {
+			await fs.promises.unlink(imagePath)
+
+			return error(401, res, "User does not exist")
+		}
+
+		await updateUser(userId, { picture })
+
+		await Post.updateMany({ owner: userId },
+			{ $set: { userPicture: picture } }
+		)
 
 		return success({}, 201, res)
 	}, res)

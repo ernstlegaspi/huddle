@@ -10,7 +10,11 @@ type Props = {
 
 export default function ProfilePicture({ height = 35, picture, width = 35 }: Props) {
 	return <>
-		{picture ? <p>Picture</p> : <LazyLoadImage
+		{picture ? <img
+			src={`http://localhost:3001/images/${picture}`}
+			alt="User Profile"
+			className="rounded-full s"
+		/> : <LazyLoadImage
 			src="/assets/images/placeholder.webp"
 			alt="User Profile"
 			effect='blur'

@@ -3,25 +3,36 @@ import { lazy, Suspense, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
-import AddPostModal from './components/modals/add_post/AddPostModal'
-import EditProfileModal from './components/modals/edit_profile/EditProfileModal'
 import SkeletonHomepage from './components/home/SkeletonHomepage'
-import SettingsModal from './components/modals/settings/SettingsModal'
+import usePostsCount from './hooks/usePostsCount'
 import { clearLocalStorage, getUser } from './lib/utils'
 import { getUserApi, signOut } from './api/api'
+
+const AddPostModal = lazy(() => import("./components/modals/add_post/AddPostModal"))
+const EditProfileModal = lazy(() => import("./components/modals/edit_profile/EditProfileModal"))
+const ChangePictureModal = lazy(() => import("./components/modals/change_picture/ChangePictureModal"))
+const SettingsModal = lazy(() => import("./components/modals/settings/SettingsModal"))
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 
 axios.defaults.withCredentials = true
 
 export default function App() {
+	const { postsCount } = usePostsCount()
 	const user = getUser()
 
 	useEffect(() => {
 		if(user) {
 			(async () => {
 				try {
-					await getUserApi(user?.email)
+					const { data } = await getUserApi(user?.email)
+
+					localStorage.setItem('huddle_user', JSON.stringify({
+						email: data.email,
+						name: data.name,
+						username: data.username,
+						picture: data.picture
+					}))
 				}
 				catch(e) {
 					await signOut()
@@ -35,13 +46,15 @@ export default function App() {
 
 	return <div className={`
 		${user ? 'bg-gl' : 'bg-vio'}
-		h-auto w
+		${postsCount === 0 ? 'h-[100vh]' : 'h-auto'}
+		w
 	`}>
-		<AddPostModal />
-		<EditProfileModal />
-		<SettingsModal />
 		<BrowserRouter>
 			<Suspense fallback={user ? <SkeletonHomepage /> : <div className="w h-[100vh] bg-vio"></div>}>
+				<AddPostModal />
+				<ChangePictureModal />
+				<EditProfileModal />
+				<SettingsModal />
 				<Toaster />
 				<Routes>
 					<Route path="/" element={<HomePage />} />

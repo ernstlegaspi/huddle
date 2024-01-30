@@ -11,7 +11,10 @@ const userSchema = new mongoose.Schema({
 	birthday: String,
 	password: String,
 	interests: [String],
-	picture: String,
+	picture: {
+		type: String,
+		default: ''
+	},
 	posts: [{
 		type: mongoose.Schema.ObjectId,
 		ref: 'Post'

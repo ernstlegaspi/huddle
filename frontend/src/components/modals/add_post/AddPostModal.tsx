@@ -9,8 +9,8 @@ import ImageUpload from './ImageUpload'
 import BlackInset from '../BlackInset'
 import CloseButton from '../../CloseButton'
 import { useAddPostModal } from "../../../hooks/useToggleModal"
-import { addPost, changePostImage, uploadPostImage } from '../../../api/api'
-import { getUser } from '../../../lib/utils'
+import { addPost, changePostImage, uploadImage } from '../../../api/api'
+import { MAX_FILE_SIZE, axiosError, getUser } from '../../../lib/utils'
 
 export default function AddPostModal() {
 	const user: AuthUser = getUser()
@@ -22,8 +22,6 @@ export default function AddPostModal() {
 	const [isNext, setIsNext] = useState(false)
 
 	const { close, isOpen } = useAddPostModal()
-
-	const MAX_FILE_SIZE = 1048576 // 1 MB
 
 	if(!isOpen) return null
 
@@ -81,32 +79,14 @@ export default function AddPostModal() {
 
 				return
 			}
-			
-			const { data } = await uploadPostImage(formData)
+
+			const { data } = await uploadImage(formData)
 
 			setPostImage(data.filename)
 		}
 		catch(e: any) {
 			setPostImage('')
-
-			if(e instanceof AxiosError) {
-				const { response }: AxiosError = e
-				const { message }: { message: string } = response?.data as { message: string }
-
-				if(message.toLowerCase() === "maximum file size is 1 mb") {
-					toast.error('Maximum file size is 1 MB')
-
-					return
-				}
-
-				if(message.toLowerCase() === "not an image") {
-					toast.error('Only image files are allowed.')
-
-					return
-				}
-			}
-
-			toast.error('Can not upload picture. Try again later.')
+			toast.error(axiosError(e, "Can not upload post image. Try again later."))
 		}
 	}
 
