@@ -324,9 +324,9 @@ export const updateInterests = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const updatePicture = async (req: Request, res: Response) => {
+export const updateProfilePicture = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		const { email, picture } = req.body
+		const { email, changing, prevProfilePicture, picture } = req.body
 		const userId = getUserId(req)
 		const imagePath = path.join(__dirname, `../public/images/${picture}`)
 
@@ -355,6 +355,11 @@ export const updatePicture = async (req: Request, res: Response) => {
 		await Post.updateMany({ owner: userId },
 			{ $set: { userPicture: picture } }
 		)
+
+		if(changing) {
+			const newImagePath = path.join(__dirname, `../public/images/${prevProfilePicture}`)
+			await fs.promises.unlink(newImagePath)
+		}
 
 		return success({}, 201, res)
 	}, res)

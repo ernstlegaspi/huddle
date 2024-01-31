@@ -11,8 +11,8 @@ export const signUp = (data: User) => API.post('auth/sign-up', data)
 export const signOut = () => API.post('auth/sign-out', {})
 
 // post
-export const changePostImage = (data: FormData, prevImage: string) => API.post(`upload/change-post-image/${prevImage}`, data)
-export const uploadImage = (data: FormData) => API.post('upload/post-image', data)
+export const changePostImage = (data: FormData, prevImage: string) => API.post(`upload/change-image/${prevImage}`, data)
+export const uploadImage = (data: FormData) => API.post('upload/image', data)
 
 export const addPost = (data: Post) => API.post('addPost', data)
 export const getPostsPerUser = (page: Number, email: string) => API.get(`getPostsPerUser/${page}/${email}`)
@@ -25,7 +25,7 @@ export const updateName = (data: { email: string, name: string }) => API.put('us
 export const updateUsername = (data: { email: string, username: string }) => API.put('user/updateUsername', data)
 export const updateEmail = (data: { email: string }) => API.put('user/updateEmail', data)
 export const updateInterests = (data: { email: string, interests: string[] }) => API.put('user/updateInterests', data)
-export const updatePicture = (data: { email: string, picture: string }) => API.put('user/updatePicture', data)
+export const updatePicture = (data: { email: string, picture: string, prevProfilePicture?: string, changing?: boolean }) => API.put('user/updateProfilePicture', data)
 export const removeProfilePicture = (data: { email: string, picture: string }) => API.put('user/removeProfilePicture', data)
 
 export const updatePassword = (data: {

@@ -6,7 +6,7 @@ import { catchError, error, success } from '../utils'
 const allowedFile = ["png", "jpeg", "jpg", "webp"]
 const MAX_FILE_SIZE = 1048576 // 1 MB
 
-export const temporaryPostImageUpload = async (req: Request, res: Response) => {
+export const imageUpload = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const file = req.file
 
@@ -22,7 +22,7 @@ export const temporaryPostImageUpload = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const changePostImageUpload = async (req: Request, res: Response) => {
+export const changeExistingImage = async (req: Request, res: Response) => {
 	try {
 		const { prevImage } = req.params
 		const file = req.file

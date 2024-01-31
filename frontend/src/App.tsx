@@ -8,6 +8,7 @@ import usePostsCount from './hooks/usePostsCount'
 import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
 import { getUserApi, signOut } from './api/api'
 import useCurrentUser from './hooks/useCurrentUser'
+import ViewPhotoModal from './components/modals/ViewPhotoModal'
 
 const AddPostModal = lazy(() => import("./components/modals/add_post/AddPostModal"))
 const EditProfileModal = lazy(() => import("./components/modals/edit_profile/EditProfileModal"))
@@ -28,6 +29,7 @@ export default function App() {
 			(async () => {
 				try {
 					const { data } = await getUserApi(user?.email)
+
 					setCurrentUser(data)
 
 					setPersistedUser({
@@ -58,6 +60,7 @@ export default function App() {
 				<ChangePictureModal />
 				<EditProfileModal />
 				<SettingsModal />
+				<ViewPhotoModal />
 				<Toaster />
 				<Routes>
 					<Route path="/" element={<HomePage />} />
