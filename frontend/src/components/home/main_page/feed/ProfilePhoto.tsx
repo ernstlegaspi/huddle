@@ -5,7 +5,7 @@ import ProfilePicture from "../../../ProfilePicture"
 import useCurrentPhoto from "../../../../hooks/useCurrentPhoto"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import { useChangePictureModal } from "../../../../hooks/useToggleModal"
-import { updatePicture, uploadImage } from "../../../../api/api"
+import { updatePhoto, uploadImage } from "../../../../api/api"
 import { MAX_FILE_SIZE, axiosError, getPersistedUser, setPersistedUser } from "../../../../lib/utils"
 
 export default function ProfilePhoto() {
@@ -33,7 +33,7 @@ export default function ProfilePhoto() {
 
 			const { data } = await uploadImage(formData)
 
-			await updatePicture({ email: user.email, picture: data.filename })
+			await updatePhoto({ email: user.email, isCoverPhoto: false, picture: data.filename })
 
 			setPersistedUser({
 				email: user.email,

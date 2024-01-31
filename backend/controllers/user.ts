@@ -4,11 +4,10 @@ import jwt from 'jsonwebtoken'
 import path from 'path'
 import { Request, Response } from 'express'
 
-import Post from '../models/post'
 import User from '../models/user'
 import { catchError, error, getUserId, isValidBirthday, isValidEmail, isValidName, isValidUsername, success, updatePosts, updateUser } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
-import { errorEmail, errorName, errorUnauthorized, errorUsername } from '../utils/constants'
+import { errorEmail, errorName, errorUnauthorized } from '../utils/constants'
 
 const COOKIE_AGE = 9999999999999
 
@@ -250,9 +249,12 @@ export const updateProfile = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const updateProfilePicture = async (req: Request, res: Response) => {
+export const updatePhoto = async (req: Request, res: Response) => {
+	/*
+		this function, updatePhoto is either for profile picture or cover photo
+	*/
 	return catchError(async () => {
-		const { email, changing, prevProfilePicture, picture } = req.body
+		const { email, changing, isCoverPhoto, prevPicture, picture } = req.body
 		const userId = getUserId(req)
 		const imagePath = path.join(__dirname, `../public/images/${picture}`)
 
@@ -276,12 +278,18 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
 			return error(401, res, "User does not exist")
 		}
 
-		await updateUser(userId, { picture })
-
-		await updatePosts(userId, { userPicture: picture })
+		if(isCoverPhoto) {
+			await updateUser(userId, { coverPhoto: picture })
+		}
+		else {
+			await Promise.all([
+				updateUser(userId, { picture }),
+				updatePosts(userId, { userPicture: picture })
+			])
+		}
 
 		if(changing) {
-			const newImagePath = path.join(__dirname, `../public/images/${prevProfilePicture}`)
+			const newImagePath = path.join(__dirname, `../public/images/${prevPicture}`)
 			await fs.promises.unlink(newImagePath)
 		}
 
@@ -328,9 +336,9 @@ export const passwordConfirmation = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const removeProfilePicture = async (req: Request, res: Response) => {
+export const removePicture = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		const { email, picture } = req.body
+		const { email, isCoverPhoto, picture } = req.body
 		const userId = getUserId(req)
 		const imagePath = path.join(__dirname, `../public/images/${picture}`)
 
@@ -342,9 +350,15 @@ export const removeProfilePicture = async (req: Request, res: Response) => {
 
 		await fs.promises.unlink(imagePath)
 
-		await updateUser(userId, { picture: '' })
-
-		await updatePosts(userId, { userPicture: '' })
+		if(isCoverPhoto) {
+			await updateUser(userId, { coverPhoto: '' })
+		}
+		else {
+			await Promise.all([
+				updateUser(userId, { picture: '' }),
+				updatePosts(userId, { userPicture: '' })
+			])
+		}
 
 		return success({}, 201, res)
 	}, res)

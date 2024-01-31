@@ -6,7 +6,8 @@ import useCurrentPhoto from "../../../hooks/useCurrentPhoto"
 import useCurrentUser from "../../../hooks/useCurrentUser"
 import { useChangePictureModal, useViewProfilePictureModal } from "../../../hooks/useToggleModal"
 import { MAX_FILE_SIZE, axiosError, setPersistedUser } from "../../../lib/utils"
-import { removeProfilePicture, updatePicture, uploadImage } from "../../../api/api"
+import { removePicture, updatePhoto, uploadImage } from "../../../api/api"
+import UserButton from "./UserButton"
 
 export default function ChangePictureModal() {
 	const [loading, setLoading] = useState(false)
@@ -16,19 +17,6 @@ export default function ChangePictureModal() {
 	const { open } = useViewProfilePictureModal()
 
 	if(!isOpen) return null
-
-	const UserButton = ({ label, onClick }: { label: string, onClick: () => void }) => <>
-		<div onClick={() => {
-			if(loading) return
-
-			onClick()
-		}} className={`
-		${loading ? 'text-dark/50' : 'pointer hover:bg-vio/30 text-dark'}
-			w py-2 text-center transition-all
-		`}>
-			<p>{loading ? "Updating..." : label}</p>
-		</div>
-	</>
 
 	const handleChangePhoto = async (e: ChangeEvent<HTMLInputElement>) => {
 		if(loading) return
@@ -50,9 +38,10 @@ export default function ChangePictureModal() {
 
 			const { data } = await uploadImage(formData)
 
-			await updatePicture({
+			await updatePhoto({
 				changing: true,
-				prevProfilePicture: currentUser.picture,
+				isCoverPhoto: false,
+				prevPicture: currentUser.picture,
 				email: currentUser.email,
 				picture: data.filename
 			})
@@ -77,7 +66,7 @@ export default function ChangePictureModal() {
 	const handleRemovePhoto = async () => {
 		try {
 			setLoading(true)
-			await removeProfilePicture({ email: currentUser.email, picture: currentUser.picture as string })
+			await removePicture({ email: currentUser.email, isCoverPhoto: false, picture: currentUser.picture as string })
 
 			setPersistedUser({
 				email: currentUser.email,
@@ -108,7 +97,7 @@ export default function ChangePictureModal() {
 
 	return <BlackInset close={close}>
 		<div className="card w-[300px]">
-			<UserButton label="View Photo" onClick={handleViewPhoto} />
+			<UserButton loading={loading} label="View Photo" onClick={handleViewPhoto} />
 
 			<label className={`
 				${loading ? 'text-dark/50' : 'pointer hover:bg-vio/30 text-dark'}
@@ -120,8 +109,8 @@ export default function ChangePictureModal() {
 
 			<input onChange={handleChangePhoto} type="file" accept="image/*" className="hidden" id="changePhoto" />
 
-			<UserButton label="Remove Current Photo" onClick={handleRemovePhoto} />
-			<UserButton label="Cancel" onClick={() => close()} />
+			<UserButton loading={loading} label="Remove Current Photo" onClick={handleRemovePhoto} />
+			<UserButton loading={loading} label="Cancel" onClick={() => close()} />
 		</div>
 	</BlackInset>
 }

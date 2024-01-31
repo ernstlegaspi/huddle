@@ -1,12 +1,13 @@
 type User = {
 	id?: string
-	name: string
-	email: string
-	username: string
-	interests: string[]
 	birthday: string
+	coverPhoto?: string
+	email: string
+	interests: string[]
+	name: string
 	password: string
 	picture?: string
+	username: string
 }
 
 type AuthUser = {

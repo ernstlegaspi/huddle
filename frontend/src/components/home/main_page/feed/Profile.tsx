@@ -6,6 +6,7 @@ import SkeletonPostCard from '../../../SkeletonPostCard'
 import CircleLoader from '../../../CircleLoader'
 import useNameUsername from '../../../../hooks/useNameAndUsername'
 import usePostsCount from '../../../../hooks/usePostsCount'
+import CoverPhoto from './CoverPhoto'
 import ProfilePhoto from './ProfilePhoto'
 import { useEditProfileModal } from '../../../../hooks/useToggleModal'
 import { getPostsPerUser } from '../../../../api/api'
@@ -98,9 +99,7 @@ export default function Profile() {
 	}
 
 	return <div className="w h py-6 relative">
-		<div className="w bg-vio/50 rounded-r5 h-[300px]">
-
-		</div>
+		<CoverPhoto />
 		<ProfilePhoto />
 		<div className="relative z-10 w-max left-1/2 translate-x-[-50%] h-center mt-[-160px]">
 			<div className="relative z-10 h-center rounded-full bg-gl h-[170px] w-[170px]"></div>

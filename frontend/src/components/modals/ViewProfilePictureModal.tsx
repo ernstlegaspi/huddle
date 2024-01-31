@@ -7,7 +7,7 @@ import { useViewProfilePictureModal } from '../../hooks/useToggleModal'
 import { useState } from 'react'
 import useCurrentPhoto from '../../hooks/useCurrentPhoto'
 
-export default function ViewPhotoModal() {
+export default function ViewProfilePictureModal() {
 	const [hovered, setHovered] = useState(false)
 	const { currentPhoto } = useCurrentPhoto()
 	const { close, isOpen } = useViewProfilePictureModal()
