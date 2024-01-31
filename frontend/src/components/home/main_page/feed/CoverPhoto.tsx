@@ -46,6 +46,7 @@ export default function CoverPhoto() {
 
 	const handleClick = () => {
 		open()
+    document.body.style.overflow = 'hidden'
 	}
 
 	return <>

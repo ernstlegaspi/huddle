@@ -2,15 +2,19 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { FaRegHeart } from "react-icons/fa"
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
+
 import ProfilePicture from './ProfilePicture'
 import useNameUsername from '../hooks/useNameAndUsername'
-import useCurrentPhoto from '../hooks/useCurrentPhoto'
-import { getPersistedUser } from '../lib/utils'
+import useCurrentUser from '../hooks/useCurrentUser'
+import useIsProfilePictureRemove from '../hooks/useIsProfilePictureRemove'
+import useGlobalLoading from '../hooks/useGlobalLoading'
+import { Skeleton } from './ui/skeleton'
 
 export default function PostCard({ post }: { post: Post }) {
-	const { currentPhoto } = useCurrentPhoto()
+	const { currentUser } = useCurrentUser()
 	const { nameUsername } = useNameUsername()
-	const persistedUser: AuthUser = getPersistedUser()
+	const { isProfilePictureRemove } = useIsProfilePictureRemove()
+	const { globalLoading } = useGlobalLoading()
 	const likeCount = post.likes ? post.likes.length < 1 ? '' : post.likes.length : ''
 
 	return <div className="bg-white rounded-r5 w p-2 pointer transition-all hover:shadow-md hover:shadow-vio/70">
@@ -23,8 +27,9 @@ export default function PostCard({ post }: { post: Post }) {
 			<div className="f">
 				<div className="mt-1 mr-3">
 					{
-						currentPhoto || post.userPicture && persistedUser.picture ? <div className="w-[35px] h-[35px]">
-							<ProfilePicture picture={currentPhoto ? currentPhoto : post.userPicture } />
+						globalLoading ? <Skeleton className="w-[35px] h-[35px] rounded-full bg-vio" />
+						: currentUser.picture || post.userPicture && !isProfilePictureRemove ? <div className="w-[35px] h-[35px]">
+							<ProfilePicture picture={currentUser.picture ? currentUser.picture as string : post.userPicture } />
 						</div>
 						: <ProfilePicture picture='' />
 					}

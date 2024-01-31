@@ -12,13 +12,18 @@ export default function ViewCoverPhotoModal() {
 
 	if(!isOpen) return null
 
+	const handleClose = () => {
+		close()
+		document.body.style.overflow = 'auto'
+	}
+
 	const handleClick = () => {
 		if(hovered) return
-		close()
+		handleClose()
 	}
 
 	return <div onClick={handleClick} className="inset-0 fixed z-[100] bg-dark/50">
-		<div onClick={close} className="absolute bg-white/40 p-2 rounded-full pointer transition-all hover:bg-white mt-2 ml-2">
+		<div onClick={handleClose} className="absolute bg-white/40 p-2 rounded-full pointer transition-all hover:bg-white mt-2 ml-2">
 			<IoClose size={20} />
 		</div>
 		<div className="s f-center">

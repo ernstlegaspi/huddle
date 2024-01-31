@@ -8,6 +8,7 @@ import usePostsCount from './hooks/usePostsCount'
 import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
 import { getUserApi, signOut } from './api/api'
 import useCurrentUser from './hooks/useCurrentUser'
+import useGlobalLoading from './hooks/useGlobalLoading'
 
 const AddPostModal = lazy(() => import("./components/modals/add_post/AddPostModal"))
 const ChangeCoverPhotoModal = lazy(() => import("./components/modals/change_picture/ChangeCoverPhotoModal"))
@@ -22,6 +23,7 @@ const HomePage = lazy(() => import("./components/home/HomePage"))
 axios.defaults.withCredentials = true
 
 export default function App() {
+	const { setGlobalLoading } = useGlobalLoading()
 	const { setCurrentUser } = useCurrentUser()
 	const { postsCount } = usePostsCount()
 	const user = getPersistedUser()
@@ -30,6 +32,8 @@ export default function App() {
 		if(user) {
 			(async () => {
 				try {
+					setGlobalLoading(true)
+
 					const { data } = await getUserApi(user?.email)
 
 					setCurrentUser(data)
@@ -37,12 +41,15 @@ export default function App() {
 					setPersistedUser({
 						email: data.email,
 						name: data.name,
-						username: data.username,
-						picture: data.picture
+						username: data.username
 					})
+					setGlobalLoading(false)
 				}
 				catch(e) {
+					setGlobalLoading(false)
+
 					await signOut()
+
 					toast.error('User is invalid. Logging you out.')
 					clearLocalStorage()
 					window.location.reload()

@@ -1,18 +1,18 @@
 import toast from "react-hot-toast"
 import { ChangeEvent, useState } from "react"
 
-import BlackInset from "../BlackInset"
-import useCurrentPhoto from "../../../hooks/useCurrentPhoto"
-import useCurrentUser from "../../../hooks/useCurrentUser"
-import { useChangePictureModal, useViewProfilePictureModal } from "../../../hooks/useToggleModal"
-import { MAX_FILE_SIZE, axiosError, setPersistedUser } from "../../../lib/utils"
-import { removePicture, updatePhoto, uploadImage } from "../../../api/api"
 import UserButton from "./UserButton"
+import BlackInset from "../BlackInset"
+import useCurrentUser from "../../../hooks/useCurrentUser"
+import useIsProfilePictureRemove from "../../../hooks/useIsProfilePictureRemove"
+import { useChangePictureModal, useViewProfilePictureModal } from "../../../hooks/useToggleModal"
+import { MAX_FILE_SIZE, axiosError } from "../../../lib/utils"
+import { removePicture, updatePhoto, uploadImage } from "../../../api/api"
 
 export default function ChangePictureModal() {
 	const [loading, setLoading] = useState(false)
-	const { setCurrentPhoto } = useCurrentPhoto()
 	const { currentUser, setCurrentUser } = useCurrentUser()
+	const { setIsProfilePictureRemove } = useIsProfilePictureRemove()
 	const { close, isOpen } = useChangePictureModal()
 	const { open } = useViewProfilePictureModal()
 
@@ -46,13 +46,6 @@ export default function ChangePictureModal() {
 				picture: data.filename
 			})
 
-			setPersistedUser({
-				email: currentUser.email,
-				name: currentUser.name,
-				username: currentUser.username,
-				picture: data.filename
-			})
-			setCurrentPhoto(data.filename)
 			setCurrentUser({ ...currentUser, picture: data.filename })
 			setLoading(false)
 			close()
@@ -66,18 +59,12 @@ export default function ChangePictureModal() {
 	const handleRemovePhoto = async () => {
 		try {
 			setLoading(true)
+
 			await removePicture({ email: currentUser.email, isCoverPhoto: false, picture: currentUser.picture as string })
 
-			setPersistedUser({
-				email: currentUser.email,
-				name: currentUser.name,
-				username: currentUser.username,
-				picture: ''
-			})
-
-			setCurrentPhoto('')
 			setCurrentUser({ ...currentUser, picture: '' })
 			setLoading(false)
+			setIsProfilePictureRemove(true)
 
 			close()
 
@@ -89,13 +76,18 @@ export default function ChangePictureModal() {
 		}
 	}
 
-	const handleViewPhoto = () => {
-		setCurrentPhoto(currentUser.picture as string)
+	const handleClose = () => {
 		close()
-		open()
+		document.body.style.overflow = 'auto'
 	}
 
-	return <BlackInset close={close}>
+	const handleViewPhoto = () => {
+		close()
+		open()
+		document.body.style.overflow = 'hidden'
+	}
+
+	return <BlackInset close={handleClose}>
 		<div className="card w-[300px]">
 			<UserButton loading={loading} label="View Photo" onClick={handleViewPhoto} />
 
@@ -110,7 +102,7 @@ export default function ChangePictureModal() {
 			<input onChange={handleChangePhoto} type="file" accept="image/*" className="hidden" id="changePhoto" />
 
 			<UserButton loading={loading} label="Remove Current Photo" onClick={handleRemovePhoto} />
-			<UserButton loading={loading} label="Cancel" onClick={() => close()} />
+			<UserButton loading={loading} label="Cancel" onClick={handleClose} />
 		</div>
 	</BlackInset>
 }

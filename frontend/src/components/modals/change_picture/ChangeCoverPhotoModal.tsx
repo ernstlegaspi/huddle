@@ -38,6 +38,7 @@ export default function ChangeCoverPhotoModal() {
 	const handleViewPhoto = async () => {
 		close()
 		open()
+		document.body.style.overflow = 'hidden'
 	}
 
 	const handleChangePhoto = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +75,12 @@ export default function ChangeCoverPhotoModal() {
 		}
 	}
 
-	return <BlackInset close={close}>
+	const handleClose = () => {
+		close()
+		document.body.style.overflow = 'auto'
+	}
+
+	return <BlackInset close={handleClose}>
 		<div className="card w-[300px]">
 			<UserButton label="View Photo" loading={loading} onClick={handleViewPhoto} />
 			<label className={`
@@ -87,7 +93,7 @@ export default function ChangeCoverPhotoModal() {
 
 			<input onChange={handleChangePhoto} type="file" accept="image/*" className="hidden" id="changePhoto" />
 			<UserButton label="Remove Current Photo" loading={loading} onClick={handleRemovePhoto} />
-			<UserButton label="Cancel" loading={loading} onClick={close} />
+			<UserButton label="Cancel" loading={loading} onClick={handleClose} />
 		</div>
 	</BlackInset>
 }

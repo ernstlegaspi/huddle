@@ -1,12 +1,13 @@
 import ProfilePicture from "../../../ProfilePicture"
+import useCurrentUser from "../../../../hooks/useCurrentUser"
 import { useAddPostModal } from "../../../../hooks/useToggleModal"
-import useCurrentPhoto from "../../../../hooks/useCurrentPhoto"
-import { getPersistedUser } from "../../../../lib/utils"
+import useGlobalLoading from "../../../../hooks/useGlobalLoading"
+import { Skeleton } from "../../../ui/skeleton"
 
 export default function PostSomethingCard() {
-	const { currentPhoto } = useCurrentPhoto()
+	const { currentUser: user } = useCurrentUser()
 	const { open } = useAddPostModal()
-	const user: AuthUser = getPersistedUser()
+	const { globalLoading } = useGlobalLoading()
 	
 	const handleClick = () => {
 		open()
@@ -18,8 +19,9 @@ export default function PostSomethingCard() {
 		<div className="w border-t border-vio/30 f p-3">
 			<div className="mt-[3px]">
 				{
-					currentPhoto || user.picture ? <div className="w-[35px] h-[35px]">
-						<ProfilePicture picture={currentPhoto ? currentPhoto : user?.picture as string} />
+					globalLoading ? <Skeleton className="w-[35px] h-[35px] rounded-full bg-vio" />
+					: user.picture ? <div className="w-[35px] h-[35px]">
+						<ProfilePicture picture={user?.picture as string} />
 					</div>
 					: <ProfilePicture picture='' />
 				}

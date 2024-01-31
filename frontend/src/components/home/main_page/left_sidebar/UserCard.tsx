@@ -1,14 +1,15 @@
 import ProfilePicture from "../../../ProfilePicture"
-import { getPersistedUser } from "../../../../lib/utils"
 import useViewProfile from "../../../../hooks/useViewProfile"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
-import useCurrentPhoto from "../../../../hooks/useCurrentPhoto"
+import useCurrentUser from "../../../../hooks/useCurrentUser"
+import useGlobalLoading from "../../../../hooks/useGlobalLoading"
+import { Skeleton } from "../../../ui/skeleton"
 
 export default function UserCard() {
-	const user: AuthUser = getPersistedUser()
+	const { currentUser: user } = useCurrentUser()
 	const { nameUsername } = useNameUsername()
-	const { currentPhoto } = useCurrentPhoto()
 	const { toggle } = useViewProfile()
+	const { globalLoading } = useGlobalLoading()
 
 	const handleClick = async () => {
 		localStorage.setItem('view_profile', "true")
@@ -18,13 +19,24 @@ export default function UserCard() {
 	return <div className="w-[90%] mx-auto mt-4 text-dark">
 		<div onClick={handleClick} className="v-center pointer border border-vio/30 rounded-r5 px-3 py-2 bg-gl transition-all hover:bg-vio/30">
 			<div className="pt-[5px]">
-				{user.picture || currentPhoto ? <div className="w-[35px] h-[35px]">
-					<ProfilePicture picture={currentPhoto ? currentPhoto : user?.picture as string} />
-				</div> : <ProfilePicture picture={user?.picture as string} />}
+				{
+					globalLoading ? <Skeleton className="bg-vio w-[35px] h-[35px] rounded-full" />
+					: user.picture ? <div className="w-[35px] h-[35px]">
+						<ProfilePicture picture={user?.picture as string} />
+					</div> : <ProfilePicture picture={user?.picture as string} />
+				}
 			</div>
 			<div className="ml-3">
-				<p className="font-bold">{nameUsername.name ? nameUsername.name : user?.name}</p>
-				<p className="text-14 text-vio">@{nameUsername.username ? nameUsername.username : user?.username}</p>
+				{
+					globalLoading ? <>
+						<Skeleton className="rounded-full py-[5px] bg-vio w-[75px]" />
+						<Skeleton className="rounded-full py-[5px] bg-vio w-[50px] mt-1" />
+					</>
+					: <>
+						<p className="font-bold">{nameUsername.name ? nameUsername.name : user?.name}</p>
+						<p className="text-14 text-vio">@{nameUsername.username ? nameUsername.username : user?.username}</p>
+					</>
+				}
 			</div>
 		</div>
 	</div>
