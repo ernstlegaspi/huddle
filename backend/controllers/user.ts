@@ -6,9 +6,9 @@ import { Request, Response } from 'express'
 
 import Post from '../models/post'
 import User from '../models/user'
-import { catchError, error, getUserId, isValidBirthday, isValidEmail, isValidName, isValidUsername, success, updateUser } from '../utils/index'
+import { catchError, error, getUserId, isValidBirthday, isValidEmail, isValidName, isValidUsername, success, updatePosts, updateUser } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
-import { errorEmail, errorName, errorUsername } from '../utils/constants'
+import { errorEmail, errorName, errorUnauthorized, errorUsername } from '../utils/constants'
 
 const COOKIE_AGE = 9999999999999
 
@@ -111,6 +111,10 @@ export const getUser = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { email } = req.params
 
+		if(!email) return error(401, res, "Unauthorized. Sign in first.")
+
+		if(!isValidEmail(email)) return error(400, res, "Enter a valid email.")
+		
 		const user = await User.findOne({ email }).select('-password')
 
 		if(!user) return error(404, res, "User does not exist. Log in first.")
@@ -119,36 +123,63 @@ export const getUser = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const updateProfile = async (req: Request, res: Response) => {
+export const updateBirthday = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		const { email, name, username } = req.body
+		const { birthday, email } = req.body
 		const userId = getUserId(req)
 
-		if(!email || !name || !username) return error(400, res, "Error updating profile. Try again later.")
+		if(!birthday) return error(400, res, "Error updating birthday. Try again later.")
 
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
+		if(!isValidBirthday(birthday)) return error(400, res, "Enter a valid birthday.")
 
-		if(!isValidName(name)) return error(400, res, errorName)
-
-		if(!isValidUsername(username)) return error(400, res, errorUsername)
-		
 		const user = await User.findOne({ email })
 
 		if(!user) return error(401, res, "User does not exist.")
 
-		await updateUser(userId, { name, username })
+		if(user.birthday === birthday) return error(400, res, "There are no changes in your birthday.")
+		
+		await updateUser(userId, { birthday })
 
-		await Post.updateMany({ owner: userId },
-			{ $set: {
-				name,
-				username
-			} }
-		)
+		return success({}, 201, res)
+	}, res)
+}
+
+export const updateEmail = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, newEmail } = req.body
+		const userId = getUserId(req)
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, errorUnauthorized)
+
+		if(user.email === newEmail) return error(400, res, "There are no changes in email.")
+
+		await updateUser(userId, { email: newEmail })
 
 		return success({
-			name,
-			username
+			email: newEmail
 		}, 201, res)
+	}, res)
+}
+
+export const updateInterests = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, interests } = req.body
+		const interestArray: string[] = interests
+		const userId = getUserId(req)
+
+		if(interestArray.length < 1) return error(400, res, "Error updating interests. Try again later.")
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "User does not exist.")
+
+		if(user.interests.sort().join('').trim() === interestArray.sort().join('').trim()) return error(400, res, "There are no changes in your interests.")
+		
+		await updateUser(userId, { interests: interestArray })
+
+		return success({}, 201, res)
 	}, res)
 }
 
@@ -157,97 +188,17 @@ export const updateName = async (req: Request, res: Response) => {
 		const { email, name } = req.body
 		const userId = getUserId(req)
 
-		if(!email || !name) return error(400, res, "Error updating name. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
-		if(!isValidName(name)) return error(400, res, errorName)
-
 		const user = await User.findOne({ email })
 
-		if(!user) return error(401, res, "User does not exist")
+		if(!user) return error(401, res, "User does not exist.")
 
 		if(name === user.name) return error(400, res, "There are no changes in name.")
 
 		await updateUser(userId, { name })
 
-		await Post.updateMany({ owner: userId },
-			{ $set: { name } }
-		)
+		await updatePosts(userId, { name })
 
 		return success({}, 201, res)
-	}, res)
-}
-
-export const updateUsername = async (req: Request, res: Response) => {
-	return catchError(async () => {
-		const { email, username } = req.body
-		const userId = getUserId(req)
-
-		if(!email || !username) return error(400, res, "Error updating username. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
-		if(!isValidUsername(username)) return error(400, res, errorUsername)
-		
-		const user = await User.findOne({ email })
-
-		if(!user) return error(401, res, "User does not exist")
-
-		if(username === user.username) return error(400, res, "There are no changes in username.")
-
-		await updateUser(userId, { username })
-
-		await Post.updateMany({ owner: userId },
-			{ $set: {
-				username
-			} }
-		)
-
-		return success({
-			username
-		}, 201, res)
-	}, res)
-}
-
-export const updateEmail = async (req: Request, res: Response) => {
-	return catchError(async () => {
-		const { email } = req.body
-		const userId = getUserId(req)
-
-		if(!email) return error(400, res, "Error updating email. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
-		const user = await User.findOne({ email })
-
-		if(user) return error(401, res, "Email is already used.")
-
-		await updateUser(userId, { email })
-
-		return success({
-			email
-		}, 201, res)
-	}, res)
-}
-
-export const passwordConfirmation = async (req: Request, res: Response) => {
-	return catchError(async () => {
-		const { email, password } = req.body
-
-		if(!email || !password) return error(400, res, "Error updating password. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
-		const user = await User.findOne({ email })
-
-		if(!user) return error(401, res, "User not found.")
-
-		const comparePassword = await bcrypt.compare(password, user.password as string)
-
-		if(!comparePassword) return error(400, res, "Password is incorrect.")
-
-		return success({}, 200, res)
 	}, res)
 }
 
@@ -256,15 +207,15 @@ export const updatePassword = async (req: Request, res: Response) => {
 		const { email, currentPassword, newPassword, confirmNewPassword } = req.body
 		const userId = getUserId(req)
 
-		if(!email || !currentPassword || !newPassword || !confirmNewPassword) return error(400, res, "Error updating password. Try again later.")
+		if(!currentPassword || !newPassword || !confirmNewPassword) return error(400, res, "Error updating password. Try again later.")
 
 		if(newPassword !== confirmNewPassword) return error(400, res, "New password and confirm new password should be the same.")
 
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
+		if(newPassword === currentPassword) return error(400, res, "Current password and new password are the same.")
+		
 		const user = await User.findOne({ email })
 
-		if(!user) return error(401, res, "User not found.")
+		if(!user) return error(401, res, "User does not exist.")
 
 		const comparePassword = await bcrypt.compare(currentPassword, user.password as string)
 
@@ -279,48 +230,23 @@ export const updatePassword = async (req: Request, res: Response) => {
 	}, res)
 }
 
-export const updateBirthday = async (req: Request, res: Response) => {
+export const updateProfile = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		const { birthday, email } = req.body
+		const { email, name, username } = req.body
 		const userId = getUserId(req)
-
-		if(!email || !birthday) return error(400, res, "Error updating birthday. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
-		if(!isValidBirthday(birthday)) return error(400, res, "Enter a valid birthday.")
 
 		const user = await User.findOne({ email })
 
-		if(!user) return error(401, res, "User does not exist")
-
-		if(user.birthday === birthday) return error(400, res, "There are no changes in your birthday.")
+		if(!user) return error(401, res, "User does not exist.")
 		
-		await updateUser(userId, { birthday })
+		await updateUser(userId, { name, username })
 
-		return success({}, 201, res)
-	}, res)
-}
+		await updatePosts(userId, { name, username })
 
-export const updateInterests = async (req: Request, res: Response) => {
-	return catchError(async () => {
-		const { email, interests } = req.body
-		const interestArray: string[] = interests
-		const userId = getUserId(req)
-
-		if(!email || interestArray.length < 1) return error(400, res, "Error updating interests. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
-
-		const user = await User.findOne({ email })
-
-		if(!user) return error(401, res, "User does not exist")
-
-		if(user.interests.sort().join('').trim() === interestArray.sort().join('').trim()) return error(400, res, "There are no changes in your interests.")
-		
-		await updateUser(userId, { interests: interestArray })
-
-		return success({}, 201, res)
+		return success({
+			name,
+			username
+		}, 201, res)
 	}, res)
 }
 
@@ -352,9 +278,7 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
 
 		await updateUser(userId, { picture })
 
-		await Post.updateMany({ owner: userId },
-			{ $set: { userPicture: picture } }
-		)
+		await updatePosts(userId, { userPicture: picture })
 
 		if(changing) {
 			const newImagePath = path.join(__dirname, `../public/images/${prevProfilePicture}`)
@@ -365,15 +289,52 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
 	}, res)
 }
 
+export const updateUsername = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, username } = req.body
+		const userId = getUserId(req)
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "User does not exist")
+
+		if(username === user.username) return error(400, res, "There are no changes in username.")
+
+		await updateUser(userId, { username })
+
+		await updatePosts(userId, { username })
+
+		return success({
+			username
+		}, 201, res)
+	}, res)
+}
+
+export const passwordConfirmation = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, password } = req.body
+
+		if(!password) return error(400, res, "Error updating password. Try again later.")
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "User not found.")
+
+		const comparePassword = await bcrypt.compare(password, user.password as string)
+
+		if(!comparePassword) return error(400, res, "Password is incorrect.")
+
+		return success({}, 200, res)
+	}, res)
+}
+
 export const removeProfilePicture = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { email, picture } = req.body
 		const userId = getUserId(req)
 		const imagePath = path.join(__dirname, `../public/images/${picture}`)
 
-		if(!email || !picture) return error(400, res, "Error updating profile picture. Try again later.")
-
-		if(!isValidEmail(email)) return error(400, res, errorEmail)
+		if(!picture) return error(400, res, "Error updating profile picture. Try again later.")
 
 		const user = await User.findOne({ email })
 
@@ -383,9 +344,7 @@ export const removeProfilePicture = async (req: Request, res: Response) => {
 
 		await updateUser(userId, { picture: '' })
 
-		await Post.updateMany({ owner: userId },
-			{ $set: { userPicture: '' } }
-		)
+		await updatePosts(userId, { userPicture: '' })
 
 		return success({}, 201, res)
 	}, res)

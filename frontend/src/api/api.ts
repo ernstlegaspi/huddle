@@ -23,7 +23,7 @@ export const updateProfile = (data: { email: string, name: string, username: str
 export const updateBirthday = (data: { email: string, birthday: string }) => API.put('user/updateBirthday', data)
 export const updateName = (data: { email: string, name: string }) => API.put('user/updateName', data)
 export const updateUsername = (data: { email: string, username: string }) => API.put('user/updateUsername', data)
-export const updateEmail = (data: { email: string }) => API.put('user/updateEmail', data)
+export const updateEmail = (data: { email: string, newEmail: string }) => API.put('user/updateEmail', data)
 export const updateInterests = (data: { email: string, interests: string[] }) => API.put('user/updateInterests', data)
 export const updatePicture = (data: { email: string, picture: string, prevProfilePicture?: string, changing?: boolean }) => API.put('user/updateProfilePicture', data)
 export const removeProfilePicture = (data: { email: string, picture: string }) => API.put('user/removeProfilePicture', data)

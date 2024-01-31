@@ -98,7 +98,6 @@ export default function ChangePictureModal() {
 			setLoading(false)
 			toast.error(axiosError(e, "Can not remove photo. Try again later."))
 		}
-		console.log(currentUser.picture)
 	}
 
 	const handleViewPhoto = () => {

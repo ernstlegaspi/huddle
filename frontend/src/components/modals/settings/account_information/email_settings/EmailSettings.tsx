@@ -41,7 +41,7 @@ export default function EmailSettings({ setSettingsContent }: { setSettingsConte
 
 			setLoading(true)
 
-			await updateEmail({ email })
+			await updateEmail({ email: currentUser.email, newEmail: email })
 
 			setPersistedUser({
 				name: currentUser.name,

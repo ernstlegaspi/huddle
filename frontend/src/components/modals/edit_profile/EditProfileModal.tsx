@@ -5,7 +5,7 @@ import CloseButton from "../../CloseButton"
 import Input from "../../Input"
 import BlackInset from "../BlackInset"
 import { useEditProfileModal } from "../../../hooks/useToggleModal"
-import { getPersistedUser, nameRegex, setPersistedUser, usernameRegEx } from "../../../lib/utils"
+import { axiosError, getPersistedUser, nameRegex, setPersistedUser, usernameRegEx } from "../../../lib/utils"
 import { updateProfile } from "../../../api/api"
 import { AxiosError } from "axios"
 import useNameUsername from "../../../hooks/useNameAndUsername"
@@ -77,24 +77,7 @@ export default function EditProfileModal() {
 		}
 		catch(e) {
 			setLoading(false)
-
-			if(e instanceof AxiosError) {
-				const error: AxiosError = e
-
-				if(error?.response?.status === 401) {
-					toast.error('User is not existing.')
-					return
-				}
-
-				const { message }: { message: string } = error?.response?.data as { message: string }
-
-				if(message) {
-					toast.error(message)
-					return
-				}
-			}
-
-			toast.error("Can not update profile. Try again later.")
+			toast.error(axiosError(e, "Can not change profile information. Try agan later."))
 		}
 	}
 
