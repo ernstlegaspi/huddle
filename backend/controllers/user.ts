@@ -5,7 +5,7 @@ import path from 'path'
 import { Request, Response } from 'express'
 
 import User from '../models/user'
-import { catchError, error, getUserId, isValidBirthday, isValidEmail, isValidName, isValidUsername, success, updatePosts, updateUser } from '../utils/index'
+import { catchError, error, getUserId, isValidBirthday, isValidEmail, isValidName, success, updatePosts, updateUser } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 import { errorEmail, errorName, errorUnauthorized } from '../utils/constants'
 
@@ -57,7 +57,7 @@ export const signIn = (req: Request, res: Response) => {
 export const signUp = (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { error: joiError, value } = signUpSchema.validate(req.body)
-		const { email, name, password, interests: interestsData } = value
+		const { email, name, password, interests: interestsData, username } = value
 		const interests: string[] = interestsData as string[]
 
 		if(interests.length < 1 || joiError) return error(400, res, 'Error signing up. Try again later.')
@@ -73,9 +73,12 @@ export const signUp = (req: Request, res: Response) => {
 
 		if(existingUser) return error(409, res, "Email is already existing")
 
+		const existingUsername = await User.findOne({ username })
+
 		const newUser = await new User({
 			...req.body,
-			password: hashedPassword
+			password: hashedPassword,
+			username: existingUsername ? `${username}${Date.now()}` : username
 		}).save()
 
 		const token = jwt.sign({
@@ -237,7 +240,11 @@ export const updateProfile = async (req: Request, res: Response) => {
 		const user = await User.findOne({ email })
 
 		if(!user) return error(401, res, "User does not exist.")
-		
+
+		const existingUsername = await User.findOne({ email })
+
+		if(existingUsername) return error(409, res, "Username is already existing.")
+
 		await updateUser(userId, { name, username })
 
 		await updatePosts(userId, { name, username })
@@ -305,6 +312,10 @@ export const updateUsername = async (req: Request, res: Response) => {
 		const user = await User.findOne({ email })
 
 		if(!user) return error(401, res, "User does not exist")
+
+		const existingUsername = await User.findOne({ email })
+
+		if(existingUsername) return error(409, res, "Username is already existing.")
 
 		if(username === user.username) return error(400, res, "There are no changes in username.")
 

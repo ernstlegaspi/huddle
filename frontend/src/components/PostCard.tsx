@@ -20,7 +20,7 @@ export default function PostCard({ post }: { post: Post }) {
 	return <div className="bg-white rounded-r5 w p-2 pointer transition-all hover:shadow-md hover:shadow-vio/70">
 		<LazyLoadImage
 			src={`http://localhost:3001/images/${post.pictures}`}
-			alt="Mountains"
+			alt={post.pictures}
 			className="w h-[300px] rounded-r5"
 		/>
 		<div className="w f justify-between mt-3">

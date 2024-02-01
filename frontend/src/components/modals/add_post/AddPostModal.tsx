@@ -102,7 +102,7 @@ export default function AddPostModal() {
 
 			const userPicture: string = user.picture ? user.picture as string : ''
 
-			await addPost({
+			const { data } = await addPost({
 				body,
 				email: user?.email,
 				name: user.name,
@@ -120,6 +120,7 @@ export default function AddPostModal() {
 			close()
 			setDisabled(false)
 			document.body.style.overflow = 'auto'
+			window.location.reload()
 		}
 		catch(e) {
 			setDisabled(false)

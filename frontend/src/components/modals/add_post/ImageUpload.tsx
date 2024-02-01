@@ -10,15 +10,19 @@ type Props = {
 export default function ImageUpload({ handleImageUpload, postImage, setTags, tags }: Props) {
 	return <div className="border-t border-vio/30 flex-1">
 		{
-			postImage ? <div className="relative w h f flex-col">
-				<img src={`http://localhost:3001/images/${postImage}`} alt="Temporary Post" className="w flex-1" />
-				<input
-					type="text"
-					value={tags}
-					onChange={(e: ChangeEvent<HTMLInputElement>) => setTags(e.target.value)}
-					placeholder='Add tags about your post; e.g. forest, trees'
-					className="border-b border-vio m-3 mt-1 outline-none text-14 p-2 text-dark"
-				/>
+			postImage ? <div className="w h-[600px] overflow-y-hidden">
+				<div className="relative w h f flex-col">
+					<div className="flex-1 w bg-red-500 overflow-hidden">
+						<img src={`http://localhost:3001/images/${postImage}`} alt="Temporary Post" className="w h" />
+					</div>
+					<input
+						type="text"
+						value={tags}
+						onChange={(e: ChangeEvent<HTMLInputElement>) => setTags(e.target.value)}
+						placeholder='Add tags about your post; e.g. forest, trees'
+						className="border-b border-vio m-3 mt-1 outline-none text-14 p-2 text-dark"
+					/>
+			</div>
 			</div>
 			: <div className="f-center flex-col w h">
 				<p className="text-dark mb-3 font-medium">Upload an image for your post</p>

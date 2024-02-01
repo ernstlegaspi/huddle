@@ -1,9 +1,9 @@
 import toast from 'react-hot-toast'
 import { useEffect, useRef, useState } from 'react'
+import { ClipLoader } from "react-spinners"
 
 import PostCard from "../../../PostCard"
 import SkeletonPostCard from '../../../SkeletonPostCard'
-import CircleLoader from '../../../CircleLoader'
 import useNameUsername from '../../../../hooks/useNameAndUsername'
 import usePostsCount from '../../../../hooks/usePostsCount'
 import CoverPhoto from './CoverPhoto'
@@ -77,6 +77,7 @@ export default function Profile() {
 					canRefetch.current = true
 					setIsRefetching(false)
 					setPosts(newPosts)
+					postsRef.current = newPosts
 				}
 				catch(e) {
 					toast.error('Can not get posts. Try again later.')
@@ -131,6 +132,9 @@ export default function Profile() {
 			}
 		</div>
 		<div className="my-7"></div>
-		{isRefetching ? <CircleLoader /> : null}
+		{isRefetching ? <div className="f-center w">
+			<ClipLoader color="#afa6b7" />
+		</div> : null}
+		<div className="my-7"></div>
 	</div>
 }

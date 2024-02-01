@@ -17,7 +17,7 @@ export default function UserCard() {
 	}
 
 	return <div className="w-[90%] mx-auto mt-4 text-dark">
-		<div onClick={handleClick} className="v-center pointer border border-vio/30 rounded-r5 px-3 py-2 bg-gl transition-all hover:bg-vio/30">
+		<div onClick={handleClick} className="w v-center pointer border border-vio/30 rounded-r5 px-3 py-2 bg-gl transition-all hover:bg-vio/30">
 			<div className="pt-[5px]">
 				{
 					globalLoading ? <Skeleton className="bg-vio w-[35px] h-[35px] rounded-full" />
@@ -33,8 +33,8 @@ export default function UserCard() {
 						<Skeleton className="rounded-full py-[5px] bg-vio w-[50px] mt-1" />
 					</>
 					: <>
-						<p className="font-bold">{nameUsername.name ? nameUsername.name : user?.name}</p>
-						<p className="text-14 text-vio">@{nameUsername.username ? nameUsername.username : user?.username}</p>
+						<p className="font-bold break-all">{nameUsername.name ? nameUsername.name : user?.name}</p>
+						<p className="text-14 text-vio break-all">@{nameUsername.username ? nameUsername.username : user?.username}</p>
 					</>
 				}
 			</div>
