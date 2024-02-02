@@ -1,13 +1,17 @@
 import EventsCard from "./EventsCard"
-import OtherUserCard from "./OtherUserCard"
+import AddFriendTab from "./AddFriendTab"
 import PostSomethingCard from "./PostSomethingCard"
+import useGlobalLoading from "../../../../hooks/useGlobalLoading"
+import SkeletonAddFriend from "./SkeletonAddFriendTab"
 
 export default function RightSidebar() {
-	return <div className="relative w-[14%]">
-		<div className="h w-[14%] fixed f flex-col py-3">
+	const { globalLoading } = useGlobalLoading()
+
+	return <div className="relative w-[17%]">
+		<div className="h w-[17%] fixed f flex-col py-3">
 			<PostSomethingCard />
 			<EventsCard />
-			<OtherUserCard />
+			{globalLoading ? <SkeletonAddFriend /> : <AddFriendTab />}
 			<div className="h-[80px]"></div>
 		</div>
 	</div>

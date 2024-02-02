@@ -5,7 +5,17 @@ import path from 'path'
 import { Request, Response } from 'express'
 
 import User from '../models/user'
-import { catchError, error, getUserId, isValidBirthday, isValidEmail, isValidName, success, updatePosts, updateUser } from '../utils/index'
+import {
+	catchError,
+	error,
+	getUserId,
+	isValidBirthday,
+	isValidEmail,
+	isValidName,
+	success,
+	updatePosts,
+	updateUser
+} from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 import { errorEmail, errorName, errorUnauthorized } from '../utils/constants'
 
@@ -237,17 +247,19 @@ export const updateProfile = async (req: Request, res: Response) => {
 		const { email, name, username } = req.body
 		const userId = getUserId(req)
 
-		const user = await User.findOne({ email })
+		const [user, existingUsername] = await Promise.all([
+			User.findOne({ email }),
+			User.findOne({ username })
+		])
 
 		if(!user) return error(401, res, "User does not exist.")
 
-		const existingUsername = await User.findOne({ email })
-
 		if(existingUsername) return error(409, res, "Username is already existing.")
 
-		await updateUser(userId, { name, username })
-
-		await updatePosts(userId, { name, username })
+		await Promise.all([
+			updateUser(userId, { name, username }),
+			updatePosts(userId, { name, username })
+		])
 
 		return success({
 			name,
@@ -309,19 +321,21 @@ export const updateUsername = async (req: Request, res: Response) => {
 		const { email, username } = req.body
 		const userId = getUserId(req)
 
-		const user = await User.findOne({ email })
+		const [user, existingUsername] = await Promise.all([
+			User.findOne({ email }),
+			User.findOne({ username })
+		])
 
 		if(!user) return error(401, res, "User does not exist")
-
-		const existingUsername = await User.findOne({ email })
 
 		if(existingUsername) return error(409, res, "Username is already existing.")
 
 		if(username === user.username) return error(400, res, "There are no changes in username.")
 
-		await updateUser(userId, { username })
-
-		await updatePosts(userId, { username })
+		await Promise.all([
+			await updateUser(userId, { username }),
+			await updatePosts(userId, { username })
+		])
 
 		return success({
 			username
@@ -372,5 +386,37 @@ export const removePicture = async (req: Request, res: Response) => {
 		}
 
 		return success({}, 201, res)
+	}, res)
+}
+
+export const getUserWithSameInterests = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email, interests } = req.params
+		const interestsArr = interests.split("-")
+
+		if(interestsArr.length < 1) return error(400, res, "Can not get users with the same interests.")
+
+		const user = await User.findOne({ email })
+
+		if(!user) return error(401, res, "Unauthorized. Log in first to perform this action.")
+
+		let otherUsers = await User.aggregate([
+			{ $match: {
+				email: { $ne: email },
+				interests: { $in: interestsArr }
+			} },
+			{ $sample: { size: 8 } }
+		])
+
+		if(otherUsers.length < 1) {
+			otherUsers = await User.aggregate([
+				{ $match: {
+					email: { $ne: email }
+				} },
+				{ $sample: { size: 8 } }
+			])
+		}
+
+		return success(otherUsers, 200, res)
 	}, res)
 }

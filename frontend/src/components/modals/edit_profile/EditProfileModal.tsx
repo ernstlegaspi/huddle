@@ -7,8 +7,8 @@ import BlackInset from "../BlackInset"
 import { useEditProfileModal } from "../../../hooks/useToggleModal"
 import { axiosError, getPersistedUser, nameRegex, setPersistedUser, usernameRegEx } from "../../../lib/utils"
 import { updateProfile } from "../../../api/api"
-import { AxiosError } from "axios"
 import useNameUsername from "../../../hooks/useNameAndUsername"
+import useCurrentUser from "../../../hooks/useCurrentUser"
 
 export default function EditProfileModal() {
 	const user: AuthUser = getPersistedUser()
@@ -16,6 +16,7 @@ export default function EditProfileModal() {
 	const [loading, setLoading] = useState(false)
 	const { close, isOpen } = useEditProfileModal()
 	const { setNameUsername } = useNameUsername()
+	const { currentUser, setCurrentUser } = useCurrentUser()
 
 	if(!isOpen) return null
 
@@ -41,6 +42,11 @@ export default function EditProfileModal() {
 				return
 			}
 
+			if(name === user?.name && username === user?.username) {
+				toast.error('There are no changes in username.')
+				return
+			}
+
 			if(!nameRegex.test(name)) {
 				toast.error('Enter a valid name')
 				return
@@ -48,11 +54,6 @@ export default function EditProfileModal() {
 
 			if(!usernameRegEx.test(username)) {
 				toast.error('Enter a valid username')
-				return
-			}
-
-			if(name === user?.name && username === user?.username) {
-				toast.error('Name or Username should be different on the existing value.')
 				return
 			}
 
@@ -72,6 +73,7 @@ export default function EditProfileModal() {
 
 			setLoading(false)
 			setNameUsername({ name: data.name, username: data.username })
+			setCurrentUser({ ...currentUser, username: data.username })
 			toast.success('Profile Updated.')
 			handleClose()
 		}

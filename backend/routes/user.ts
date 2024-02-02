@@ -1,7 +1,7 @@
 import express from 'express'
 
-import { getUser, passwordConfirmation, removePicture, signIn, signOut, signUp, updateBirthday, updateEmail, updateInterests, updateName, updatePassword, updatePhoto, updateProfile, updateUsername } from '../controllers/user'
-import { checkMiddleware, checkValidName, checkValidEmail, checkValidUsername } from '../middleware'
+import { getUser, getUserWithSameInterests, passwordConfirmation, removePicture, signIn, signOut, signUp, updateBirthday, updateEmail, updateInterests, updateName, updatePassword, updatePhoto, updateProfile, updateUsername } from '../controllers/user'
+import { checkMiddleware, checkValidName, checkValidEmail, checkValidUsername, checkValidEmailParams } from '../middleware'
 
 const router = express.Router()
 
@@ -10,6 +10,8 @@ router.get('/auth/getUser/:email', checkMiddleware, getUser)
 router.post("/auth/sign-in", signIn)
 router.post("/auth/sign-up", signUp)
 router.post('/auth/sign-out', checkMiddleware, signOut)
+
+router.get('/user/getUserWithSameInterests/:interests/:email', checkMiddleware, checkValidEmailParams, getUserWithSameInterests)
 
 router.put('/user/passwordConfirmation', checkMiddleware, checkValidEmail, passwordConfirmation)
 

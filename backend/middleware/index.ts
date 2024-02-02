@@ -39,7 +39,17 @@ export const checkValidEmail = (req: Request, res: Response, next: NextFunction)
 	next()
 }
 
-export const checkValidName = async (req: Request, res: Response, next: NextFunction) => {
+export const checkValidEmailParams = (req: Request, res: Response, next: NextFunction) => {
+	const { email } = req.params
+
+	if(!email) return error(401, res, "Unauthorized. Log in first to perform this action.")
+
+	if(!isValidEmail(email)) return error(400, res, "Enter a valid email.")
+
+	next()
+}
+
+export const checkValidName = (req: Request, res: Response, next: NextFunction) => {
 	const { name } = req.body
 
 	if(!name) return error(400, res, "Invalid Request.")

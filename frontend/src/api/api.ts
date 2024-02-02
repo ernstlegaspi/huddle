@@ -27,6 +27,7 @@ export const updatePhoto = (data: { email: string, isCoverPhoto: boolean, pictur
 export const updateProfile = (data: { email: string, name: string, username: string }) => API.put('user/updateProfile', data)
 export const removePicture = (data: { email: string, isCoverPhoto: boolean, picture: string }) => API.put('user/removePicture', data)
 export const updateUsername = (data: { email: string, username: string }) => API.put('user/updateUsername', data)
+export const getUserWithSameInterests = (email: string, interests: string) => API.get(`user/getUserWithSameInterests/${interests}/${email}`)
 
 export const updatePassword = (data: {
 	email: string,
