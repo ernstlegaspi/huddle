@@ -31,6 +31,7 @@ module.exports = {
 				dark: "#434343",
 				vio: "#afa6b7",
 				dvio: "#9C90A8",
+				lvio: "#EEEAF2",
 				ind: "#6c40d9",
 				gl: "#F3F3F3",
 				border: "hsl(var(--border))",

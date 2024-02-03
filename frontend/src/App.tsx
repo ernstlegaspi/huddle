@@ -9,6 +9,7 @@ import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/uti
 import { getUserApi, signOut } from './api/api'
 import useCurrentUser from './hooks/useCurrentUser'
 import useGlobalLoading from './hooks/useGlobalLoading'
+import NotificationCard from './components/notification/NotificationTab'
 
 const AddPostModal = lazy(() => import("./components/modals/add_post/AddPostModal"))
 const ChangeCoverPhotoModal = lazy(() => import("./components/modals/change_picture/ChangeCoverPhotoModal"))
@@ -72,6 +73,7 @@ export default function App() {
 				<SettingsModal />
 				<ViewCoverPhotoModal />
 				<ViewProfilePictureModal />
+				<NotificationCard />
 				<Toaster />
 				<Routes>
 					<Route path="/" element={<HomePage />} />

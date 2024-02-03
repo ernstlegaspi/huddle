@@ -29,6 +29,28 @@ export const checkMiddleware = async (req: Request, res: Response, next: NextFun
 	}
 }
 
+export const checkValidUser = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const { email } = req.body
+		const { email: paramsEmail } = req.params
+		const userEmail = email ? email : paramsEmail
+
+		console.log(1111)
+		console.log(req.body)
+		console.log(req.params)
+		console.log(2222)
+		
+		const user = await User.findOne({ email: userEmail })
+
+		if(!user) return error(401, res, "Unauthorized. Log in first to perform this action.")
+
+		next()
+	}
+	catch(e) {
+		return error(500, res, "Internal Server Errro")
+	}
+}
+
 export const checkValidEmail = (req: Request, res: Response, next: NextFunction) => {
 	const { email } = req.body
 

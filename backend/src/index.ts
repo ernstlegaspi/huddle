@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 
 import imageUploadRoutes from '../routes/imageUpload'
 import otpRoutes from '../routes/otp'
+import notificationRoutes from '../routes/notification'
 import postRoutes from '../routes/post'
 import userRoutes from '../routes/user'
 
@@ -30,6 +31,7 @@ app.use(express.static('public'))
 app.use("", imageUploadRoutes)
 app.use("", otpRoutes)
 app.use("", postRoutes)
+app.use("", notificationRoutes)
 app.use("", userRoutes)
 
 mongoose.connect(process.env.DB_URL as string)

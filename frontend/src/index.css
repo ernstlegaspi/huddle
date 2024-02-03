@@ -131,6 +131,10 @@
 		@apply w-full outline-none px-1 py-3 border-b border-vio
 	}
 
+	.notification-card {
+		@apply v-center-bet py-3 px-2 bg-lvio text-dark
+	}
+
 	.pointer {
 		@apply cursor-pointer
 	}

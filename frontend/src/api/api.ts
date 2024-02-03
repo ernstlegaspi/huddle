@@ -10,6 +10,10 @@ export const signIn = (data: { email: string, password: string }) => API.post('a
 export const signUp = (data: User) => API.post('auth/sign-up', data)
 export const signOut = () => API.post('auth/sign-out', {})
 
+// notification
+export const addNotification = (data: { email: string, content: string, type: string, name: string, picture: string }) => API.post('notification', data)
+export const getUserNotification = (email: string) => API.get(`notification/user-notification/${email}`)
+
 // post
 export const changePostImage = (data: FormData, prevImage: string) => API.post(`upload/change-image/${prevImage}`, data)
 export const uploadImage = (data: FormData) => API.post('upload/image', data)

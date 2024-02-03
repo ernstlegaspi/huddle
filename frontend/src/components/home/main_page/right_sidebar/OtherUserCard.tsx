@@ -1,7 +1,30 @@
+import toast from "react-hot-toast"
+import { axiosError } from "../../../../lib/utils"
+
 import ProfilePicture from "../../../ProfilePicture"
 import VioButton from "../../../VioButton"
+import useCurrentUser from "../../../../hooks/useCurrentUser"
+import { addNotification } from "../../../../api/api"
 
 export default function OtherUserCard({ otherUser }: { otherUser: User }) {
+	const { currentUser } = useCurrentUser()
+
+	const handleClick = async () => {
+		try {
+			await addNotification({
+				email: currentUser.email,
+				name: currentUser.name,
+				picture: currentUser.picture as string,
+				content: 'Sent a friend request',
+				type: 'add friend'
+			})
+			toast.success('Friend request sent.')
+		}
+		catch(e) {
+			toast.error(axiosError(e, "Can not add friend. Try again later."))
+		}
+	}
+
 	return <div className="v-center-bet w py-2 px-2 mb-3">
 		<div className="v-center">
 			<ProfilePicture picture={otherUser.picture as string} />
@@ -10,6 +33,6 @@ export default function OtherUserCard({ otherUser }: { otherUser: User }) {
 				<p className="text-14">@{otherUser.username}</p>
 			</div>
 		</div>
-		<VioButton label="Add" loading={false} onClick={() => {}} />
+		<VioButton label="Add" loading={false} onClick={handleClick} />
 	</div>
 }
