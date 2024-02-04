@@ -420,3 +420,13 @@ export const getUserWithSameInterests = async (req: Request, res: Response) => {
 		return success(otherUsers, 200, res)
 	}, res)
 }
+
+export const acceptFriendRequest = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { userId, friendId } = req.body
+
+		await updateUser(userId, { friends: friendId })
+
+		return success({}, 201, res)
+	}, res)
+}

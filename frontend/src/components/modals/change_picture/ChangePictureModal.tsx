@@ -13,10 +13,8 @@ export default function ChangePictureModal() {
 	const [loading, setLoading] = useState(false)
 	const { currentUser, setCurrentUser } = useCurrentUser()
 	const { setIsProfilePictureRemove } = useIsProfilePictureRemove()
-	const { close, isOpen } = useChangePictureModal()
+	const { close } = useChangePictureModal()
 	const { open } = useViewProfilePictureModal()
-
-	if(!isOpen) return null
 
 	const handleChangePhoto = async (e: ChangeEvent<HTMLInputElement>) => {
 		if(loading) return

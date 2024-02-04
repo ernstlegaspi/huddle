@@ -1,5 +1,5 @@
 import express from 'express'
-import { addNotification, getUserNotification } from '../controllers/notification'
+import { addNotification, deleteNotification, getUserNotification } from '../controllers/notification'
 import { checkMiddleware, checkValidEmail, checkValidEmailParams, checkValidUser } from '../middleware'
 
 const router = express.Router()
@@ -7,5 +7,7 @@ const router = express.Router()
 router.get('/notification/user-notification/:email', checkMiddleware, checkValidEmailParams, checkValidUser, getUserNotification)
 
 router.post('/notification/', checkMiddleware, checkValidEmail, checkValidUser, addNotification)
+
+router.delete('/notification/:email/:id', checkMiddleware, checkValidEmailParams, checkValidUser, deleteNotification)
 
 export default router

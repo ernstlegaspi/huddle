@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 
 import CircleLoader from "../../../CircleLoader"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
-import OtherUserCard from "./OtherUserCard"
+import OtherUserCard from "./FriendCard"
 import { getUserWithSameInterests } from "../../../../api/api"
 import { axiosError } from "../../../../lib/utils"
 

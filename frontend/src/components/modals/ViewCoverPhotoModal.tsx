@@ -7,10 +7,8 @@ import useCurrentUser from '../../hooks/useCurrentUser'
 
 export default function ViewCoverPhotoModal() {
 	const [hovered, setHovered] = useState(false)
-	const { close, isOpen } = useViewCoverPhotoModal()
+	const { close } = useViewCoverPhotoModal()
 	const { currentUser } = useCurrentUser()
-
-	if(!isOpen) return null
 
 	const handleClose = () => {
 		close()

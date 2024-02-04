@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
 	birthday: String,
 	password: String,
 	interests: [String],
+	notifications: Number,
 	picture: {
 		type: String,
 		default: ''
@@ -19,6 +20,10 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		default: ''
 	},
+	friends: [{
+		type: mongoose.Schema.ObjectId,
+		ref: 'User'
+	}],
 	posts: [{
 		type: mongoose.Schema.ObjectId,
 		ref: 'Post'

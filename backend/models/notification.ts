@@ -8,6 +8,10 @@ const notificationSchema = new mongoose.Schema({
 	ownerId: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'User'
+	},
+	otherUserId: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'User'
 	}
 }, { timestamps: true })
 

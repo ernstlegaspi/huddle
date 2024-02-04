@@ -10,9 +10,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css'
 export default function ViewProfilePictureModal() {
 	const [hovered, setHovered] = useState(false)
 	const { currentUser } = useCurrentUser()
-	const { close, isOpen } = useViewProfilePictureModal()
-
-	if(!isOpen) return null
+	const { close } = useViewProfilePictureModal()
 
 	const handleClose = () => {
 		close()

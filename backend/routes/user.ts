@@ -1,7 +1,31 @@
 import express from 'express'
 
-import { getUser, getUserWithSameInterests, passwordConfirmation, removePicture, signIn, signOut, signUp, updateBirthday, updateEmail, updateInterests, updateName, updatePassword, updatePhoto, updateProfile, updateUsername } from '../controllers/user'
-import { checkMiddleware, checkValidName, checkValidEmail, checkValidUsername, checkValidEmailParams } from '../middleware'
+import {
+	acceptFriendRequest,
+	getUser,
+	getUserWithSameInterests,
+	passwordConfirmation,
+	removePicture,
+	signIn,
+	signOut,
+	signUp,
+	updateBirthday,
+	updateEmail,
+	updateInterests,
+	updateName,
+	updatePassword,
+	updatePhoto,
+	updateProfile,
+	updateUsername
+} from '../controllers/user'
+import {
+	checkMiddleware,
+	checkValidName,
+	checkValidEmail,
+	checkValidUsername,
+	checkValidEmailParams,
+	checkValidUser
+} from '../middleware'
 
 const router = express.Router()
 
@@ -25,5 +49,8 @@ router.put('/user/updatePassword', checkMiddleware, checkValidEmail, updatePassw
 router.put('/user/updateProfile', checkMiddleware, checkValidEmail, checkValidName, checkValidUsername, updateProfile)
 router.put('/user/updatePhoto', checkMiddleware, updatePhoto)
 router.put('/user/updateUsername', checkMiddleware, checkValidEmail, checkValidUsername, updateUsername)
+
+router.put('/user/accept-friend-request', checkMiddleware, checkValidEmail, checkValidUser, acceptFriendRequest)
+
 
 export default router

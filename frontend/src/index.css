@@ -132,7 +132,7 @@
 	}
 
 	.notification-card {
-		@apply v-center-bet py-3 px-2 bg-lvio text-dark
+		@apply items-center justify-between py-3 px-2 bg-lvio text-dark
 	}
 
 	.pointer {

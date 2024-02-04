@@ -14,11 +14,9 @@ export default function EditProfileModal() {
 	const user: AuthUser = getPersistedUser()
 	const [data, setData] = useState({ name: user?.name, username: user?.username })
 	const [loading, setLoading] = useState(false)
-	const { close, isOpen } = useEditProfileModal()
+	const { close } = useEditProfileModal()
 	const { setNameUsername } = useNameUsername()
 	const { currentUser, setCurrentUser } = useCurrentUser()
-
-	if(!isOpen) return null
 
 	const handleClose = () => {
 		if(loading) return

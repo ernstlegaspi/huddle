@@ -11,7 +11,8 @@ export const signUp = (data: User) => API.post('auth/sign-up', data)
 export const signOut = () => API.post('auth/sign-out', {})
 
 // notification
-export const addNotification = (data: { email: string, content: string, type: string, name: string, picture: string }) => API.post('notification', data)
+export const addNotification = (data: { email: string, content: string, name: string, otherUserId: string, ownerId: string, picture: string, type: string }) => API.post('notification', data)
+export const deleteNotification = (email: string, _id: string) => API.delete(`notification/${email}/${_id}`)
 export const getUserNotification = (email: string) => API.get(`notification/user-notification/${email}`)
 
 // post
@@ -32,6 +33,7 @@ export const updateProfile = (data: { email: string, name: string, username: str
 export const removePicture = (data: { email: string, isCoverPhoto: boolean, picture: string }) => API.put('user/removePicture', data)
 export const updateUsername = (data: { email: string, username: string }) => API.put('user/updateUsername', data)
 export const getUserWithSameInterests = (email: string, interests: string) => API.get(`user/getUserWithSameInterests/${interests}/${email}`)
+export const acceptFriendRequest = (data: { email: string, userId: string, friendId: string }) => API.put(`user/accept-friend-request`, data)
 
 export const updatePassword = (data: {
 	email: string,

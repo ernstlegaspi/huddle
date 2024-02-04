@@ -9,15 +9,7 @@ import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/uti
 import { getUserApi, signOut } from './api/api'
 import useCurrentUser from './hooks/useCurrentUser'
 import useGlobalLoading from './hooks/useGlobalLoading'
-import NotificationCard from './components/notification/NotificationTab'
-
-const AddPostModal = lazy(() => import("./components/modals/add_post/AddPostModal"))
-const ChangeCoverPhotoModal = lazy(() => import("./components/modals/change_picture/ChangeCoverPhotoModal"))
-const ChangePictureModal = lazy(() => import("./components/modals/change_picture/ChangePictureModal"))
-const EditProfileModal = lazy(() => import("./components/modals/edit_profile/EditProfileModal"))
-const SettingsModal = lazy(() => import("./components/modals/settings/SettingsModal"))
-const ViewCoverPhotoModal = lazy(() => import("./components/modals/ViewCoverPhotoModal"))
-const ViewProfilePictureModal = lazy(() => import("./components/modals/ViewProfilePictureModal"))
+import Modal from './components/modals/Modal'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 
@@ -66,14 +58,7 @@ export default function App() {
 	`}>
 		<BrowserRouter>
 			<Suspense fallback={user ? <SkeletonHomepage /> : <div className="w h-[100vh] bg-vio"></div>}>
-				<AddPostModal />
-				<ChangeCoverPhotoModal />
-				<ChangePictureModal />
-				<EditProfileModal />
-				<SettingsModal />
-				<ViewCoverPhotoModal />
-				<ViewProfilePictureModal />
-				<NotificationCard />
+				<Modal />
 				<Toaster />
 				<Routes>
 					<Route path="/" element={<HomePage />} />

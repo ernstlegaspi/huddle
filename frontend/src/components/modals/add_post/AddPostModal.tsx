@@ -21,9 +21,7 @@ export default function AddPostModal() {
 	const [tags, setTags] = useState('')
 	const [isNext, setIsNext] = useState(false)
 
-	const { close, isOpen } = useAddPostModal()
-
-	if(!isOpen) return null
+	const { close } = useAddPostModal()
 
 	const handleClose = () => {
 		if(disabled) return

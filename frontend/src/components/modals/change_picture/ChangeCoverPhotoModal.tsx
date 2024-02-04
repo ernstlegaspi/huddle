@@ -11,10 +11,8 @@ import { removePicture, updatePhoto, uploadImage } from "../../../api/api"
 export default function ChangeCoverPhotoModal() {
 	const [loading, setLoading] = useState(false)
 	const { currentUser, setCurrentUser } = useCurrentUser()
-	const { close, isOpen } = useChangeCoverPhotoModal()
+	const { close } = useChangeCoverPhotoModal()
 	const { open } = useViewCoverPhotoModal()
-
-	if(!isOpen) return null
 
 	const handleRemovePhoto = async () => {
 		try {

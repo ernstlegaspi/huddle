@@ -12,10 +12,12 @@ export default function OtherUserCard({ otherUser }: { otherUser: User }) {
 	const handleClick = async () => {
 		try {
 			await addNotification({
+				content: 'Sent a friend request',
 				email: currentUser.email,
 				name: currentUser.name,
+				otherUserId: currentUser._id as string,
+				ownerId: otherUser._id as string,
 				picture: currentUser.picture as string,
-				content: 'Sent a friend request',
 				type: 'add friend'
 			})
 			toast.success('Friend request sent.')

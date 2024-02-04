@@ -28,9 +28,7 @@ export default function SettingsModal() {
 	const [activeSettings, setActiveSettings] = useState('')
 	const [settingsContent, setSettingsContent] = useState('')
 	const { setActiveSidebar } = useActiveSidebar()
-	const { close, isOpen } = useSettingsModal()
-
-	if(!isOpen) return null
+	const { close } = useSettingsModal()
 
 	const handleClose = () => {
 		setActiveSidebar('feed')
