@@ -9,7 +9,7 @@ type TNotification = {
 	content: string
 	_id?: string
 	name: string
-  otherUserId: string
+	otherUserId: string
 	ownerId: string
 	picture: string
 	type: string

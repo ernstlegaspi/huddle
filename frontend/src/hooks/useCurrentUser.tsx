@@ -7,7 +7,7 @@ type Props = {
 
 const useCurrentUser = create<Props>((set) => ({
 	currentUser: {
-		id: '',
+		_id: '',
 		coverPhoto: '',
 		name: '',
 		email: '',

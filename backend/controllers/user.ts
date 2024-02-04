@@ -392,7 +392,7 @@ export const removePicture = async (req: Request, res: Response) => {
 export const getUserWithSameInterests = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { email, interests } = req.params
-		const interestsArr = interests.split("-")
+		const interestsArr = interests.split('-')
 
 		if(interestsArr.length < 1) return error(400, res, "Can not get users with the same interests.")
 
@@ -403,6 +403,7 @@ export const getUserWithSameInterests = async (req: Request, res: Response) => {
 		let otherUsers = await User.aggregate([
 			{ $match: {
 				email: { $ne: email },
+				_id: { $nin: user.friends },
 				interests: { $in: interestsArr }
 			} },
 			{ $sample: { size: 8 } }
@@ -411,7 +412,8 @@ export const getUserWithSameInterests = async (req: Request, res: Response) => {
 		if(otherUsers.length < 1) {
 			otherUsers = await User.aggregate([
 				{ $match: {
-					email: { $ne: email }
+					email: { $ne: email },
+					_id: { $nin: user.friends },
 				} },
 				{ $sample: { size: 8 } }
 			])
@@ -425,7 +427,10 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { userId, friendId } = req.body
 
-		await updateUser(userId, { friends: friendId })
+		await Promise.all([
+			updateUser(userId, { friends: friendId }),
+			updateUser(friendId, { friends: userId })
+		])
 
 		return success({}, 201, res)
 	}, res)
