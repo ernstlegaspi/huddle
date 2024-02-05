@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		default: ''
 	},
+	requestsSent: [String],
 	friends: [{
 		type: mongoose.Schema.ObjectId,
 		ref: 'User'

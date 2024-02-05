@@ -2,6 +2,7 @@ import express from 'express'
 
 import {
 	acceptFriendRequest,
+	appendToRequestsSent,
 	getUser,
 	getUserWithSameInterests,
 	passwordConfirmation,
@@ -36,6 +37,8 @@ router.post("/auth/sign-up", signUp)
 router.post('/auth/sign-out', checkMiddleware, signOut)
 
 router.get('/user/getUserWithSameInterests/:interests/:email', checkMiddleware, checkValidEmailParams, getUserWithSameInterests)
+
+router.put('/user/append-to-requests-sent', checkMiddleware, checkValidEmail, checkValidUser, appendToRequestsSent)
 
 router.put('/user/passwordConfirmation', checkMiddleware, checkValidEmail, passwordConfirmation)
 

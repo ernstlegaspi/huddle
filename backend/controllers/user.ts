@@ -389,6 +389,20 @@ export const removePicture = async (req: Request, res: Response) => {
 	}, res)
 }
 
+export const appendToRequestsSent = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { otherUserId } = req.body
+		const currentUserId = getUserId(req)
+
+		await User.findByIdAndUpdate(currentUserId,
+			{ $push: { requestsSent: otherUserId } },
+			{ $new: true }
+		)
+
+		return success({}, 200, res)
+	}, res)
+}
+
 export const getUserWithSameInterests = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { email, interests } = req.params

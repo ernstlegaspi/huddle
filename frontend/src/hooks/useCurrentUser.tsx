@@ -15,7 +15,8 @@ const useCurrentUser = create<Props>((set) => ({
 		interests: [],
 		birthday: '',
 		password: '',
-		picture: ''
+		picture: '',
+		requestsSent: []
 	},
 	setCurrentUser: (newVal: User) => set({ currentUser: newVal })
 }))

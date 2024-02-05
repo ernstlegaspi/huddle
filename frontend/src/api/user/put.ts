@@ -1,5 +1,6 @@
 import { API } from "../api"
 
+export const appendToRequestsSent = (data: { email: string, otherUserId: string }) => API.put(`user/append-to-requests-sent`, data)
 export const acceptFriendRequest = (data: { email: string, userId: string, friendId: string }) => API.put(`user/accept-friend-request`, data)
 
 export const removePicture = (data: { email: string, isCoverPhoto: boolean, picture: string }) => API.put('user/removePicture', data)

@@ -33,6 +33,7 @@ type User = {
 	coverPhoto?: string
 	email: string
 	interests: string[]
+  requestsSent?: string[]
 	name: string
 	password: string
 	picture?: string

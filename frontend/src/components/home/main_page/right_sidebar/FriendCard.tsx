@@ -1,28 +1,39 @@
 import toast from "react-hot-toast"
+import { useState } from "react"
 import { axiosError } from "../../../../lib/utils"
 
 import ProfilePicture from "../../../ProfilePicture"
 import VioButton from "../../../VioButton"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import { addNotification } from "../../../../api/notification/post"
+import { appendToRequestsSent } from "../../../../api/user/put"
 
 export default function OtherUserCard({ otherUser }: { otherUser: User }) {
+	const [clicked, setClicked] = useState(false)
 	const { currentUser } = useCurrentUser()
+	const id = otherUser._id as string
+	const requestSent = currentUser.requestsSent as string[]
+	const hasSentRequest = requestSent.includes(id)
 
 	const handleClick = async () => {
 		try {
-			await addNotification({
-				content: 'Sent a friend request',
-				email: currentUser.email,
-				name: currentUser.name,
-				otherUserId: currentUser._id as string,
-				ownerId: otherUser._id as string,
-				picture: currentUser.picture as string,
-				type: 'add friend'
-			})
-			toast.success('Friend request sent.')
+			setClicked(true)
+
+			await Promise.all([
+				addNotification({
+					content: 'Sent a friend request',
+					email: currentUser.email,
+					name: currentUser.name,
+					otherUserId: currentUser._id as string,
+					ownerId: id,
+					picture: currentUser.picture as string,
+					type: 'add friend'
+				}),
+				appendToRequestsSent({ email: currentUser.email, otherUserId: id })
+			])
 		}
 		catch(e) {
+			setClicked(false)
 			toast.error(axiosError(e, "Can not add friend. Try again later."))
 		}
 	}
@@ -35,6 +46,6 @@ export default function OtherUserCard({ otherUser }: { otherUser: User }) {
 				<p className="text-14">@{otherUser.username}</p>
 			</div>
 		</div>
-		<VioButton label="Add" loading={false} onClick={handleClick} />
+		<VioButton label={`${clicked || hasSentRequest ? 'Request Sent' : 'Add'}`} loading={false || clicked || hasSentRequest} onClick={handleClick} />
 	</div>
 }
