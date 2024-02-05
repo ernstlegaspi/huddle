@@ -5,9 +5,9 @@ import { BsPersonFillAdd } from "react-icons/bs"
 import { IoIosNotifications, IoIosNotificationsOutline } from "react-icons/io"
 
 import HoverableIcon from "../../../HoverableIcon"
-import { signOut } from "../../../../api/api"
 import { clearLocalStorage } from "../../../../lib/utils"
 import { useNotificationTabModal } from "../../../../hooks/useToggleModal"
+import { signOut } from "../../../../api/auth/auth"
 
 export default function UserNav() {
 	const { close, isOpen, open } = useNotificationTabModal()

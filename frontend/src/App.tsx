@@ -6,10 +6,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import SkeletonHomepage from './components/home/SkeletonHomepage'
 import usePostsCount from './hooks/usePostsCount'
 import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
-import { getUserApi, signOut } from './api/api'
+import { signOut } from './api/auth/auth'
 import useCurrentUser from './hooks/useCurrentUser'
 import useGlobalLoading from './hooks/useGlobalLoading'
 import Modal from './components/modals/Modal'
+import { getUserApi } from './api/user/get'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 

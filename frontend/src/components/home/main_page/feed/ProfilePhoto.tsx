@@ -4,10 +4,11 @@ import { ChangeEvent, useState } from "react"
 import ProfilePicture from "../../../ProfilePicture"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import { useChangePictureModal } from "../../../../hooks/useToggleModal"
-import { updatePhoto, uploadImage } from "../../../../api/api"
 import { MAX_FILE_SIZE, axiosError } from "../../../../lib/utils"
 import useGlobalLoading from "../../../../hooks/useGlobalLoading"
 import { Skeleton } from "../../../ui/skeleton"
+import { updatePhoto } from "../../../../api/user/put"
+import { uploadImage } from "../../../../api/post/post"
 
 export default function ProfilePhoto() {
 	const [loading, setLoading] = useState(false)

@@ -9,8 +9,8 @@ import ImageUpload from './ImageUpload'
 import BlackInset from '../BlackInset'
 import CloseButton from '../../CloseButton'
 import { useAddPostModal } from "../../../hooks/useToggleModal"
-import { addPost, changePostImage, uploadImage } from '../../../api/api'
 import { MAX_FILE_SIZE, axiosError, getPersistedUser } from '../../../lib/utils'
+import { addPost, changePostImage, uploadImage } from '../../../api/post/post'
 
 export default function AddPostModal() {
 	const user: AuthUser = getPersistedUser()

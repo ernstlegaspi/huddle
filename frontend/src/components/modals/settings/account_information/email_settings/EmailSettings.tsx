@@ -3,11 +3,12 @@ import { ChangeEvent, useState } from "react"
 
 import AccountForm from "../Form"
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
-import { emailOtp, updateEmail } from "../../../../../api/api"
-import { axiosError, emailRegex, emailRegex2, setPersistedUser } from "../../../../../lib/utils"
 import CircleLoader from "../../../../CircleLoader"
 import CodeConfirmation from "./CodeConfirmation"
 import VioButton from "../../../../VioButton"
+import { emailOtp } from "../../../../../api/api"
+import { axiosError, emailRegex, emailRegex2, setPersistedUser } from "../../../../../lib/utils"
+import { updateEmail } from "../../../../../api/user/put"
 
 export default function EmailSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
 	const { currentUser, setCurrentUser } = useCurrentUser()

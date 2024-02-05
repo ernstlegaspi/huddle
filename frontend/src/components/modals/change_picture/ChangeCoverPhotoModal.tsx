@@ -6,7 +6,8 @@ import UserButton from "./UserButton"
 import useCurrentUser from "../../../hooks/useCurrentUser"
 import { useChangeCoverPhotoModal, useViewCoverPhotoModal } from "../../../hooks/useToggleModal"
 import { axiosError } from "../../../lib/utils"
-import { removePicture, updatePhoto, uploadImage } from "../../../api/api"
+import { removePicture, updatePhoto } from "../../../api/user/put"
+import { uploadImage } from "../../../api/post/post"
 
 export default function ChangeCoverPhotoModal() {
 	const [loading, setLoading] = useState(false)

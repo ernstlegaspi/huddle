@@ -5,9 +5,9 @@ import { IoIosArrowBack } from "react-icons/io"
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
 import HoverableIcon from "../../../../HoverableIcon"
 import CircleLoader from "../../../../CircleLoader"
-import { axiosError, isValidPassword } from "../../../../../lib/utils"
-import { passwordConfirmation } from "../../../../../api/api"
 import VioButton from "../../../../VioButton"
+import { axiosError, isValidPassword } from "../../../../../lib/utils"
+import { passwordConfirmation } from "../../../../../api/user/put"
 
 type Props = {
 	setCanChangePassword: Dispatch<SetStateAction<boolean>>

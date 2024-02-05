@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast'
 import { ChangeEvent, useState } from 'react'
 
-import { signIn } from '../../../api/api'
+import { signIn } from '../../../api/auth/auth'
 import { axiosError, setPersistedUser } from '../../../lib/utils'
 
 export default function SignIn() {

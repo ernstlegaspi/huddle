@@ -7,7 +7,8 @@ import useCurrentUser from "../../../hooks/useCurrentUser"
 import useIsProfilePictureRemove from "../../../hooks/useIsProfilePictureRemove"
 import { useChangePictureModal, useViewProfilePictureModal } from "../../../hooks/useToggleModal"
 import { MAX_FILE_SIZE, axiosError } from "../../../lib/utils"
-import { removePicture, updatePhoto, uploadImage } from "../../../api/api"
+import { removePicture, updatePhoto } from "../../../api/user/put"
+import { uploadImage } from "../../../api/post/post"
 
 export default function ChangePictureModal() {
 	const [loading, setLoading] = useState(false)

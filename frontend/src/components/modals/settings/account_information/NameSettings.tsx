@@ -1,11 +1,11 @@
 import toast from "react-hot-toast"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 
-import { axiosError, nameRegex, setPersistedUser } from "../../../../lib/utils"
-import { updateName } from "../../../../api/api"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
 import AccountForm from "./Form"
+import { updateName } from "../../../../api/user/put"
+import { axiosError, nameRegex, setPersistedUser } from "../../../../lib/utils"
 
 export default function NameSetting({ setSettingsContent }: { setSettingsContent: Dispatch<SetStateAction<string>> }) {
 	const { currentUser, setCurrentUser } = useCurrentUser()

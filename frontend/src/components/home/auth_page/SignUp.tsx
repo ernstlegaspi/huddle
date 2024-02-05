@@ -2,8 +2,8 @@ import toast from "react-hot-toast"
 import { ChangeEvent, useState } from "react"
 
 import { days, interestsArr, months, years } from "../../../constants"
-import { signUp } from '../../../api/api'
 import { axiosError, birthdayFormatter, emailRegex, emailRegex2, nameRegex, setPersistedUser } from '../../../lib/utils'
+import { signUp } from "../../../api/auth/auth"
 
 export default function SignUp() {
 	const [data, setData] = useState<User>({ name: '', username: '', password: '', email: '', birthday: '', interests: [] })

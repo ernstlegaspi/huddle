@@ -4,8 +4,8 @@ import { ChangeEvent, useState } from "react"
 import AccountForm from "./Form"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import useNameUsername from "../../../../hooks/useNameAndUsername"
-import { updateUsername } from "../../../../api/api"
 import { axiosError, setPersistedUser, usernameRegEx } from "../../../../lib/utils"
+import { updateUsername } from "../../../../api/user/put"
 
 export default function UsernameSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
 	const { currentUser, setCurrentUser } = useCurrentUser()

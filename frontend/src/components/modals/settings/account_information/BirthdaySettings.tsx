@@ -5,7 +5,7 @@ import useCurrentUser from "../../../../hooks/useCurrentUser"
 import VioButton from "../../../VioButton"
 import toast from "react-hot-toast"
 import { axiosError, birthdayFormatter } from "../../../../lib/utils"
-import { updateBirthday } from "../../../../api/api"
+import { updateBirthday } from "../../../../api/user/put"
 
 export default function BirthdaySettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
 	const { currentUser: user, setCurrentUser, } = useCurrentUser()

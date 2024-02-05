@@ -4,7 +4,7 @@ import { axiosError } from "../../../../lib/utils"
 import ProfilePicture from "../../../ProfilePicture"
 import VioButton from "../../../VioButton"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
-import { addNotification } from "../../../../api/api"
+import { addNotification } from "../../../../api/notification/post"
 
 export default function OtherUserCard({ otherUser }: { otherUser: User }) {
 	const { currentUser } = useCurrentUser()

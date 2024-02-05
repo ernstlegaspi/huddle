@@ -2,10 +2,10 @@ import toast from "react-hot-toast"
 import { useEffect, useState } from "react"
 
 import FriendRequestNotificationCard from "./FriendRequestNotificationCard"
-import useCurrentUser from "../../hooks/useCurrentUser"
-import { getUserNotification } from "../../api/api"
-import { axiosError } from "../../lib/utils"
 import CircleLoader from "../CircleLoader"
+import useCurrentUser from "../../hooks/useCurrentUser"
+import { axiosError } from "../../lib/utils"
+import { getUserNotification } from "../../api/notification/get"
 
 export default function NotificationTab() {
 	const [loading, setLoading] = useState(false)

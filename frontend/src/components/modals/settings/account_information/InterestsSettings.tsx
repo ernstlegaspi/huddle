@@ -6,7 +6,7 @@ import useCurrentUser from "../../../../hooks/useCurrentUser"
 import VioButton from "../../../VioButton"
 import { axiosError } from "../../../../lib/utils"
 import { interestsArr } from "../../../../constants"
-import { updateInterests } from "../../../../api/api"
+import { updateInterests } from "../../../../api/user/put"
 
 export default function InterestsSettings({ setSettingsContent }: { setSettingsContent: React.Dispatch<React.SetStateAction<string>> }) {
 	const { currentUser, setCurrentUser } = useCurrentUser()

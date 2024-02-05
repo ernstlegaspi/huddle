@@ -4,11 +4,11 @@ import { ChangeEvent, useState } from "react"
 import CloseButton from "../../CloseButton"
 import Input from "../../Input"
 import BlackInset from "../BlackInset"
-import { useEditProfileModal } from "../../../hooks/useToggleModal"
-import { axiosError, getPersistedUser, nameRegex, setPersistedUser, usernameRegEx } from "../../../lib/utils"
-import { updateProfile } from "../../../api/api"
 import useNameUsername from "../../../hooks/useNameAndUsername"
 import useCurrentUser from "../../../hooks/useCurrentUser"
+import { useEditProfileModal } from "../../../hooks/useToggleModal"
+import { axiosError, getPersistedUser, nameRegex, setPersistedUser, usernameRegEx } from "../../../lib/utils"
+import { updateProfile } from "../../../api/user/put"
 
 export default function EditProfileModal() {
 	const user: AuthUser = getPersistedUser()

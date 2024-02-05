@@ -3,7 +3,8 @@ import { useState } from "react"
 
 import ProfilePicture from "../ProfilePicture"
 import useCurrentUser from "../../hooks/useCurrentUser"
-import { acceptFriendRequest, deleteNotification } from "../../api/api"
+import { acceptFriendRequest } from "../../api/user/put"
+import { deleteNotification } from "../../api/notification/delete"
 
 export default function FriendRequestNotificationCard({ notification }: { notification: TNotification }) {
 	const [clicked, setClicked] = useState(false)

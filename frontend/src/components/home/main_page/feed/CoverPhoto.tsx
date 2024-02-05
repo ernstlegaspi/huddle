@@ -4,11 +4,12 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import { MAX_FILE_SIZE, axiosError } from "../../../../lib/utils"
-import { updatePhoto, uploadImage } from "../../../../api/api"
 import { Skeleton } from "../../../ui/skeleton"
 import { useChangeCoverPhotoModal } from "../../../../hooks/useToggleModal"
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
+import { updatePhoto } from "../../../../api/user/put"
+import { uploadImage } from "../../../../api/post/post"
 
 export default function CoverPhoto() {
 	const [loading, setLoading] = useState(false)

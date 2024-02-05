@@ -5,9 +5,9 @@ import PasswordConfirmation from "./PasswordConfirmation"
 import Input from "../../../../Input"
 import CloseButton from "../../../../CloseButton"
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
-import { axiosError, isValidPassword } from "../../../../../lib/utils"
-import { updatePassword } from "../../../../../api/api"
 import VioButton from "../../../../VioButton"
+import { axiosError, isValidPassword } from "../../../../../lib/utils"
+import { updatePassword } from "../../../../../api/user/put"
 
 export default function PasswordSetting({ setSettingsContent }: { setSettingsContent: Dispatch<SetStateAction<string>> }) {
 	const [canChangePassword, setCanChangePassword] = useState(false)

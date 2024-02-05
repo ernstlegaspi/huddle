@@ -4,8 +4,8 @@ import { useEffect, useState } from "react"
 import CircleLoader from "../../../CircleLoader"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import OtherUserCard from "./FriendCard"
-import { getUserWithSameInterests } from "../../../../api/api"
 import { axiosError } from "../../../../lib/utils"
+import { getUserWithSameInterests } from "../../../../api/user/get"
 
 export default function AddFriendTab() {
 	const [loading, setLoading] = useState(false)

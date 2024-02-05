@@ -9,8 +9,8 @@ import usePostsCount from '../../../../hooks/usePostsCount'
 import CoverPhoto from './CoverPhoto'
 import ProfilePhoto from './ProfilePhoto'
 import { useEditProfileModal } from '../../../../hooks/useToggleModal'
-import { getPostsPerUser } from '../../../../api/api'
 import { axiosError, getPersistedUser } from '../../../../lib/utils'
+import { getPostsPerUser } from '../../../../api/post/get'
 
 export default function Profile() {
 	const page = useRef(0)
