@@ -4,6 +4,7 @@ import {
 	acceptFriendRequest,
 	appendToRequestsSent,
 	getUser,
+	getUserFriends,
 	getUserWithSameInterests,
 	passwordConfirmation,
 	removePicture,
@@ -37,6 +38,7 @@ router.post("/auth/sign-up", signUp)
 router.post('/auth/sign-out', checkMiddleware, signOut)
 
 router.get('/user/getUserWithSameInterests/:interests/:email', checkMiddleware, checkValidEmailParams, getUserWithSameInterests)
+router.get('/user/get-user-friends/:email', checkMiddleware, checkValidEmailParams, checkValidUser, getUserFriends)
 
 router.put('/user/append-to-requests-sent', checkMiddleware, checkValidEmail, checkValidUser, appendToRequestsSent)
 

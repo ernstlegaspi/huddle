@@ -449,3 +449,17 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
 		return success({}, 201, res)
 	}, res)
 }
+
+export const getUserFriends = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { email } = req.params
+
+		const userFriends = await User.findOne({ email })
+			.populate('friends')
+			.exec()
+
+		if(!userFriends) return success({}, 200, res)
+
+		return success(userFriends.friends, 200, res)
+	}, res)
+}

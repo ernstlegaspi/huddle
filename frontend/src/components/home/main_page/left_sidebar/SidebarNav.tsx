@@ -40,9 +40,9 @@ export default function SidebarNav() {
 
 		const handleClick = () => {
 			onClick()
-			setActiveSidebar(text)
+			setActiveSidebar(text.toLowerCase())
 			toggle('')
-			localStorage.setItem('active_sidebar', text)
+			localStorage.setItem('active_sidebar', text.toLowerCase())
 			localStorage.setItem('view_profile', '')
 		}
 
