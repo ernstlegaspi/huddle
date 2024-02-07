@@ -11,8 +11,9 @@ import useGlobalLoading from './hooks/useGlobalLoading'
 import Modal from './components/modals/Modal'
 import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
 import { signOut } from './api/auth/auth'
-import { getUserApi } from './api/user/get'
+import { getUserApi, getUserFriends } from './api/user/get'
 import { serverURL } from './constants'
+import useUserFriends from './hooks/useUserFriends'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 
@@ -24,6 +25,7 @@ export default function App() {
 	const { setGlobalLoading } = useGlobalLoading()
 	const { setCurrentUser } = useCurrentUser()
 	const { postsCount } = usePostsCount()
+	const { setUserFriends } = useUserFriends()
 	const user = getPersistedUser()
 
 	useEffect(() => {
@@ -32,18 +34,22 @@ export default function App() {
 				try {
 					setGlobalLoading(true)
 
-					const { data } = await getUserApi(user?.email)
+					const [userData, userFriends] = await Promise.all([
+						getUserApi(user?.email),
+						getUserFriends(user?.email)
+					])
+					
+					socket.emit('join-user-room', userData.data._id)
 
-					socket.emit('join-user-room', data._id)
-
-					setCurrentUser(data)
+					setCurrentUser(userData.data)
 
 					setPersistedUser({
-						email: data.email,
-						name: data.name,
-						username: data.username
+						email: userData.data.email,
+						name: userData.data.name,
+						username: userData.data.username
 					})
 
+					setUserFriends(userFriends.data)
 					setGlobalLoading(false)
 				}
 				catch(e) {

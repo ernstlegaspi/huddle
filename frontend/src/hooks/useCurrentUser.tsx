@@ -12,7 +12,7 @@ const useCurrentUser = create<Props>((set) => ({
 		coverPhoto: '',
 		name: '',
 		email: '',
-    hasNotification: false,
+		hasNotification: false,
 		interests: [],
 		password: '',
 		picture: '',

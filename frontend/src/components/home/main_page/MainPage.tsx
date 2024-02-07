@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import SkeletonHomepage from '../SkeletonHomepage'
 import useViewProfile from '../../../hooks/useViewProfile'
 import usePostsCount from '../../../hooks/usePostsCount'
+import useGlobalLoading from '../../../hooks/useGlobalLoading'
+import SkeletonFriendsBar from './friends_bar/SkeletonFriendsBar'
 
 const Feed = lazy(() => import("./feed/Feed"))
 const FriendsBar = lazy(() => import("./friends_bar/FriendsBar"))
@@ -13,6 +15,7 @@ export default function MainPage() {
 	const viewProfile = localStorage.getItem('view_profile')
 	const { postsCount } = usePostsCount()
 	const { isClicked } = useViewProfile()
+	const { globalLoading } = useGlobalLoading()
 
 	return <>
 		<Suspense fallback={<SkeletonHomepage />}>
@@ -21,7 +24,7 @@ export default function MainPage() {
 				<Sidebar />
 				<Feed />
 				<RightSidebar />
-				<FriendsBar />
+				{globalLoading ? <SkeletonFriendsBar /> : <FriendsBar />}
 			</div>
 		</Suspense>
 	</>

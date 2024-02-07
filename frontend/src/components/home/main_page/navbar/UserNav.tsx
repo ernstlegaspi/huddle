@@ -55,15 +55,10 @@ export default function UserNav() {
 		}
 	}
 
-	const UserNavButton = ({ hasNotification: hasNotif, icon: Icon, icon2: Icon2, onClick }: UserNavButtonProps) => {
-		console.log(userNotification)
-		console.log(hasNotif)
-		
-		return <div className="relative h-max w-max">
-			{hasNotif && !userNotification ? <div className="bg-vio rounded-full p-1 w-max h-max absolute right-0"></div> : null}
-			<HoverableIcon hoverIcon={Icon2} mainIcon={Icon} onClick={onClick} />
-		</div>
-	}
+	const UserNavButton = ({ hasNotification: hasNotif, icon: Icon, icon2: Icon2, onClick }: UserNavButtonProps) => <div className="relative h-max w-max">
+		{hasNotif && !userNotification ? <div className="bg-vio rounded-full p-1 w-max h-max absolute right-0"></div> : null}
+		<HoverableIcon hoverIcon={Icon2} mainIcon={Icon} onClick={onClick} />
+	</div>
 
 	return <div className="v-center">
 		<UserNavButton hasNotification={false} icon={AiOutlineMessage} icon2={AiFillMessage} onClick={() => {}} />

@@ -1,32 +1,11 @@
-import toast from "react-hot-toast"
-import { useEffect, useState } from "react"
-
 import FriendsTabCard from "./FriendsTabCard"
-import useCurrentUser from "../../../../../hooks/useCurrentUser"
 import SkeletonFriendsTabCard from "./SkeletonFriendsTabCard"
-import { getUserFriends } from "../../../../../api/user/get"
+import useUserFriends from "../../../../../hooks/useUserFriends"
+import useGlobalLoading from "../../../../../hooks/useGlobalLoading"
 
 export default function FriendsTab() {
-	const [data, setData] = useState<User[]>([])
-	const [loading, setLoading] = useState(false)
-	const { currentUser } = useCurrentUser()
-	
-	useEffect(() => {
-		(async () => {
-			try {
-				setLoading(true)
-
-				const { data: res } = await getUserFriends(currentUser.email)
-	
-				setData(res)
-				setLoading(false)
-			}
-			catch(e) {
-				setLoading(false)
-				toast.error('Internal server error.')
-			}
-		})()
-	}, [])
+	const { userFriends } = useUserFriends()
+	const { globalLoading } = useGlobalLoading()
 
 	return <div className="w h flex flex-col">
 		<div className="h-[11px]"></div>
@@ -34,15 +13,15 @@ export default function FriendsTab() {
 			<p className="vio-label text-20 mb-3">Friends</p>
 			<>
 				{
-					!loading && data.length < 1 ? <p className="text-dvio tracking-wider">You do not have any friends. Add other users to interact with.</p>
+					!globalLoading && userFriends.length < 1 ? <p className="text-dvio tracking-wider">You do not have any friends. Add other users to interact with.</p>
 					: <div className="w grid grid-cols-2 gap-3">
 						{
-							loading ? <>
+							globalLoading ? <>
 								<SkeletonFriendsTabCard />
 								<SkeletonFriendsTabCard />
 								<SkeletonFriendsTabCard />
 								<SkeletonFriendsTabCard />
-							</> : data.map(otherUser => <FriendsTabCard key={otherUser._id} user={otherUser} />)
+							</> : userFriends.map(otherUser => <FriendsTabCard key={otherUser._id} user={otherUser} />)
 						}
 					</div>
 				}

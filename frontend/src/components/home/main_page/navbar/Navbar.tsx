@@ -3,13 +3,17 @@ import { Link } from "react-router-dom"
 import SearchBar from "./SearchBar"
 import UserNav from "./UserNav"
 import useViewProfile from "../../../../hooks/useViewProfile"
+import useActiveSidebar from "../../../../hooks/useActiveSidebar"
 
 export default function Navbar() {
 	const { toggle } = useViewProfile()
+	const { setActiveSidebar } = useActiveSidebar()
 
 	const handleClick = () => {
 		localStorage.setItem('view_profile', '')
+		localStorage.setItem('active_sidebar', 'feed')
 		toggle('')
+		setActiveSidebar('feed')
 	}
 
 	return <div className="relative w">
