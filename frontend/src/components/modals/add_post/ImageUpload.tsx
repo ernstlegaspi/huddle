@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react"
+import { serverURL } from "../../../constants"
 
 type Props = {
 	handleImageUpload: (e: ChangeEvent<HTMLInputElement>) => void
@@ -13,7 +14,7 @@ export default function ImageUpload({ handleImageUpload, postImage, setTags, tag
 			postImage ? <div className="w h-[600px] overflow-y-hidden">
 				<div className="relative w h f flex-col">
 					<div className="flex-1 w bg-red-500 overflow-hidden">
-						<img src={`http://localhost:3001/images/${postImage}`} alt="Temporary Post" className="w h" />
+						<img src={`${serverURL}images/${postImage}`} alt="Temporary Post" className="w h" />
 					</div>
 					<input
 						type="text"

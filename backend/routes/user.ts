@@ -13,6 +13,7 @@ import {
 	signUp,
 	updateBirthday,
 	updateEmail,
+	updateHasNotification,
 	updateInterests,
 	updateName,
 	updatePassword,
@@ -49,6 +50,7 @@ router.put('/user/removePicture', checkMiddleware, checkValidEmail, removePictur
 router.put('/user/updateBirthday', checkMiddleware, checkValidEmail, updateBirthday)
 router.put('/user/updateEmail', checkMiddleware, checkValidEmail, updateEmail)
 router.put('/user/updateInterests', checkMiddleware, checkValidEmail, updateInterests)
+router.put('/user/update-has-notification', checkMiddleware, checkValidEmail, checkValidUser, updateHasNotification)
 router.put('/user/updateName', checkMiddleware, checkValidEmail, checkValidName, updateName)
 router.put('/user/updatePassword', checkMiddleware, checkValidEmail, updatePassword)
 router.put('/user/updateProfile', checkMiddleware, checkValidEmail, checkValidName, checkValidUsername, updateProfile)

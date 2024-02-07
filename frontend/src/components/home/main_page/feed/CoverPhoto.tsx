@@ -10,6 +10,7 @@ import { useChangeCoverPhotoModal } from "../../../../hooks/useToggleModal"
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { updatePhoto } from "../../../../api/user/put"
 import { uploadImage } from "../../../../api/post/post"
+import { serverURL } from "../../../../constants"
 
 export default function CoverPhoto() {
 	const [loading, setLoading] = useState(false)
@@ -56,7 +57,7 @@ export default function CoverPhoto() {
 			: currentUser.coverPhoto ? <div className="h-[400px] w rounded-r5">
 			<div onClick={handleClick} className="pointer overflow-y-hidden h w rounded-r5">
 				<LazyLoadImage
-					src={`http://localhost:3001/images/${currentUser.coverPhoto}`}
+					src={`${serverURL}images/${currentUser.coverPhoto}`}
 					effect="blur"
 					alt="Cover Photo"
 					className="s rounded-r5"

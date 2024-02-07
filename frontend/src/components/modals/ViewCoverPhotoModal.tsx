@@ -4,6 +4,7 @@ import { IoClose } from "react-icons/io5"
 import { useViewCoverPhotoModal } from '../../hooks/useToggleModal'
 
 import useCurrentUser from '../../hooks/useCurrentUser'
+import { serverURL } from '../../constants'
 
 export default function ViewCoverPhotoModal() {
 	const [hovered, setHovered] = useState(false)
@@ -28,7 +29,7 @@ export default function ViewCoverPhotoModal() {
 			<div className="w-[80%] h-[90%]">
 				<img
 					onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-					src={`http://localhost:3001/images/${currentUser.coverPhoto}`}
+					src={`${serverURL}images/${currentUser.coverPhoto}`}
 					className="relative rounded-r5 s"
 				/>
 			</div>

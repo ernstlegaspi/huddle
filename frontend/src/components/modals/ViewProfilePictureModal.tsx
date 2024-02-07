@@ -6,6 +6,7 @@ import useCurrentUser from '../../hooks/useCurrentUser'
 import { useViewProfilePictureModal } from '../../hooks/useToggleModal'
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
+import { serverURL } from '../../constants'
 
 export default function ViewProfilePictureModal() {
 	const [hovered, setHovered] = useState(false)
@@ -30,7 +31,7 @@ export default function ViewProfilePictureModal() {
 			<LazyLoadImage
 				onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
 				effect='blur'
-				src={`http://localhost:3001/images/${currentUser.picture}`}
+				src={`${serverURL}images/${currentUser.picture}`}
 				className="rounded-full w-[400px] h-[400px]"
 			/>
 		</div>

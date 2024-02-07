@@ -1,3 +1,3 @@
 import { API } from "../api"
 
-export const deleteNotification = (email: string, _id: string) => API.delete(`notification/${email}/${_id}`)
+export const deleteNotification = (email: string, _id: string, otherUserId: string) => API.delete(`notification/${email}/${_id}/${otherUserId}`)

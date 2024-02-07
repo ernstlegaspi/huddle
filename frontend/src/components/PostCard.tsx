@@ -9,6 +9,7 @@ import useCurrentUser from '../hooks/useCurrentUser'
 import useIsProfilePictureRemove from '../hooks/useIsProfilePictureRemove'
 import useGlobalLoading from '../hooks/useGlobalLoading'
 import { Skeleton } from './ui/skeleton'
+import { serverURL } from '../constants'
 
 export default function PostCard({ post }: { post: Post }) {
 	const { currentUser } = useCurrentUser()
@@ -19,7 +20,7 @@ export default function PostCard({ post }: { post: Post }) {
 
 	return <div className="bg-white rounded-r5 w p-2 pointer transition-all hover:shadow-md hover:shadow-vio/70">
 		<LazyLoadImage
-			src={`http://localhost:3001/images/${post.pictures}`}
+			src={`${serverURL}images/${post.pictures}`}
 			alt={post.pictures}
 			className="w h-[300px] rounded-r5"
 		/>

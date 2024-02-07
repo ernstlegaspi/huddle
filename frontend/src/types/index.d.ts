@@ -38,4 +38,5 @@ type User = {
 	password: string
 	picture?: string
 	username: string
+	hasNotification?: boolean
 }

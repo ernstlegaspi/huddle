@@ -1,20 +1,24 @@
 import axios from 'axios'
 import { lazy, Suspense, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+import { io } from 'socket.io-client'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import SkeletonHomepage from './components/home/SkeletonHomepage'
 import usePostsCount from './hooks/usePostsCount'
-import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
-import { signOut } from './api/auth/auth'
 import useCurrentUser from './hooks/useCurrentUser'
 import useGlobalLoading from './hooks/useGlobalLoading'
 import Modal from './components/modals/Modal'
+import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
+import { signOut } from './api/auth/auth'
 import { getUserApi } from './api/user/get'
+import { serverURL } from './constants'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 
 axios.defaults.withCredentials = true
+
+export const socket = io(serverURL)
 
 export default function App() {
 	const { setGlobalLoading } = useGlobalLoading()
@@ -30,6 +34,8 @@ export default function App() {
 
 					const { data } = await getUserApi(user?.email)
 
+					socket.emit('join-user-room', data._id)
+
 					setCurrentUser(data)
 
 					setPersistedUser({
@@ -37,6 +43,7 @@ export default function App() {
 						name: data.name,
 						username: data.username
 					})
+
 					setGlobalLoading(false)
 				}
 				catch(e) {

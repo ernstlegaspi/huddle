@@ -9,6 +9,7 @@ export const passwordConfirmation = (data: { email: string, password: string }) 
 
 export const updateBirthday = (data: { email: string, birthday: string }) => API.put('user/updateBirthday', data)
 export const updateEmail = (data: { email: string, newEmail: string }) => API.put('user/updateEmail', data)
+export const updateHasNotification = (data: { email: string }) => API.put('user/update-has-notification', data)
 export const updateInterests = (data: { email: string, interests: string[] }) => API.put('user/updateInterests', data)
 export const updateName = (data: { email: string, name: string }) => API.put('user/updateName', data)
 export const updatePassword = (data: { email: string, currentPassword: string, confirmNewPassword: string, newPassword: string }) => API.put('user/updatePassword', data)

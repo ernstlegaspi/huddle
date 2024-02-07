@@ -15,9 +15,9 @@ export default function Feed() {
 	const viewProfile = localStorage.getItem('view_profile')
 	const { activeSidebar } = useActiveSidebar()
 	const { isClicked } = useViewProfile()
-	const inFriends = activeSidebar === 'friends' || persistedActiveSidebar === 'friends'
-	const inMainFeed = activeSidebar === 'feed' || persistedActiveSidebar === 'feed'
 	const inProfile = isClicked || viewProfile
+	const inFriends = activeSidebar === 'friends' || persistedActiveSidebar === 'friends' && !inProfile
+	const inMainFeed = activeSidebar === 'feed' || persistedActiveSidebar === 'feed' && !inProfile
 	const { globalLoading } = useGlobalLoading()
 
 	return <div className={`${inProfile ? 'px-6' : 'px-10'} relative h-auto w-[50%]`}>

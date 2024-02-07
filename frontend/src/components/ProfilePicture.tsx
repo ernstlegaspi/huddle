@@ -1,6 +1,7 @@
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
+import { serverURL } from '../constants'
 
 type Props = {
 	height?: number
@@ -11,7 +12,7 @@ type Props = {
 export default function ProfilePicture({ height = 35, picture, width = 35 }: Props) {
 	return <>
 		{picture ? <img
-			src={`http://localhost:3001/images/${picture}`}
+			src={`${serverURL}images/${picture}`}
 			alt="User Profile"
 			className="rounded-full s"
 		/> : <LazyLoadImage

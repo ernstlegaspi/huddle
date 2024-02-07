@@ -420,7 +420,8 @@ export const getUserWithSameInterests = async (req: Request, res: Response) => {
 				_id: { $nin: user.friends },
 				interests: { $in: interestsArr }
 			} },
-			{ $sample: { size: 8 } }
+			{ $sample: { size: 8 } },
+			{ $project: { password: 0 } }
 		])
 
 		if(otherUsers.length < 1) {
@@ -429,7 +430,8 @@ export const getUserWithSameInterests = async (req: Request, res: Response) => {
 					email: { $ne: email },
 					_id: { $nin: user.friends },
 				} },
-				{ $sample: { size: 8 } }
+				{ $sample: { size: 8 } },
+				{ $project: { password: 0 } }
 			])
 		}
 
@@ -461,5 +463,15 @@ export const getUserFriends = async (req: Request, res: Response) => {
 		if(!userFriends) return success({}, 200, res)
 
 		return success(userFriends.friends, 200, res)
+	}, res)
+}
+
+export const updateHasNotification = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const userId = getUserId(req)
+
+		await updateUser(userId, { hasNotification: false })
+
+		return success({}, 200, res)
 	}, res)
 }

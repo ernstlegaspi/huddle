@@ -11,7 +11,7 @@ export default function AddFriendTab() {
 	const [loading, setLoading] = useState(false)
 	const [otherUsers, setOtherUsers] = useState<User[]>([])
 	const { currentUser } = useCurrentUser()
-	
+
 	useEffect(() => {
 		(async () => {
 			try {
@@ -27,7 +27,7 @@ export default function AddFriendTab() {
 				toast.error(axiosError(e, "Can not fetch other users."))
 			}
 		})()
-	}, [currentUser])
+	}, [])
 	
 	return <div className="card flex-1 w scroll">
 		<p className="vio-label p-3 border-b border-vio/30 mb-3">Add Friend</p>

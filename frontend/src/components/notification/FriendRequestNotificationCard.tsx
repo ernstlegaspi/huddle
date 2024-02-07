@@ -16,7 +16,7 @@ export default function FriendRequestNotificationCard({ notification }: { notifi
 
 		try {
 			setLoading(true)
-			await deleteNotification(currentUser.email, notification._id as string)
+			await deleteNotification(currentUser.email, notification._id as string, notification.otherUserId)
 			setLoading(false)
 		}
 		catch(e) {

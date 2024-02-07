@@ -8,6 +8,6 @@ router.get('/notification/user-notification/:email', checkMiddleware, checkValid
 
 router.post('/notification/', checkMiddleware, checkValidEmail, checkValidUser, addNotification)
 
-router.delete('/notification/:email/:id', checkMiddleware, checkValidEmailParams, checkValidUser, deleteNotification)
+router.delete('/notification/:email/:id/:otherUserId', checkMiddleware, checkValidEmailParams, checkValidUser, deleteNotification)
 
 export default router

@@ -7,6 +7,7 @@ import VioButton from "../../../VioButton"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
 import { addNotification } from "../../../../api/notification/post"
 import { appendToRequestsSent } from "../../../../api/user/put"
+import { socket } from "../../../../App"
 
 export default function OtherUserCard({ otherUser }: { otherUser: User }) {
 	const [clicked, setClicked] = useState(false)
@@ -31,6 +32,8 @@ export default function OtherUserCard({ otherUser }: { otherUser: User }) {
 				}),
 				appendToRequestsSent({ email: currentUser.email, otherUserId: id })
 			])
+
+			socket.emit('send-notification', true, id)
 		}
 		catch(e) {
 			setClicked(false)

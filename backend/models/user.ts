@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
 	birthday: String,
 	password: String,
 	interests: [String],
+	hasNotification: {
+		type: Boolean,
+		default: false
+	},
 	notifications: Number,
 	picture: {
 		type: String,
