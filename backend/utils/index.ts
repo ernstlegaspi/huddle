@@ -1,9 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Request, Response } from "express"
 
-import User from '../models/user'
-import Post from '../models/post'
-
 export const success = (result: object, code: number, res: Response) => res.status(code).json(result)
 
 export const error = (code: number, res: Response, message: string = "") => res.status(code).json({ message })
@@ -48,17 +45,4 @@ export const isValidUsername = (username: string) => {
 	const usernameRegEx = /^[a-zA-Z_]+$/
 
 	return usernameRegEx.test(username)
-}
-
-export const updateUser = async (userId: string, data: object) => {
-	await User.findByIdAndUpdate(userId,
-		{ $set: data },
-		{ new: true }
-	)
-}
-
-export const updatePosts = async (ownerId: string, data: object) => {
-	await Post.updateMany({ owner: ownerId },
-		{ $set: data }
-	)
 }

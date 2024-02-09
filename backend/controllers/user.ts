@@ -12,12 +12,12 @@ import {
 	isValidBirthday,
 	isValidEmail,
 	isValidName,
-	success,
-	updatePosts,
-	updateUser
+	success
 } from '../utils/index'
 import { signInSchema, signUpSchema } from '../utils/schema'
 import { errorEmail, errorName, errorUnauthorized } from '../utils/constants'
+import { userPushField, userSetField } from '../utils/db/user'
+import { postSetField } from '../utils/db/post'
 
 const COOKIE_AGE = 9999999999999
 
@@ -87,6 +87,7 @@ export const signUp = (req: Request, res: Response) => {
 
 		const newUser = await new User({
 			...req.body,
+			interests: ['testing'],
 			password: hashedPassword,
 			username: existingUsername ? `${username}${Date.now()}` : username
 		}).save()
@@ -150,7 +151,7 @@ export const updateBirthday = async (req: Request, res: Response) => {
 
 		if(user.birthday === birthday) return error(400, res, "There are no changes in your birthday.")
 		
-		await updateUser(userId, { birthday })
+		await userSetField(userId, { birthday })
 
 		return success({}, 201, res)
 	}, res)
@@ -167,7 +168,7 @@ export const updateEmail = async (req: Request, res: Response) => {
 
 		if(user.email === newEmail) return error(400, res, "There are no changes in email.")
 
-		await updateUser(userId, { email: newEmail })
+		await userSetField(userId, { email: newEmail })
 
 		return success({
 			email: newEmail
@@ -189,7 +190,7 @@ export const updateInterests = async (req: Request, res: Response) => {
 
 		if(user.interests.sort().join('').trim() === interestArray.sort().join('').trim()) return error(400, res, "There are no changes in your interests.")
 		
-		await updateUser(userId, { interests: interestArray })
+		await userSetField(userId, { interests: interestArray })
 
 		return success({}, 201, res)
 	}, res)
@@ -206,9 +207,10 @@ export const updateName = async (req: Request, res: Response) => {
 
 		if(name === user.name) return error(400, res, "There are no changes in name.")
 
-		await updateUser(userId, { name })
-
-		await updatePosts(userId, { name })
+		await Promise.all([
+			userSetField(userId, { name }),
+			postSetField(userId, { name })
+		])
 
 		return success({}, 201, res)
 	}, res)
@@ -236,7 +238,7 @@ export const updatePassword = async (req: Request, res: Response) => {
 		const salt = await bcrypt.genSalt(12)
 		const hashedNewPassword = await bcrypt.hash(newPassword, salt)
 
-		await updateUser(userId, { password: hashedNewPassword })
+		await userSetField(userId, { password: hashedNewPassword })
 
 		return success({}, 201, res)
 	}, res)
@@ -257,8 +259,8 @@ export const updateProfile = async (req: Request, res: Response) => {
 		if(existingUsername) return error(409, res, "Username is already existing.")
 
 		await Promise.all([
-			updateUser(userId, { name, username }),
-			updatePosts(userId, { name, username })
+			userSetField(userId, { name, username }),
+			postSetField(userId, { name, username })
 		])
 
 		return success({
@@ -298,12 +300,12 @@ export const updatePhoto = async (req: Request, res: Response) => {
 		}
 
 		if(isCoverPhoto) {
-			await updateUser(userId, { coverPhoto: picture })
+			await userSetField(userId, { coverPhoto: picture })
 		}
 		else {
 			await Promise.all([
-				updateUser(userId, { picture }),
-				updatePosts(userId, { userPicture: picture })
+				userSetField(userId, { picture }),
+				postSetField(userId, { userPicture: picture })
 			])
 		}
 
@@ -333,8 +335,8 @@ export const updateUsername = async (req: Request, res: Response) => {
 		if(username === user.username) return error(400, res, "There are no changes in username.")
 
 		await Promise.all([
-			await updateUser(userId, { username }),
-			await updatePosts(userId, { username })
+			await userSetField(userId, { username }),
+			await postSetField(userId, { username })
 		])
 
 		return success({
@@ -376,12 +378,12 @@ export const removePicture = async (req: Request, res: Response) => {
 		await fs.promises.unlink(imagePath)
 
 		if(isCoverPhoto) {
-			await updateUser(userId, { coverPhoto: '' })
+			await userSetField(userId, { coverPhoto: '' })
 		}
 		else {
 			await Promise.all([
-				updateUser(userId, { picture: '' }),
-				updatePosts(userId, { userPicture: '' })
+				userSetField(userId, { picture: '' }),
+				postSetField(userId, { userPicture: '' })
 			])
 		}
 
@@ -394,10 +396,7 @@ export const appendToRequestsSent = async (req: Request, res: Response) => {
 		const { otherUserId } = req.body
 		const currentUserId = getUserId(req)
 
-		await User.findByIdAndUpdate(currentUserId,
-			{ $push: { requestsSent: otherUserId } },
-			{ $new: true }
-		)
+		await userPushField(currentUserId, { requestsSent: otherUserId })
 
 		return success({}, 200, res)
 	}, res)
@@ -435,6 +434,19 @@ export const getUserWithSameInterests = async (req: Request, res: Response) => {
 			])
 		}
 
+		if(otherUsers.length < 8) {
+			let _otherUsers = await User.aggregate([
+				{ $match: {
+					email: { $ne: email },
+					_id: { $nin: [...user.friends, ...otherUsers.map(otherUser => otherUser._id)] },
+				} },
+				{ $sample: { size: 8 - otherUsers.length } },
+				{ $project: { password: 0 } }
+			])
+
+			otherUsers = otherUsers.concat(_otherUsers)
+		}
+
 		return success(otherUsers, 200, res)
 	}, res)
 }
@@ -444,8 +456,8 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
 		const { userId, friendId } = req.body
 
 		await Promise.all([
-			updateUser(userId, { friends: friendId }),
-			updateUser(friendId, { friends: userId })
+			userPushField(userId, { friends: friendId }),
+			userPushField(friendId, { friends: userId })
 		])
 
 		return success({}, 201, res)
@@ -470,7 +482,7 @@ export const updateHasNotification = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const userId = getUserId(req)
 
-		await updateUser(userId, { hasNotification: false })
+		await userSetField(userId, { hasNotification: false })
 
 		return success({}, 200, res)
 	}, res)

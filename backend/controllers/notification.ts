@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 
 import Notification from '../models/notification'
-import User from '../models/user'
-import { catchError, getUserId, success, updateUser } from '../utils'
+import { catchError, getUserId, success } from '../utils'
+import { userPullField, userSetField } from '../utils/db/user'
 
 export const addNotification = async (req: Request, res: Response) => {
 	return catchError(async () => {
@@ -10,7 +10,7 @@ export const addNotification = async (req: Request, res: Response) => {
 
 		await Promise.all([
 			new Notification({ ...req.body }).save(),
-			updateUser(ownerId, { hasNotification: true })
+			userSetField(ownerId, { hasNotification: true })
 		])
 
 		return success({}, 201, res)
@@ -23,11 +23,8 @@ export const deleteNotification = async (req: Request, res: Response) => {
 		const currentUserId = getUserId(req)
 
 		await Promise.all([
-			await Notification.findByIdAndDelete(id),
-			User.findByIdAndUpdate(otherUserId,
-				{ $pull: { requestsSent: currentUserId } },
-				{ $new: true }
-			)
+			Notification.findByIdAndDelete(id),
+			userPullField(otherUserId, { requestsSent: currentUserId })
 		])
 		
 

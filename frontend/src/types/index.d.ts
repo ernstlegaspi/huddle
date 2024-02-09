@@ -34,6 +34,7 @@ type User = {
 	email: string
 	interests: string[]
 	requestsSent?: string[]
+	friends?: string[]
 	name: string
 	password: string
 	picture?: string

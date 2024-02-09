@@ -9,11 +9,11 @@ import usePostsCount from './hooks/usePostsCount'
 import useCurrentUser from './hooks/useCurrentUser'
 import useGlobalLoading from './hooks/useGlobalLoading'
 import Modal from './components/modals/Modal'
+import useUserFriends from './hooks/useUserFriends'
 import { clearLocalStorage, getPersistedUser, setPersistedUser } from './lib/utils'
 import { signOut } from './api/auth/auth'
 import { getUserApi, getUserFriends } from './api/user/get'
 import { serverURL } from './constants'
-import useUserFriends from './hooks/useUserFriends'
 
 const HomePage = lazy(() => import("./components/home/HomePage"))
 

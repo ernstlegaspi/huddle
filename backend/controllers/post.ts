@@ -3,6 +3,7 @@ import { catchError, error, getUserId, success } from '../utils'
 
 import User from '../models/user'
 import Post from '../models/post'
+import { userPushField } from '../utils/db/user'
 
 export const addPost = async (req: Request, res: Response) => {
 	return catchError(async () => {
@@ -15,18 +16,28 @@ export const addPost = async (req: Request, res: Response) => {
 		const user = await User.findOne({ email })
 
 		if(!user) return error(401, res, "User does not exist")
-		
+
 		const newPost = await new Post({
 			...req.body,
 			owner: userId
 		}).save()
 
-		await User.findByIdAndUpdate(userId,
-			{ $push: { posts: newPost._id } },
-			{ new: true }
-		)
+		await userPushField(userId, { posts: newPost._id })
 
 		return success(newPost, 201, res)
+	}, res)
+}
+
+export const getFriendsPosts = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { friends } = req.params
+		const friendsArr = friends.split('-')
+
+		const friendsPosts = await Post.find({
+			owner: { $in: friendsArr }
+		}).sort({ createdAt: -1 })
+
+		return success(friendsPosts, 200, res)
 	}, res)
 }
 
