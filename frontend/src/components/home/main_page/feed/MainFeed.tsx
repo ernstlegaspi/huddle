@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { getFriendsPosts } from "../../../../api/post/get"
 import useCurrentUser from "../../../../hooks/useCurrentUser"
-import useUserFriends from "../../../../hooks/useUserFriends"
 import useGlobalLoading from "../../../../hooks/useGlobalLoading"
 
 export default function MainFeed() {
