@@ -41,6 +41,7 @@ export default function MainFeed() {
 	}, [globalLoading])
 
 	return <div>
+		<p>For you</p>
 		{
 			!loading && posts.length < 1 && !globalLoading ? <p>There are no posts to display.</p>
 			: loading ? <div className="mt-6">
