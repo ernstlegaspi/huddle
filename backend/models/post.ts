@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema({
 	name: String,
 	pictures: String,
 	tags: [String],
+	interests: [String],
 	username: String,
 	userPicture: String,
 	owner: {

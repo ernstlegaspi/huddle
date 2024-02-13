@@ -4,9 +4,9 @@ import { checkMiddleware, checkValidEmail, checkValidEmailParams, checkValidUser
 
 const router = express.Router()
 
-router.post('/addPost', checkMiddleware, addPost)
+router.post('/addPost', checkMiddleware, checkValidEmail, checkValidUser, addPost)
 
 router.get('/get-friends-posts/:friends/:email', checkMiddleware, checkValidEmailParams, checkValidUser, getFriendsPosts)
-router.get('/getPostsPerUser/:page/:email', checkMiddleware, getPostsPerUser)
+router.get('/getPostsPerUser/:page/:email', checkMiddleware, checkValidEmailParams, checkValidUser, getPostsPerUser)
 
 export default router

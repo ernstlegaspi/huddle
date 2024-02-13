@@ -7,18 +7,16 @@ import { userPushField } from '../utils/db/user'
 
 export const addPost = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		const { body, email, name, pictures, tags, username } = req.body
+		const { body, name, pictures, tags, username, interests } = req.body
 		const tagsArr: string[] = tags
+		const interestsArr: string[] = interests
 		const userId = getUserId(req)
 
-		if(!body || !email || !name || !pictures || tagsArr.length < 1 || !userId || !username) return error(400, res, "Error creating a new post. Try again later.")
-
-		const user = await User.findOne({ email })
-
-		if(!user) return error(401, res, "User does not exist")
+		if(!body || !name || !pictures || interestsArr.length < 1 || tagsArr.length < 1 || !userId || !username) return error(400, res, "Error creating a new post. Try again later.")
 
 		const newPost = await new Post({
 			...req.body,
+			interests: interestsArr,
 			owner: userId
 		}).save()
 
@@ -43,13 +41,9 @@ export const getFriendsPosts = async (req: Request, res: Response) => {
 
 export const getPostsPerUser = async (req: Request, res: Response) => {
 	return catchError(async () => {
-		const { email, page } = req.params
+		const { page } = req.params
 
-		if(!page || !email) return error(404, res, "Error getting your posts. Try again later.")
-
-		const user = await User.findOne({ email })
-
-		if(!user) return error(401, res, "User does not exist")
+		if(!page) return error(404, res, "Error getting your posts. Try again later.")
 
 		const p = +page // convert string to int
 		const userId = getUserId(req)

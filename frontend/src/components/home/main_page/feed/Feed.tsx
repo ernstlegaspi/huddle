@@ -5,7 +5,7 @@ import useViewProfile from '../../../../hooks/useViewProfile'
 import FriendsTab from './friends/Friends'
 import SkeletonFriendsTab from './friends/SkeletonFriendsTab'
 import useActiveSidebar from '../../../../hooks/useActiveSidebar'
-import MainFeed from './MainFeed'
+import MainFeed from './main_feed/MainFeed'
 
 const Profile = lazy(() => import("./Profile"))
 

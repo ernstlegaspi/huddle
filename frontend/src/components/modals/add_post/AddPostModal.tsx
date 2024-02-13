@@ -100,7 +100,7 @@ export default function AddPostModal() {
 
 			const userPicture: string = user.picture ? user.picture as string : ''
 
-			const { data } = await addPost({
+			await addPost({
 				body,
 				email: user?.email,
 				name: user.name,
