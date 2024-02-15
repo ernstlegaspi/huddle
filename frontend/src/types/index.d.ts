@@ -25,6 +25,7 @@ type Post = {
 	tags: string[]
 	username: string
 	userPicture: string
+	interests?: string[]
 }
 
 type User = {

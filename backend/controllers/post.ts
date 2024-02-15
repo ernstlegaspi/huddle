@@ -39,6 +39,21 @@ export const getFriendsPosts = async (req: Request, res: Response) => {
 	}, res)
 }
 
+export const getForYouPosts = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { interests } = req.params
+		const interestsArr = interests.split('-')
+		const currentUserId = getUserId(req)
+
+		const forYouPosts = await Post.find({
+			owner: { $ne: currentUserId },
+			interests: { $in: interestsArr }
+		}).sort({ createdAt: -1 })
+
+		return success(forYouPosts, 200, res)
+	}, res)
+}
+
 export const getPostsPerUser = async (req: Request, res: Response) => {
 	return catchError(async () => {
 		const { page } = req.params

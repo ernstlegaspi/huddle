@@ -11,6 +11,7 @@ import CloseButton from '../../CloseButton'
 import { useAddPostModal } from "../../../hooks/useToggleModal"
 import { MAX_FILE_SIZE, axiosError, getPersistedUser } from '../../../lib/utils'
 import { addPost, changePostImage, uploadImage } from '../../../api/post/post'
+import useCurrentUser from '../../../hooks/useCurrentUser'
 
 export default function AddPostModal() {
 	const user: AuthUser = getPersistedUser()
@@ -21,6 +22,7 @@ export default function AddPostModal() {
 	const [tags, setTags] = useState('')
 	const [isNext, setIsNext] = useState(false)
 
+	const { currentUser } = useCurrentUser()
 	const { close } = useAddPostModal()
 
 	const handleClose = () => {
@@ -106,6 +108,7 @@ export default function AddPostModal() {
 				name: user.name,
 				pictures: postImage,
 				username: user.username,
+				interests: currentUser.interests,
 				userPicture,
 				tags: tags.split(",")
 			})

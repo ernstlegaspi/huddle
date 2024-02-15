@@ -3,11 +3,13 @@ import { lazy, Suspense, useEffect, useState } from "react"
 
 import useCurrentUser from "../../../../../hooks/useCurrentUser"
 import useGlobalLoading from "../../../../../hooks/useGlobalLoading"
-import CircleLoader from "../../../../CircleLoader"
 import useFeedPosts from "../../../../../hooks/useFeedPosts"
 import Stories from "./Stories"
 import useForYou from "../../../../../hooks/useForYou"
-import { getFriendsPosts } from "../../../../../api/post/get"
+import { getForYouPosts, getFriendsPosts } from "../../../../../api/post/get"
+import SkeletonPostCard from "../../../../SkeletonPostCard"
+import useFeedLoading from "../../../../../hooks/useFeedLoading"
+import CircleLoader from "../../../../CircleLoader"
 
 const ForYouPosts = lazy(() => import('./ForYouPosts'))
 const FriendsPosts = lazy(() => import('./FriendsPosts'))
@@ -19,40 +21,44 @@ export default function MainFeed() {
 	const { globalLoading } = useGlobalLoading()
 	const { setFeedPosts } = useFeedPosts()
 	const { isForYou, setIsForYou } = useForYou()
+	const { feedLoading, setFeedLoading } = useFeedLoading()
 
 	useEffect(() => {
 		(async () => {
+			setFeedLoading(true)
 			setLoading(true)
 
 			try {
 				if(globalLoading) return
 
 				let res = null
-				const userFriends = currentUser.friends?.join('-')
-
-				if(!userFriends) return
+				let userFriends = currentUser.friends?.join('-')
 
 				if(isForYou) {
-					// get for you recommendation
-				}
-				else {
-					const { data } = await getFriendsPosts(currentUser.email, userFriends as string)
+					const { data } = await getForYouPosts(currentUser.email, currentUser.interests.join('-'))
 					res = data
 				}
+				else {
+					if(userFriends) {
+						const { data } = await getFriendsPosts(currentUser.email, userFriends as string)
+						res = data
+					}
+				}
 
-				setPosts(res)
-				setFeedPosts(res.length)
+				setPosts(res ? res : [])
+				setFeedPosts(res ? res.length : 0)
 			}
 			catch(e) {
 				toast.error('Can not fetch posts. Try again later')
 			}
 			finally {
 				setLoading(false)
+				setFeedLoading(false)
 			}
 		})()
 	}, [globalLoading, isForYou])
 
-	return <div className="py-3">
+	return <div className={`${feedLoading ? 'h-auto' : ''} bg-red-300 py-3`}>
 		<Stories />
 		<div className="h-end text-vio text-20 tracking-wider">
 			<p onClick={() => setIsForYou(false)} className={`${isForYou ? '' : 'font-bold'} mr-3 pointer hover:text-dvio`}>Friends</p>
@@ -60,7 +66,7 @@ export default function MainFeed() {
 		</div>
 		{
 			!loading && posts.length < 1 && !globalLoading ? <p>There are no posts to display.</p>
-			: loading ? <div className="mt-6">
+			: feedLoading ? <div className='f-center'>
 				<CircleLoader />
 			</div>
 			: <Suspense fallback={<p>Loading</p>}>

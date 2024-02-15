@@ -15,8 +15,8 @@ export default function Feed() {
 	const { activeSidebar } = useActiveSidebar()
 	const { isClicked } = useViewProfile()
 	const inProfile = isClicked || viewProfile
-	const inFriends = activeSidebar === 'friends' || persistedActiveSidebar === 'friends' && !inProfile
-	const inMainFeed = activeSidebar === 'feed' || persistedActiveSidebar === 'feed' && !inProfile
+	const inFriends = (activeSidebar === 'friends' || persistedActiveSidebar === 'friends') && !inProfile
+	const inMainFeed = (activeSidebar === 'feed' || persistedActiveSidebar === 'feed') && !inProfile
 
 	return <div className={`${inProfile ? 'px-6' : 'px-10'} relative h-auto w-[50%]`}>
 		<Suspense fallback={
