@@ -2,7 +2,7 @@ import toast from 'react-hot-toast'
 import { useEffect, useRef, useState } from 'react'
 import { ClipLoader } from "react-spinners"
 
-import PostCard from "../../../PostCard"
+import PostCard from "../../../post_card/PostCard"
 import SkeletonPostCard from '../../../SkeletonPostCard'
 import useNameUsername from '../../../../hooks/useNameAndUsername'
 import usePostsCount from '../../../../hooks/usePostsCount'

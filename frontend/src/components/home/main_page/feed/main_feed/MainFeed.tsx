@@ -28,6 +28,8 @@ export default function MainFeed() {
 			setFeedLoading(true)
 			setLoading(true)
 
+			document.body.style.overflow = 'hidden'
+
 			try {
 				if(globalLoading) return
 
@@ -52,13 +54,15 @@ export default function MainFeed() {
 				toast.error('Can not fetch posts. Try again later')
 			}
 			finally {
+				document.body.style.overflow = 'auto'
+
 				setLoading(false)
 				setFeedLoading(false)
 			}
 		})()
 	}, [globalLoading, isForYou])
 
-	return <div className={`${feedLoading ? 'h-auto' : ''} bg-red-300 py-3`}>
+	return <div className='h py-3'>
 		<Stories />
 		<div className="h-end text-vio text-20 tracking-wider">
 			<p onClick={() => setIsForYou(false)} className={`${isForYou ? '' : 'font-bold'} mr-3 pointer hover:text-dvio`}>Friends</p>
@@ -66,7 +70,7 @@ export default function MainFeed() {
 		</div>
 		{
 			!loading && posts.length < 1 && !globalLoading ? <p>There are no posts to display.</p>
-			: feedLoading ? <div className='f-center'>
+			: feedLoading ? <div className='mt-[-200px] h f-center'>
 				<CircleLoader />
 			</div>
 			: <Suspense fallback={<p>Loading</p>}>

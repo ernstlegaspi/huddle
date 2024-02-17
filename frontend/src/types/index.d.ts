@@ -18,7 +18,7 @@ type TNotification = {
 type Post = {
 	body: string
 	email?: string
-	id?: string
+	_id?: string
 	likes?: string[]
 	name: string
 	pictures: string

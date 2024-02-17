@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { catchError, error, getUserId, success } from '../utils'
 
-import User from '../models/user'
 import Post from '../models/post'
+import User from '../models/user'
 import { userPushField } from '../utils/db/user'
 
 export const addPost = async (req: Request, res: Response) => {
@@ -23,6 +23,30 @@ export const addPost = async (req: Request, res: Response) => {
 		await userPushField(userId, { posts: newPost._id })
 
 		return success(newPost, 201, res)
+	}, res)
+}
+
+export const updateLike = async (req: Request, res: Response) => {
+	return catchError(async () => {
+		const { postId, likerId } = req.body
+
+		console.log(postId)
+		console.log(likerId)
+		
+		if(!postId || !likerId) return error(400, res, 'Invalid request.')
+
+		
+		const post = await Post.findById(postId)
+
+
+		if(!post) return error(404, res, 'Post not found.')
+
+		await Post.findByIdAndUpdate(postId,
+			{ $push: { likes: likerId } },
+			{ $new: true }
+		)
+
+		return success({}, 200, res)
 	}, res)
 }
 
